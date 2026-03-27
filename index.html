@@ -28,7 +28,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 
 /* ── CRIAR PALAVRA ── */
 .cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px; position: relative;}
 .card-title{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--acc2);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
 
 .fg{display:flex;flex-direction:column;gap:14px}
@@ -38,12 +38,14 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .fi::placeholder{color:var(--tx3)}
 select.fi option{background:var(--s2)}
 
-.deriv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.deriv-grid{display:grid;grid-template-columns:1fr;gap:8px}
 .cb-wrap{display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;cursor:pointer;transition:border-color .2s}
 .cb-wrap:hover{border-color:var(--acc)}
 .cb-wrap input{width:15px;height:15px;accent-color:var(--acc);cursor:pointer;flex-shrink:0}
 .cb-wrap .cb-label{font-size:.82rem;color:var(--tx2)}
 .cb-wrap .cb-suf{font-size:.78rem;color:var(--acc2);margin-left:auto;font-family:monospace}
+.deriv-group { margin-bottom: 15px; }
+.deriv-group-title { font-size: 0.7rem; color: var(--tx3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
 
 .btn-row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{padding:10px 22px;border:none;border-radius:9px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
@@ -51,8 +53,8 @@ select.fi option{background:var(--s2)}
 .btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(139,107,212,.5)}
 .btn-export{background:var(--s2);border:1px solid var(--bd2);color:var(--tx2)}
 .btn-export:hover{border-color:var(--acc);color:var(--tx)}
-.btn-reset{background:var(--s2);border:1px solid var(--er);color:#e88080}
-.btn-reset:hover{background:rgba(138,58,58,.15)}
+.btn-cloud{background:rgba(58,111,168,.2);border:1px solid rgba(58,111,168,.4);color:#7ab0e8; width: 100%; margin-top: 15px;}
+.btn-cloud:hover{background:rgba(58,111,168,.35)}
 .btn-sm{padding:4px 10px;font-size:.75rem;border-radius:6px;border:none;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn-edit{background:rgba(139,107,212,.12);border:1px solid rgba(139,107,212,.25);color:var(--acc2)}
 .btn-edit:hover{background:rgba(139,107,212,.25);color:var(--acc3)}
@@ -117,45 +119,26 @@ select.fi option{background:var(--s2)}
 .t-default{background:rgba(80,80,100,.18);color:#aaaacc;border:1px solid rgba(80,80,100,.3)}
 .ed{font-size:.85rem;color:var(--tx2);flex:1;min-width:140px}
 .de-actions{display:flex;gap:5px;margin-left:auto;flex-shrink:0}
-
-/* Inline edit */
 .ed-input{flex:1;min-width:140px;padding:4px 9px;background:var(--s3);border:1px solid var(--acc);border-radius:6px;color:var(--tx);font-size:.85rem;font-family:inherit;outline:none}
-
 .nr{text-align:center;padding:40px;color:var(--tx2);font-size:.95rem}
 
-/* ── RESPONSIVIDADE MOBILE TURBINADA ── */
 @media(max-width:720px){
-  .hdr { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .hdr-stat { margin-left: 0; }
-  .logo { font-size: 2rem; }
-  .nav { padding: 0; display: flex; width: 100%; }
-  .nb { flex: 1; text-align: center; padding: 14px 5px; font-size: .9rem; }
-  .content { padding: 20px 14px; }
-  
-  .cp-grid, .deriv-grid { grid-template-columns: 1fr; }
-  
-  .btn-row { flex-direction: column; gap: 12px; }
-  .btn { width: 100%; justify-content: center; }
-  
-  .de { flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; position: relative; }
-  .ew { min-width: auto; font-size: 1.1rem; }
-  .ei { min-width: auto; margin-bottom: 4px; }
-  .ed { width: 100%; min-width: auto; margin-top: 4px; line-height: 1.4; }
-  .de-actions { margin-left: 0; width: 100%; justify-content: flex-end; margin-top: 10px; border-top: 1px solid var(--bd); padding-top: 12px; }
-  
-  .ed-input { width: 100%; }
-  
-  .toast { left: 20px; right: 20px; bottom: 20px; text-align: center; }
+  .hdr{padding:14px 18px}.nav{padding:0 14px}.content{padding:18px 14px}
+  .cp-grid{grid-template-columns:1fr}.deriv-grid{grid-template-columns:1fr}
+  .ew{min-width:90px}.ei{min-width:70px}
 }
 </style>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
 <div id="app">
   <header class="hdr">
     <div style="display:flex;align-items:baseline;gap:10px">
       <div class="logo">Mani</div>
-      <div class="logo-sub">Língua Construída</div>
+      <div class="logo-sub">Nuvem Ativa</div>
     </div>
-    <div class="hdr-stat">Dicionário: <span id="total-count">0</span> entradas</div>
+    <div class="hdr-stat">Dicionário: <span id="total-count">...</span> entradas</div>
   </header>
   <nav class="nav">
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
@@ -170,7 +153,7 @@ select.fi option{background:var(--s2)}
           <div class="fg">
             <div>
               <label class="fl">Palavra base (Mani) *</label>
-              <input class="fi" id="f-word" placeholder="ex: flumak" oninput="livePreview()">
+              <input class="fi" id="f-word" placeholder="ex: flumak" oninput="updateDerivOptions(); livePreview()">
             </div>
             <div>
               <label class="fl">Tradução (Português) *</label>
@@ -178,7 +161,7 @@ select.fi option{background:var(--s2)}
             </div>
             <div>
               <label class="fl">Classe Gramatical *</label>
-              <select class="fi" id="f-type" onchange="livePreview()">
+              <select class="fi" id="f-type" onchange="updateDerivOptions(); livePreview()">
                 <option value="">— selecione —</option>
                 <option value="verbo">Verbo</option>
                 <option value="substantivo">Substantivo</option>
@@ -202,12 +185,8 @@ select.fi option{background:var(--s2)}
 
         <div class="card">
           <div class="card-title">Derivações Automáticas</div>
-          <div class="deriv-grid" id="deriv-grid">
-            <label class="cb-wrap"><input type="checkbox" id="d-noma" onchange="livePreview()"><span class="cb-label">Coletivo</span><span class="cb-suf">-noma</span></label>
-            <label class="cb-wrap"><input type="checkbox" id="d-ti" onchange="livePreview()"><span class="cb-label">Abstrato</span><span class="cb-suf">-ṫi</span></label>
-            <label class="cb-wrap"><input type="checkbox" id="d-av" onchange="livePreview()"><span class="cb-label">Agente</span><span class="cb-suf">-av</span></label>
-            <label class="cb-wrap"><input type="checkbox" id="d-lam" onchange="livePreview()"><span class="cb-label">Adj. Resultante</span><span class="cb-suf">-λ</span></label>
-            <label class="cb-wrap"><input type="checkbox" id="d-isha" onchange="livePreview()"><span class="cb-label">Advérbio de Modo</span><span class="cb-suf">-iჰa</span></label>
+          <div id="deriv-options-container">
+              <span style="color:var(--tx3);font-size:.82rem">Selecione uma classe gramatical para ver as opções...</span>
           </div>
 
           <div style="margin-top:20px">
@@ -216,11 +195,11 @@ select.fi option{background:var(--s2)}
           </div>
 
           <div class="btn-row" style="margin-top:20px">
-            <button class="btn btn-save" onclick="saveWord()">✓ Salvar no Dicionário</button>
-            <button class="btn btn-export" onclick="exportDict()">⬇ Exportar JS</button>
+            <button class="btn btn-save" onclick="saveWord()">✓ Salvar na Nuvem</button>
           </div>
-          <div style="margin-top:10px">
-            <button class="btn btn-reset" onclick="resetDict()">↺ Resetar para original</button>
+          
+          <div id="migration-box" style="display:none;">
+            <button class="btn btn-cloud" onclick="migrateBaseData()">☁️ Migrar Dicionário Base para a Nuvem</button>
           </div>
         </div>
       </div>
@@ -244,394 +223,35 @@ select.fi option{background:var(--s2)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── DADOS BASE ────────────────────────────────────────────────
-const BASE_DATA=[
-["nɔ","nɔ","numeral","Zero (0)"],["uri","uɾi","numeral","Um (1)"],["paro","paɾo","numeral","Dois (2)"],
-["naji","naʒi","numeral","Três (3)"],["kλnko","kɐ̃nko","numeral","Quatro (4)"],
-["sinჰa","sinksa","numeral","Cinco (5)"],["terou","teɾou","numeral","Seis (6)"],
-["luṫa","luθa","numeral","Sete (7)"],["boru","boɾu","numeral","Oito (8)"],
-["mile","mile","numeral","Nove (9)"],["deko","deko","numeral","Dez (10)"],
-["domo","domo","numeral","Cem (100)"],["muli","muli","numeral","Mil (1.000)"],
-["manṫa","manθa","numeral","Milhão (1.000.000)"],
-["kɔrona","kɔɾona","substantivo","Domingo"],["milana","milana","substantivo","Segunda-feira"],
-["pana","pana","substantivo","Terça-feira"],["jina","ʒina","substantivo","Quarta-feira"],
-["vena","vena","substantivo","Quinta-feira"],["sana","sana","substantivo","Sexta-feira"],
-["lana","lana","substantivo","Sábado"],
-["iak","iak","interjeição","Olá, oi"],["navo","navo","interjeição","Tchau, até logo"],
-["dron","dɾon","interjeição","Obrigado"],["nɔv","nɔv","interjeição","De nada"],
-["pazɛr","pazɛɾ","interjeição","Desculpe"],["vɔpli","vɔpli","interjeição","Com licença"],
-["onim","onim","partícula","Sim (afirmação)"],["iჰo","ikso","partícula","Não (negação)"],
-["viλn","viɐ̃n","interrogativo","Quando (Tempo)"],["vie","vie","interrogativo","Onde (Lugar)"],
-["vier","vieɾ","interrogativo","Por que (Causa)"],["vin","vin","interrogativo","Como (Modo)"],
-["vio","vio","interrogativo","Quem (Agente)"],["vu","vu","interrogativo","O que (Objeto)"],
-["vɛu","vɛu","interrogativo","Quanto (Quantidade)"],["vi","vi","partícula","Marcador de pergunta fechada"],
-["თo","tʃo","determinativo","Artigo definido masculino singular"],
-["თa","tʃa","determinativo","Artigo definido feminino singular"],
-["თe","tʃe","determinativo","Artigo definido neutro"],
-["თi","tʃi","determinativo","Artigo definido inanimado"],
-["lut","lut","determinativo","Artigo indefinido (um, uma)"],
-["luts","luts","determinativo","Artigo indefinido plural (uns, umas)"],
-["kuji","kuʒi","determinativo","Este, esta"],["kamuji","kamuʒi","determinativo","Aquele, aquela"],
-["movo","movo","adjetivo","Bastante, em grande quantidade"],
-["mira","miɾa","adjetivo","Pouco, em quantidade reduzida"],
-["bistu","bistu","adjetivo","Algum, alguma"],
-["denko","denko","adjetivo","Tudo, totalidade"],
-["in","in","partícula","Em (marcador de lugar)"],
-["kin","kin","partícula","Marcador de passado"],
-["kλn","kɐ̃n","partícula","Marcador de futuro"],
-["o","o","partícula","Marcador temporal absoluto"],
-["oi","oi","conjunção","E (adição)"],["რis","ʁis","conjunção","Mas (oposição)"],
-["zier","zieɾ","conjunção","Porque (causa)"],["ɛi","ɛi","conjunção","Ou (alternância)"],
-["tubi","tubi","partícula","Se (condicional)"],["dɔn","dɔn","conjunção","Então, portanto"],
-["ɔli","ɔli","conjunção","Também"],["tulλ","tulɐ̃","conjunção","Afinal, enfim"],
-["trɔ","tɾɔ","partícula","Em direção a (movimento)"],
-["mɛnin","mɛnin","partícula","Entre"],["rɛzun","ɾɛzun","conjunção","Ao invés de"],
-["vλn","vɐ̃n","conjunção","Quando (subordinativa temporal)"],
-["vλnin","vɐ̃nin","conjunção","Enquanto (simultaneidade)"],
-["fluvel","fluvel","conjunção","Até que"],["ziɛrun","ziɛɾun","conjunção","Já que, visto que"],
-["რistubi","ʁistubi","conjunção","Embora, ainda que"],
-["zos","zos","partícula","Que (discurso indireto)"],
-["jɔ","jɔ","partícula","Vocativo — interpelação direta"],
-["რɔs","ʁɔs","partícula","Com (companhia)"],
-["λba","ɐ̃ba","advérbio","Em cima, sobre"],["λni","ɐ̃ni","advérbio","Embaixo, sob"],
-["miთa","miθa","advérbio","Bem, de forma positiva"],
-["mau","mau","pronome","Eu"],["tau","tau","pronome","Você, tu"],
-["lou","lou","pronome","Ele"],["lau","lau","pronome","Ela"],
-["leu","leu","pronome","Pessoa neutra (singular)"],
-["liu","liu","pronome","Isso, aquilo (inanimado)"],
-["maus","maus","pronome","Nós"],["taus","taus","pronome","Vocês"],
-["lous","lous","pronome","Eles"],["laus","laus","pronome","Elas"],
-["avita","avita","substantivo","Pessoa, indivíduo humano"],
-["boრi","boʁi","substantivo","Homem"],["kiრi","kiʁi","substantivo","Mulher"],
-["peრi","peʁi","substantivo","Pessoa de gênero neutro"],
-["piniavita","piniavita","substantivo","Criança"],
-["kirɔbavita","kiɾɔbavita","substantivo","Idoso"],
-["dapa","dapa","substantivo","Pai"],["nλnλ","nɐ̃nɐ̃","substantivo","Mãe"],
-["mimo","mimo","substantivo","Filho"],["mima","mima","substantivo","Filha"],
-["mime","mime","substantivo","Filho neutro"],
-["pat","pat","substantivo","Irmã"],["pot","pot","substantivo","Irmão"],
-["drovu","dɾovu","substantivo","Avô"],["drova","dɾova","substantivo","Avó"],
-["rovu","ɾovu","substantivo","Tio"],["rova","ɾova","substantivo","Tia"],
-["rovziku","ɾovziku","substantivo","Primo"],["rovzika","ɾovzika","substantivo","Prima"],
-["rλskimpɔn","ʁɐ̃skimpɔn","substantivo","Cônjuge, parceiro"],
-["bomiva","bomiva","substantivo","Amigo"],["maჰiva","maksiva","substantivo","Inimigo"],
-["fεmoroრi","fɛmoɾoʁi","substantivo","Namorado"],["fεmorokiრi","fɛmoɾokiʁi","substantivo","Namorada"],
-["korvu","koɾvu","substantivo","Corpo"],["koka","koka","substantivo","Cabeça"],
-["pɔro","pɔɾo","substantivo","Olho"],["finu","finu","substantivo","Nariz"],
-["vɔmu","vɔmu","substantivo","Boca"],["vɔbiu","vɔbiu","substantivo","Lábio"],
-["lukoi","lukoi","substantivo","Ouvido"],["gulεm","gulɛm","substantivo","Língua"],
-["marku","maɾku","substantivo","Dente"],["sukra","sukɾa","substantivo","Pescoço"],
-["pavila","pavila","substantivo","Peito, região torácica"],
-["sεlvu","sɛlvu","substantivo","Braço"],["kravu","kɾavu","substantivo","Mão"],
-["finji","finʒi","substantivo","Dedo"],["kalopu","kalopu","substantivo","Ombro"],
-["bijɔku","biʒɔku","substantivo","Cotovelo"],["pumbi","pumbi","substantivo","Perna"],
-["griko","gɾiko","substantivo","Joelho"],["talnu","talnu","substantivo","Pé"],
-["bouvu","bouvu","substantivo","Barriga, abdômen"],
-["dɔrva","dɔɾva","substantivo","Costas"],["drɔku","dɾɔku","substantivo","Osso"],
-["vikɔva","vikɔva","substantivo","Coração"],["suviza","suviza","substantivo","Pele"],
-["klapɔ","klapɔ","substantivo","Cabelo"],["bunɔ","bunɔ","substantivo","Sangue"],
-["vλvλnu","vɐ̃vɐ̃nu","substantivo","Pulso, batida rítmica vital"],
-["kɔro","kɔɾo","substantivo","Sol"],["mila","mila","substantivo","Lua"],
-["silεu","silɛu","substantivo","Estrela"],["sipa","sipa","substantivo","Céu"],
-["ṫelum","θelum","substantivo","Terra, solo, planeta"],
-["flua","flua","substantivo","Água"],["fluaponi","fluaponi","substantivo","Rio"],
-["fluaribi","fluaɾibi","substantivo","Chuva"],
-["fluakrinu","fluakrinu","substantivo","Mar"],["flunɛ","flunɛ","substantivo","Lago"],
-["ikra","ikɾa","substantivo","Gelo"],["nɔuva","nɔuva","substantivo","Neve"],
-["frigare","fɾigaɾe","substantivo","Fogo"],["iana","iana","substantivo","Ar"],
-["frisia","fɾisia","substantivo","Vento"],["lavurina","lavuɾina","substantivo","Natureza"],
-["maki","maki","substantivo","Árvore"],["julλm","ʒulɐ̃m","substantivo","Planta"],
-["εჰuma","ɛksuma","substantivo","Erva, planta medicinal"],
-["nεjλm","nɛʒɐ̃m","substantivo","Flor"],["parta","parta","substantivo","Folha"],
-["voneka","voneka","substantivo","Galho"],["pontɔ","pontɔ","substantivo","Semente"],
-["surioთa","suɾioθa","substantivo","Raiz"],
-["grλba","gɾɐ̃ba","substantivo","Montanha"],["grλva","gɾɐ̃va","substantivo","Vale"],
-["prozu","pɾozu","substantivo","Pedra"],["telupini","telupini","substantivo","Areia"],
-["sinka","sinka","substantivo","Ilha"],["nulva","nulva","substantivo","Sombra"],
-["kɔrimaki","kɔɾimaki","substantivo","Luz do sol filtrada pelas folhas das árvores"],
-["sivεlu","sivɛlu","substantivo","Nuvem"],
-["lomun","lomun","substantivo","Animal"],["nako","nako","substantivo","Gato"],
-["pogo","pogo","substantivo","Cão, cachorro"],["dλnთo","dɐ̃nʃo","substantivo","Pássaro"],
-["poჰთi","poksʃi","substantivo","Peixe"],["genbλr","genbɐ̃ɾ","substantivo","Cobra"],
-["pinilomun","pinilomun","substantivo","Inseto"],
-["pinigenbλr","pinigenbɐ̃ɾ","substantivo","Verme"],
-["omun","omun","substantivo","Ovo"],["nivada","nivada","substantivo","Pena (de pássaro)"],
-["krumu","krumu","substantivo","Chifre"],
-["flum","flum","substantivo","Tempo (cronologia)"],
-["mλza","mãza","substantivo","Dia (período de luz)"],
-["apεra","apɛɾa","substantivo","Manhã"],["jegou","ʒegou","substantivo","Tarde"],
-["nit","nit","substantivo","Noite"],["tukan","tukan","substantivo","Hoje"],
-["turmoi","tuɾmoi","substantivo","Ontem"],["pouna","pouna","substantivo","Amanhã"],
-["namu","namu","substantivo","Agora, momento presente"],
-["zɔrvu","zɔɾvu","substantivo","Mês"],["vɔrnu","vɔɾnu","substantivo","Ano"],
-["kamre","kamɾe","substantivo","Casa, habitação"],
-["ponu","ponu","substantivo","Rua, via urbana"],
-["lilum","lilum","substantivo","Caminho, trilha"],
-["grɔp","gɾɔp","substantivo","Chão"],["kɔbu","kɔbu","substantivo","Teto"],
-["levu","levu","substantivo","Cama"],["grovu","grovu","substantivo","Mesa"],
-["dɔbu","dɔbu","substantivo","Porta"],["fargλ","fargɐ̃","substantivo","Janela"],
-["drɔmpu","dɾɔmpu","substantivo","Parede"],["kirobu","kirobu","substantivo","Cadeira"],
-["koრi","korri","substantivo","Roupa"],["priთa","pricha","substantivo","Sapato"],
-["dia","dia","substantivo","Aqui (lugar próximo)"],
-["dio","dio","substantivo","Ali, lá (lugar distante)"],
-["ditu","ditu","substantivo","Dentro"],["diჰ","diks","substantivo","Fora"],
-["fɛmo","fɛmo","substantivo","Amor"],["vinila","vinila","substantivo","Vida"],
-["vorλn","voɾɐ̃n","substantivo","Mundo"],["lavi","lavi","substantivo","Luz"],
-["frεkila","fɾɛkila","substantivo","Liberdade"],
-["εuvra","ɛuvɾa","substantivo","Verdade"],["zɔuske","zɔuske","substantivo","Mentira"],
-["silum","silum","substantivo","Paz"],["grɔmbu","gɾɔmbu","substantivo","Guerra"],
-["vulεmia","vulɛmia","substantivo","Memória"],["nuvu","nuvu","substantivo","Silêncio"],
-["luvɔჰem","luvɔksem","substantivo","Pertencimento"],
-["kakinea","kakinea","substantivo","Hábito"],["kakiλso","kakiɐ̃so","substantivo","Rotina"],
-["menekuთa","menekuʃa","substantivo","Consciência"],
-["kakim","kakim","substantivo","Dinheiro"],["glofa","glofa","substantivo","Comida, alimento"],
-["drizka","dɾizka","substantivo","Café"],["idina","idina","substantivo","Idioma, língua"],
-["რamkon","ʁamkon","substantivo","Deus, entidade divina"],
-["რankavita","ʁankavita","substantivo","Espírito, pessoa imaterial"],
-["kuniṫa","kuniθa","substantivo","Nome"],
-["brizalia","bɾizalia","substantivo","Energia, vitalidade"],
-["mivolu","mivolu","substantivo","Cuidado, atenção delicada"],
-["εmoru","ɛmoɾu","substantivo","Nascimento"],
-["murλ","muɾɐ̃","substantivo","Tristeza"],["graki","gɾaki","substantivo","Raiva"],
-["gumira","gumiɾa","substantivo","Medo"],["krεრa","kɾɛʁa","substantivo","Angústia"],
-["pɔka","pɔka","substantivo","Surpresa"],["mεuvu","mɛuvu","substantivo","Saudade"],
-["venɔlu","venɔlu","substantivo","Esperança"],
-["krilთi","kɾilʃi","substantivo","Ansiedade"],["lλgri","lɐ̃gɾi","substantivo","Culpa"],
-["lorimu","loɾimu","substantivo","Vergonha"],["mavel","mavɛl","substantivo","Inveja"],
-["grλkoru","gɾɐ̃koɾu","substantivo","Orgulho"],
-["jemiჰu","ʒemiksu","substantivo","Solidão"],
-["fentoli","fentoli","substantivo","Gratidão"],["droma","dɾoma","substantivo","Tédio"],
-["zɔpru","zɔpɾu","substantivo","Nojo, repulsa"],
-["lɔnu","lɔnu","substantivo","Sono"],["vεliu","vεliu","substantivo","Sonho"],
-["kilε","kilɛ","substantivo","Riso"],["flεru","flɛɾu","substantivo","Lágrima"],
-["vεkinura","vɛkinuɾa","substantivo","Curiosidade"],
-["grεvu","gɾεvu","substantivo","Dor"],["fɔlvru","fɔlvɾu","substantivo","Febre"],
-["ribɛnevu","ɾibɛnevu","substantivo","Desmaio"],
-["voɔusku","voɔusku","substantivo","Náusea, enjoo"],
-["bunɔkar","bunɔkaɾ","substantivo","Ferida"],["voldεku","voldɛku","substantivo","Curativo"],
-["trakεmo","tɾakεmo","substantivo","Emergência"],
-["suvade","suvaðe","substantivo","Paciente (de saúde)"],
-["vɔkru","vɔkɾu","substantivo","Fome"],["ziɛkru","ziɛkɾu","substantivo","Sede"],
-["tɔrpλ","tɔɾpɐ̃","substantivo","Pressão"],
-["lεkivo","lɛkivo","substantivo","Livro"],["druva","dɾuva","substantivo","Aula"],
-["kanoka","kanoka","substantivo","Nota, avaliação"],
-["menzεkra","menzɛkɾa","substantivo","Prova, avaliação formal"],
-["menzolu","menzolu","substantivo","Estágio"],
-["jetniru","ʒetniɾu","substantivo","Mestrado"],
-["vonju","vonʒu","substantivo","Pesquisa"],["fraudu","fɾaudu","substantivo","Aula vaga"],
-["mabilu","mabilu","substantivo","Jogo"],["prisi","pɾisi","substantivo","Partida (jogo)"],
-["trima","tɾima","substantivo","Vitória"],["kuven","kuvɛn","substantivo","Derrota"],
-["animε","animɛ","substantivo","Anime, animação japonesa"],
-["malλna","malɐ̃na","substantivo","Música"],["solλn","solɐ̃n","substantivo","Canto, canção"],
-["zentru","zentɾu","substantivo","Foco, atenção concentrada"],
-["vεljoku","vɛlʒoku","substantivo","Dispersão, atenção fragmentada"],
-["sku","sku","substantivo","Aparelho, dispositivo tecnológico"],
-["skufonu","skufonu","substantivo","Celular, aparelho portátil"],
-["rizsoi","ɾizsoi","substantivo","Tela"],["uɛbi","uɛbi","substantivo","Internet"],
-["virsoi","viɾsoi","substantivo","Vídeo"],
-["vokεgim","vokεgim","substantivo","Mensagem"],
-["pλnto","pɐ̃nto","substantivo","Marte (regente da terça-feira)"],
-["jinto","ʒinto","substantivo","Mercúrio (regente da quarta-feira)"],
-["vento","vento","substantivo","Júpiter (regente da quinta-feira)"],
-["santo","santo","substantivo","Vênus (regente da sexta-feira)"],
-["lanto","lanto","substantivo","Saturno (regente do sábado)"],
-["bemtɔ","bentɔ","adjetivo","Grande, de magnitude elevada"],
-["griku","gɾiku","adjetivo","Baixo, de estatura reduzida"],
-["puvɔ","puvɔ","adjetivo","Alto, de estatura elevada"],
-["drɔvu","dɾɔvu","adjetivo","Pesado"],["fijia","fiʒia","adjetivo","Leve"],
-["triჰu","tɾiksu","adjetivo","Rápido, veloz"],
-["drɔbu","dɾɔbu","adjetivo","Lento, vagaroso"],
-["ikon","ikon","adjetivo","Frio"],["brizo","bɾizo","adjetivo","Quente"],
-["pionთen","pionʃen","adjetivo","Forte, vigoroso"],
-["poron","poɾon","adjetivo","Fraco, débil"],
-["mugrɔ","mugɾɔ","adjetivo","Duro, rígido"],
-["lavika","lavika","adjetivo","Brilhante, reluzente"],
-["folutu","folutu","adjetivo","Cheio, pleno"],
-["nutu","nutu","adjetivo","Vazio"],
-["mɔnru","mɔnɾu","adjetivo","Perto, próximo"],
-["vɔrdλ","vɔɾdɐ̃","adjetivo","Longe, distante"],
-["midili","midili","adjetivo","Liso"],["rizti","ɾizti","adjetivo","Reto"],
-["ronpo","ɾonpo","adjetivo","Redondo"],["pizujo","pizuʒo","adjetivo","Podre"],
-["flunarito","flunaɾito","adjetivo","Molhado"],
-["supolu","supolu","adjetivo","Seco"],["zukiona","zukiona","adjetivo","Sujo"],
-["mεlnu","mεlnu","adjetivo","Doce"],["navila","navila","adjetivo","Macio, suave ao toque"],
-["kakuno","kakuno","adjetivo","Novo, recente"],
-["kirɔba","kiɾɔba","adjetivo","Velho, de longa existência"],
-["bɔno","bɔno","adjetivo","Bom, bondoso"],
-["fumen","fumɛn","adjetivo","Mau, malicioso"],
-["kaliz","kaliz","adjetivo","Feliz"],["ludo","ludo","adjetivo","Unido, coeso"],
-["morku","moɾku","adjetivo","Doente"],["vivɔlu","vivɔlu","adjetivo","Saudável"],
-["pεzurλ","pεzuɾɐ̃","adjetivo","Cansado"],
-["vilɔ","vilɔ","adjetivo","Bonito, belo"],["kɛvu","kɛvu","adjetivo","Feio, disforme"],
-["alvi","alvi","adjetivo","Branco"],["grunda","gɾunda","adjetivo","Preto"],
-["roka","ɾoka","adjetivo","Vermelho"],["natra","natɾa","adjetivo","Verde"],
-["sivλ","sivɐ̃","adjetivo","Azul"],["sɔra","sɔɾa","adjetivo","Amarelo"],
-["tɔpλr","tɔpɐ̃ɾ","adjetivo","Marrom"],["murmura","muɾmuɾa","adjetivo","Roxo"],
-["flɛru","flɛɾu","adjetivo","Laranja (cor)"],
-["lɔva","lɔva","adjetivo","Rosa (cor)"],["drelu","dɾelu","adjetivo","Cinza"],
-["ajλr","aʒɐ̃r","verbo","Fazer, agir, executar"],
-["apεrar","apεɾaɾ","verbo","Amanhecer"],
-["apifir","apifiɾ","verbo","Lecionar, ensinar"],
-["bemtɔr","bentɔɾ","verbo","Engrandecer, expandir"],
-["bluvir","bluviɾ","verbo","Perder"],["bor","boɾ","verbo","Vir, chegar"],
-["brizor","bɾizoɾ","verbo","Aquecer"],["bunɔr","bunɔɾ","verbo","Sangrar"],
-["bur","buɾ","verbo","Ir, partir"],["desmir","desmiɾ","verbo","Morrer"],
-["diჰar","diksaɾ","verbo","Sair, exteriorizar"],["dɔlir","dɔliɾ","verbo","Ficar, permanecer"],
-["domɛnar","domɛnaɾ","verbo","Escolher"],["drɔvir","dɾɔviɾ","verbo","Sentar"],
-["εmorur","εmoɾuɾ","verbo","Nascer"],["faponir","faponir","verbo","Farejar"],
-["fɛmor","fɛmoɾ","verbo","Amar"],["flegor","flegoɾ","verbo","Queimar"],
-["fluar","fluaɾ","verbo","Aguar, liquefazer"],["fluvir","fluviɾ","verbo","Nadar"],
-["folutur","folutuɾ","verbo","Encher"],["frɔkir","fɾɔkiɾ","verbo","Quebrar"],
-["frisiar","fɾisiaɾ","verbo","Ventar, soprar"],["fruრir","fɾuʁiɾ","verbo","Esfregar"],
-["garemar","gaɾemaɾ","verbo","Trabalhar"],
-["giuvir","giuviɾ","verbo","Saborear"],["glofur","glofuɾ","verbo","Comer"],
-["glunɔr","glunɔɾ","verbo","Beber"],["gravir","gɾaviɾ","verbo","Trazer"],
-["grɛvomir","gɾɛvomiɾ","verbo","Discordar"],
-["gumirar","gumiɾaɾ","verbo","Ter medo, amedrontar-se"],
-["ikonar","ikonaɾ","verbo","Esfriar"],["jegour","ʒegouɾ","verbo","Entardecer"],
-["jetɛr","ʒetɛɾ","verbo","Saber, conhecer"],
-["jivar","ʒivaɾ","verbo","Falar"],["kalɛvir","kalɛviɾ","verbo","Acordar"],
-["kalizar","kalizaɾ","verbo","Alegrar-se"],
-["kamalor","kamaloɾ","verbo","Lavar, limpar"],
-["kanir","kaniɾ","verbo","Contar, enumerar"],["kar","kaɾ","verbo","Caminhar"],
-["kɛpivir","kɛpiviɾ","verbo","Entender, compreender"],
-["klɔvar","klɔvaɾ","verbo","Fechar"],
-["klovɛmir","klovɛmiɾ","verbo","Construir"],["klunir","klunir","verbo","Esconder"],
-["konvir","konviɾ","verbo","Reunir"],
-["kɔbarλr","kɔbaɾɐ̃ɾ","verbo","Empurrar"],
-["kɔror","kɔɾoɾ","verbo","Brilhar, ensolarar"],
-["krovar","kɾovaɾ","verbo","Cozinhar"],["krɔzir","kɾɔziɾ","verbo","Agarrar"],
-["kunitar","kunitaɾ","verbo","Nomear"],
-["kuroჰur","kuɾoksur","verbo","Matar"],["kuჰar","kuksaɾ","verbo","Caçar"],
-["lavikar","lavikaɾ","verbo","Reluzir, tornar-se brilhante"],
-["lɔkar","lɔkaɾ","verbo","Abrir"],["lɔnar","lɔnaɾ","verbo","Deitar, repousar"],
-["lɔnur","lɔnuɾ","verbo","Dormir"],["lukir","lukiɾ","verbo","Ouvir"],
-["lumɛr","lumɛɾ","verbo","Sorrir"],["luჰilar","luksilaɾ","verbo","Melhorar"],
-["maჰilar","maksilaɾ","verbo","Piorar, deteriorar"],
-["markir","markiɾ","verbo","Morder"],["mener","meneɾ","verbo","Pensar"],
-["menzor","menzoɾ","verbo","Aprender, estudar"],
-["milar","milaɾ","verbo","Luar, iluminar pela lua"],
-["mivor","mivoɾ","verbo","Criar, inventar"],["molir","moliɾ","verbo","Tocar"],
-["mugrɔr","mugɾɔɾ","verbo","Endurecer"],
-["namir","namiɾ","verbo","Curar, restaurar a saúde"],
-["natrar","natɾaɾ","verbo","Esverdear"],["nɛbir","nɛbiɾ","verbo","Esquecer"],
-["nɛlar","nɛlaɾ","verbo","Ler"],["nɛvir","nɛviɾ","verbo","Dar"],
-["nitar","nitaɾ","verbo","Anoitecer"],["pabear","pabeaɾ","verbo","Brincar"],
-["parრerar","paɾbeɾaɾ","verbo","Bater, golpear"],
-["piluvar","piluvaɾ","verbo","Pular, saltar"],["piugir","piugiɾ","verbo","Suar"],
-["piumar","piumaɾ","verbo","Puxar, atrair"],
-["plɔmir","plɔmiɾ","verbo","Ajudar, auxiliar"],
-["pɔtar","pɔtaɾ","verbo","Poder (modal)"],
-["pɔṫir","pɔθiɾ","verbo","Crescer, expandir-se"],
-["pozir","poziɾ","verbo","Ter, possuir"],["pruvir","pɾuviɾ","verbo","Tentar"],
-["puvεr","puvεɾ","verbo","Subir, ascender"],
-["rɛvir","ɾɛviɾ","verbo","Voltar, retornar"],
-["ribɛr","ɾibɛɾ","verbo","Cair"],["rikilar","ɾikilaɾ","verbo","Decidir"],
-["riskar","ɾiskaɾ","verbo","Cortar"],["ritλr","ɾitɐ̃ɾ","verbo","Dançar"],
-["ritorer","ɾitoɾeɾ","verbo","Acertar"],
-["rɔr","ɾɔɾ","verbo","Correr"],["რisar","ʁisaɾ","verbo","Opor-se"],
-["რujirar","ʁuʒiɾaɾ","verbo","Mudar, transformar"],
-["რuvir","ʁuviɾ","verbo","Levar (para longe)"],
-["რuთur","buθuɾ","verbo","Lutar, combater"],
-["safiar","safiaɾ","verbo","Começar, iniciar"],
-["sibλr","sibɐ̃ɾ","verbo","Respirar"],["siჰar","siksaɾ","verbo","Pescar"],
-["skivar","skivaɾ","verbo","Escrever"],
-["soir","soiɾ","verbo","Ver (percepção visual)"],
-["sɔlir","sɔliɾ","verbo","Voar"],["solλnr","solɐ̃nɾ","verbo","Cantar"],
-["susmir","susmiɾ","verbo","Errar, desviar-se"],
-["takir","takiɾ","verbo","Receber"],["ṫonar","θonaɾ","verbo","Usar, utilizar"],
-["ṫopir","θopiɾ","verbo","Segurar"],
-["ṫunir","θuniɾ","verbo","Precisar (modal)"],
-["tɔmir","tɔmiɾ","verbo","Pedir, solicitar"],
-["trɛpakir","tɾɛpakiɾ","verbo","Seguir (acompanhar)"],
-["trɛvolar","tɾɛvolaɾ","verbo","Confiar"],["vɛmir","vɛmiɾ","verbo","Mostrar"],
-["vimur","vimuɾ","verbo","Ser, estar (existência)"],
-["vinilar","vinilaɾ","verbo","Viver"],["viრur","viʁuɾ","verbo","Virar, rotacionar"],
-["vokar","vokaɾ","verbo","Dizer, declarar"],
-["vɔjir","vɔʒiɾ","verbo","Chamar, invocar"],
-["voldɛr","voldɛɾ","verbo","Proteger, guardar"],
-["vunir","vunir","verbo","Querer, desejar (modal)"],
-["zɛkir","zɛkiɾ","verbo","Lançar, projetar"],
-["zɛmir","zɛmiɾ","verbo","Encontrar, deparar-se"],
-["zɛvir","zɛviɾ","verbo","Levantar-se, erguer-se"],
-["zɛvomir","zɛvomiɾ","verbo","Concordar"],["ziskir","ziskiɾ","verbo","Roubar"],
-["zɔrar","zɔɾaɾ","verbo","Esperar, aguardar"],
-["zuniჰar","zuniksaɾ","verbo","Terminar, encerrar"],
-["λsor","ɐ̃soɾ","verbo","Sentir (físico ou emocional)"],
-["kilεr","kilεɾ","verbo","Rir"],["flεrur","flεɾuɾ","verbo","Chorar"],
-["fentolir","fentoliɾ","verbo","Agradecer"],
-["pontɔr","pontɔɾ","verbo","Semear"],
-];
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// ── GERAÇÃO DE DERIVAÇÕES AUTOMÁTICAS E PLURAIS ────────────────────────────
-function generateDerivatives(base){
-  const result=[...base];
-  const exists=new Set(base.map(e=>e[0]));
-  const add=e=>{if(!exists.has(e[0])){result.push(e);exists.add(e[0]);}};
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCBDH9UqYXcliyiER9L-JUkiJdWuVnOV4M",
+  authDomain: "dicionario-mani.firebaseapp.com",
+  projectId: "dicionario-mani",
+  storageBucket: "dicionario-mani.firebasestorage.app",
+  messagingSenderId: "168308043752",
+  appId: "1:168308043752:web:b8c45c45152b64ae6cfe5d",
+  measurementId: "G-JJJG3WX9CD"
+};
 
-  // 1. Derivações (Ação->Estado / Qualidade->Ação / etc)
-  base.forEach(([w,ip,tp,df])=>{
-    const d=df.toLowerCase().split(',')[0].split(';')[0].trim();
-    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-    const ipaBase = ip ? ip.replace(/r$/, '') : '';
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
-    if(tp==='verbo'){
-      const st=w.replace(/r$/,'');
-      add([w+'λ',       ip?ip+'ẽ':'','adjetivo',    cap(d)+'; estado resultante']);
-      add([st+'av',     ipaBase?ipaBase+'av':'','substantivo', 'Aquele que '+d]);
-      add([w+'ṫi',      ip?ip+'θi':'','substantivo', 'O conceito de '+d]);
-      add([w+'iჰa',     ip?ip+'iksa':'','advérbio',    'De modo: '+d]);
-    }
+// Inicializa o Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    if(tp==='substantivo' || tp==='adjetivo'){
-      add([w+'noma',    ip?ip+'noma':'','substantivo', 'Conjunto de '+d]);
-    }
+// ── ESTADO E NORMALIZAÇÃO ──
+let D = []; // Agora armazena objetos: [ {word, ipa, type, trans, id}, ... ]
 
-    if(tp==='adjetivo'){
-      const isVow=/[aeiouɛɔλɐ]$/i.test(w);
-      const vb=isVow?w+'r':w+'ar';
-      const verbIpa = ip ? (isVow ? ip+'r' : ip+'ar') : '';
-      const st=vb.replace(/r$/,'');
-      const verbTrans = 'Tornar-se '+d;
-
-      add([vb,          verbIpa,'verbo',       verbTrans]);
-      add([vb+'λ',      verbIpa?verbIpa+'ẽ':'','adjetivo',    cap(d)+'; estado derivado']);
-      add([st+'av',     verbIpa?verbIpa.replace(/r$/,'')+'av':'','substantivo', 'Aquilo que '+verbTrans.toLowerCase()]);
-      add([vb+'ṫi',     verbIpa?verbIpa+'θi':'','substantivo', 'A essência de '+d]);
-      add([vb+'iჰa',    verbIpa?verbIpa+'iksa':'','advérbio',    'De forma '+d]);
-    }
-  });
-
-  // 2. Pluralização Universal
-  const current = [...result];
-  current.forEach(([w, ip, tp, df])=>{
-    if(['substantivo', 'adjetivo', 'determinativo'].includes(tp) && !w.endsWith('s')){
-       add([w+'s', ip?ip+'s':'', tp, df + ' (Plural)']);
-    }
-  });
-
-  return result;
-}
-
-// ── PERSISTÊNCIA ──────────────────────────────────────────────
-const LS_KEY='maniDict_v2';
-let D=[];
-
-function loadData(){
-  try{
-    const raw=localStorage.getItem(LS_KEY);
-    if(raw){D=JSON.parse(raw);return;}
-  }catch(e){}
-  
-  // CORREÇÃO AQUI: Garante que os derivados e os plurais sejam gerados na primeira vez!
-  D=generateDerivatives(BASE_DATA); 
-  saveLS();
-}
-function saveLS(){
-  try{localStorage.setItem(LS_KEY,JSON.stringify(D));}catch(e){}
-}
-
-// ── NORMALIZAÇÃO ──────────────────────────────────────────────
 function nn(s){
   return s.toLowerCase()
     .replace(/[λ]/g,'a').replace(/[ɛε]/g,'e').replace(/[ɔ]/g,'o')
@@ -640,35 +260,125 @@ function nn(s){
     .replace(/[ʁ]/g,'r').replace(/[ʃ]/g,'ch').replace(/[θ]/g,'th')
     .replace(/[ɐ]/g,'a').replace(/[ɾ]/g,'r');
 }
-function sortD(){D.sort((a,b)=>nn(a[0]).localeCompare(nn(b[0]),'pt'));}
+function sortD(){D.sort((a,b)=>nn(a.word).localeCompare(nn(b.word),'pt'));}
 function firstChar(w){return nn(w)[0].toUpperCase();}
 function updateHeaderCount(){
   const el=document.getElementById('total-count');
   if(el)el.textContent=D.length;
 }
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 
-// ── DERIVAÇÃO DO FORMULÁRIO ─────────────────────────────────────────────────
-function getBase(word,type){
-  return type==='verbo'?word.replace(/r$/,''):word;
+// ── LÓGICA DE DERIVAÇÃO ──
+function getBaseForVerb(word) { return word.replace(/r$/,''); }
+function getBaseForAdjectiveToVerb(word) {
+    return /[aeiouɛɔλɐ]$/i.test(word) ? word+'r' : word+'ar';
 }
+
 function buildDerivs(word,trans,type,ipa){
-  const b=getBase(word,type);
-  const bi=ipa?getBase(ipa,type):'';
-  const entries=[];
-  if(document.getElementById('d-noma').checked)
-    entries.push([b+'noma',bi?bi+'noma':'','substantivo','Conjunto de '+trans.toLowerCase()]);
-  if(document.getElementById('d-ti').checked)
-    entries.push([b+'ṫi',bi?bi+'θi':'','substantivo','Conceito de '+trans.toLowerCase()]);
-  if(document.getElementById('d-av').checked)
-    entries.push([b+'av',bi?bi+'av':'','substantivo','Aquele que '+trans.toLowerCase()]);
-  if(document.getElementById('d-lam').checked)
-    entries.push([b+'λ',bi?bi+'ɐ̃':'','adjetivo','Relativo a '+trans.toLowerCase()]);
-  if(document.getElementById('d-isha').checked)
-    entries.push([b+'iჰa',bi?bi+'iksa':'','advérbio','De modo '+trans.toLowerCase()]);
-  return entries;
+    const entries=[];
+    const d = trans.toLowerCase().split(',')[0].split(';')[0].trim(); 
+    const ipaBase = ipa ? ipa.replace(/r$/, '') : '';
+
+    if(type === 'verbo') {
+        const b = getBaseForVerb(word);
+        if(document.getElementById('d-v-adj-res')?.checked)
+            entries.push({word: word+'λ', ipa: ipaBase ? ipa+'ẽ' : '', type: 'adjetivo', trans: cap(d)+'; estado resultante'});
+        if(document.getElementById('d-v-agente')?.checked)
+            entries.push({word: b+'av', ipa: ipaBase ? ipaBase+'av' : '', type: 'substantivo', trans: 'Aquele que '+d});
+        if(document.getElementById('d-v-abstrato')?.checked)
+            entries.push({word: word+'ṫi', ipa: ipaBase ? ipa+'θi' : '', type: 'substantivo', trans: 'O conceito de '+d});
+        if(document.getElementById('d-v-adv-modo')?.checked)
+            entries.push({word: word+'iჰa', ipa: ipaBase ? ipa+'iksa' : '', type: 'advérbio', trans: 'De modo: '+d});
+    } 
+    else if (type === 'adjetivo' || type === 'substantivo') {
+        let verbForm = word;
+        let verbTrans = d;
+        let verbIpa = ipa;
+
+        if (type === 'adjetivo') {
+             verbForm = getBaseForAdjectiveToVerb(word);
+             verbTrans = 'Tornar-se ' + d;
+             verbIpa = ipa ? (/[aeiouɛɔλɐ]$/i.test(word) ? ipa+'r' : ipa+'ar') : '';
+             
+             if(document.getElementById('d-a-verbo')?.checked)
+                 entries.push({word: verbForm, ipa: verbIpa, type: 'verbo', trans: cap(verbTrans)});
+        }
+        
+        const b = getBaseForVerb(verbForm);
+
+        if(document.getElementById('d-a-adj-res')?.checked)
+            entries.push({word: verbForm+'λ', ipa: verbIpa ? verbIpa+'ẽ' : '', type: 'adjetivo', trans: cap(d)+'; estado derivado'});
+        if(document.getElementById('d-a-agente')?.checked)
+            entries.push({word: b+'av', ipa: verbIpa ? verbIpa.replace(/r$/, '')+'av' : '', type: 'substantivo', trans: 'Aquilo que '+verbTrans.toLowerCase()});
+        if(document.getElementById('d-a-abstrato')?.checked)
+            entries.push({word: verbForm+'ṫi', ipa: verbIpa ? verbIpa+'θi' : '', type: 'substantivo', trans: 'A essência de '+d});
+        if(document.getElementById('d-a-adv-modo')?.checked)
+            entries.push({word: verbForm+'iჰa', ipa: verbIpa ? verbIpa+'iksa' : '', type: 'advérbio', trans: 'De forma '+d});
+        if(document.getElementById('d-s-coletivo')?.checked)
+             entries.push({word: word+'noma', ipa: ipa ? ipa+'noma' : '', type: 'substantivo', trans: 'Conjunto de '+d});
+    }
+
+    // Derivação Universal: Plural
+    if(document.getElementById('d-s-plural')?.checked) {
+        entries.push({word: word+'s', ipa: ipa ? ipa+'s' : '', type: type, trans: trans + ' (plural)'});
+    }
+
+    return entries;
 }
 
-// ── PREVIEW ───────────────────────────────────────────────────
+function updateDerivOptions() {
+    const type = document.getElementById('f-type').value;
+    const container = document.getElementById('deriv-options-container');
+    if (!type) {
+        container.innerHTML = '<span style="color:var(--tx3);font-size:.82rem">Selecione uma classe gramatical para ver as opções...</span>';
+        return;
+    }
+    let html = '';
+    if (type === 'verbo') {
+        html += `
+        <div class="deriv-group">
+            <div class="deriv-group-title">Do Verbo para...</div>
+            <div class="deriv-grid">
+                <label class="cb-wrap"><input type="checkbox" id="d-v-adj-res" onchange="livePreview()"><span class="cb-label">Adjetivo Resultante</span><span class="cb-suf">-λ</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-v-agente" onchange="livePreview()"><span class="cb-label">Agente</span><span class="cb-suf">-av</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-v-abstrato" onchange="livePreview()"><span class="cb-label">Abstrato (Conceito)</span><span class="cb-suf">-ṫi</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-v-adv-modo" onchange="livePreview()"><span class="cb-label">Advérbio de Modo</span><span class="cb-suf">-iჰa</span></label>
+            </div>
+        </div>`;
+    } else if (type === 'adjetivo') {
+        html += `
+        <div class="deriv-group">
+            <div class="deriv-group-title">Da Qualidade para...</div>
+            <div class="deriv-grid">
+                <label class="cb-wrap"><input type="checkbox" id="d-a-verbo" onchange="livePreview()"><span class="cb-label">Verbo (Tornar-se)</span><span class="cb-suf">-r / -ar</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-a-adj-res" onchange="livePreview()"><span class="cb-label">Adjetivo Derivado</span><span class="cb-suf">Verbo+-λ</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-a-agente" onchange="livePreview()"><span class="cb-label">Agente</span><span class="cb-suf">-av</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-a-abstrato" onchange="livePreview()"><span class="cb-label">Abstrato</span><span class="cb-suf">Verbo+-ṫi</span></label>
+                <label class="cb-wrap"><input type="checkbox" id="d-a-adv-modo" onchange="livePreview()"><span class="cb-label">Adv. Modo</span><span class="cb-suf">Verbo+-iჰa</span></label>
+            </div>
+        </div>`;
+    } 
+    if (type === 'substantivo' || type === 'adjetivo') {
+        html += `
+        <div class="deriv-group">
+            <div class="deriv-group-title">Agrupamento</div>
+            <div class="deriv-grid">
+                <label class="cb-wrap"><input type="checkbox" id="d-s-coletivo" onchange="livePreview()"><span class="cb-label">Coletivo (Conjunto)</span><span class="cb-suf">-noma</span></label>
+            </div>
+        </div>`;
+    }
+    // Plural para todos
+    html += `
+    <div class="deriv-group">
+        <div class="deriv-group-title">Quantidade</div>
+        <div class="deriv-grid">
+            <label class="cb-wrap"><input type="checkbox" id="d-s-plural" onchange="livePreview()"><span class="cb-label">Plural</span><span class="cb-suf">-s</span></label>
+        </div>
+    </div>`;
+
+    container.innerHTML = html;
+}
+
 function livePreview(){
   const w=document.getElementById('f-word').value.trim();
   const t=document.getElementById('f-trans').value.trim();
@@ -679,58 +389,68 @@ function livePreview(){
     prev.innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha os campos obrigatórios…</span>';
     return;
   }
-  const all=[[w,ip,tp,t],...buildDerivs(w,t,tp,ip)];
-  prev.innerHTML='<div class="prev-title">Entradas a adicionar:</div>'+
-    all.map(([pw,pi,pt,pd])=>
-      `<span class="prev-chip"><span class="pw">${pw}</span><span class="ps">${pt}</span><span class="pt">${pd}</span></span>`
+  const all=[{word: w, ipa: ip, type: tp, trans: t}, ...buildDerivs(w,t,tp,ip)];
+  prev.innerHTML='<div class="prev-title">Entradas a salvar na nuvem:</div>'+
+    all.map(item=>
+      `<span class="prev-chip"><span class="pw">${item.word}</span><span class="ps">${item.type}</span><span class="pt">${item.trans}</span></span>`
     ).join('');
 }
 
-// ── SALVAR ────────────────────────────────────────────────────
-function saveWord(){
+// ── CARREGAMENTO DO FIREBASE ──
+function loadFromCloud() {
+  db.collection("mani_words").onSnapshot((querySnapshot) => {
+      D = [];
+      querySnapshot.forEach((doc) => {
+          let data = doc.data();
+          data.id = doc.id; // Guarda o ID do banco
+          D.push(data);
+      });
+      
+      // Se o banco estiver vazio, mostra o botão de migração
+      if(D.length === 0) document.getElementById('migration-box').style.display = 'block';
+      else document.getElementById('migration-box').style.display = 'none';
+
+      sortD(); updateHeaderCount(); buildAlpha(); renderDict();
+  }, (error) => {
+      console.log("Erro ao carregar dados: ", error);
+      toast('Erro ao conectar com a nuvem.', 'err');
+  });
+}
+
+// ── SALVAR NO FIREBASE ──
+async function saveWord(){
   const w=document.getElementById('f-word').value.trim();
   const t=document.getElementById('f-trans').value.trim();
   const tp=document.getElementById('f-type').value;
   const ip=document.getElementById('f-ipa').value.trim();
-  if(!w){toast('Preencha a palavra em Mani.','err');return;}
-  if(!t){toast('Preencha a tradução.','err');return;}
-  if(!tp){toast('Selecione a classe gramatical.','err');return;}
-  const dup=D.find(e=>e[0]===w);
-  if(dup){toast(`"${w}" já existe no dicionário.`,'err');return;}
-  const all=[[w,ip,tp,t],...buildDerivs(w,t,tp,ip)];
-  all.forEach(e=>D.push(e));
-  sortD();saveLS();updateHeaderCount();
-  buildAlpha();renderDict();
-  const n=all.length;
-  toast(`${n} entrada${n>1?'s':''} adicionada${n>1?'s':''}!`,'ok');
-  // Limpar form
-  ['f-word','f-trans','f-ipa'].forEach(id=>{document.getElementById(id).value='';});
-  document.getElementById('f-type').value='';
-  ['d-noma','d-ti','d-av','d-lam','d-isha'].forEach(id=>{document.getElementById(id).checked=false;});
-  document.getElementById('preview').innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span>';
-}
-
-// ── EXPORT ────────────────────────────────────────────────────
-function exportDict(){
-  const lines=D.map(e=>`  ${JSON.stringify(e)}`).join(',\n');
-  const code=`let D=[\n${lines}\n];`;
-  navigator.clipboard.writeText(code).then(()=>toast('Código JS copiado!','info'))
-    .catch(()=>toast('Falha ao copiar.','err'));
-}
-
-// ── RESET ────────────────────────────────────────────────────
-function resetDict(){
-  if(!confirm('Isso apagará todas as entradas personalizadas e restaurará o dicionário original. Continuar?'))return;
   
-  // CORREÇÃO AQUI TAMBÉM: Quando reseta, ele roda toda a fábrica de plurais!
-  D=generateDerivatives(BASE_DATA);
-  sortD();saveLS();updateHeaderCount();
-  buildAlpha();renderDict();
-  toast('Dicionário restaurado e plurais gerados!','info');
+  if(!w || !t || !tp) { toast('Preencha os campos obrigatórios.', 'err'); return; }
+  if(D.find(e => e.word === w)) { toast(`"${w}" já existe!`, 'err'); return; }
+  
+  toast('Salvando...', 'info');
+  const all=[{word: w, ipa: ip, type: tp, trans: t}, ...buildDerivs(w,t,tp,ip)];
+  
+  try {
+      const batch = db.batch();
+      all.forEach(item => {
+          const newDocRef = db.collection("mani_words").doc();
+          batch.set(newDocRef, item);
+      });
+      await batch.commit();
+      
+      toast(`${all.length} entrada(s) salva(s) na nuvem!`, 'ok');
+      
+      ['f-word','f-trans','f-ipa'].forEach(id=> document.getElementById(id).value='');
+      document.getElementById('f-type').value='';
+      updateDerivOptions();
+      document.getElementById('preview').innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span>';
+  } catch (e) {
+      toast('Erro ao salvar na nuvem.', 'err');
+  }
 }
 
-// ── TAB SWITCH ───────────────────────────────────────────────
-let currentTab='criar',filt='all',alpha=null;
+// ── INTERFACE DO DICIONÁRIO ──
+let currentTab='criar', filt='all', alpha=null;
 function sw(t){
   currentTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
@@ -740,42 +460,39 @@ function sw(t){
   if(t==='dictionary'){buildAlpha();renderDict();}
 }
 
-// ── FILTROS ───────────────────────────────────────────────────
-const FILTERS=[['all','Todos'],['verbo','Verbos'],['substantivo','Substantivos'],
-  ['adjetivo','Adjetivos'],['numeral','Numerais'],['outros','Outros']];
+const FILTERS=[['all','Todos'],['verbo','Verbos'],['substantivo','Substantivos'],['adjetivo','Adjetivos'],['numeral','Numerais'],['outros','Outros']];
 function buildFilters(){
   document.getElementById('fr').innerHTML=FILTERS.map(([v,l])=>
     `<button class="fb${v===filt?' on':''}" onclick="setFilt(this,'${v}')">${l}</button>`
   ).join('');
 }
 function setFilt(btn,f){
-  filt=f;alpha=null;
+  filt=f; alpha=null;
   document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  buildAlpha();renderDict();
+  buildAlpha(); renderDict();
 }
 
 function getFiltered(){
   const q=(document.getElementById('sr')?.value||'').toLowerCase();
-  return D.filter(([w,,t,d])=>{
-    if(filt!=='all'&&filt!=='outros'&&t!==filt)return false;
-    if(filt==='outros'&&['verbo','substantivo','adjetivo','numeral'].includes(t))return false;
-    if(alpha&&firstChar(w)!==alpha)return false;
-    if(q){const nw=nn(w);return nw.includes(q)||w.toLowerCase().includes(q)||d.toLowerCase().includes(q);}
+  return D.filter(e=>{
+    if(filt!=='all'&&filt!=='outros'&&e.type!==filt)return false;
+    if(filt==='outros'&&['verbo','substantivo','adjetivo','numeral'].includes(e.type))return false;
+    if(alpha&&firstChar(e.word)!==alpha)return false;
+    if(q){const nw=nn(e.word);return nw.includes(q)||e.word.toLowerCase().includes(q)||e.trans.toLowerCase().includes(q);}
     return true;
   });
 }
 
 function buildAlpha(){
-  const present=new Set(getFiltered().map(e=>firstChar(e[0])));
-  const all=[...new Set(D.map(e=>firstChar(e[0])))].sort();
+  const present=new Set(getFiltered().map(e=>firstChar(e.word)));
+  const all=[...new Set(D.map(e=>firstChar(e.word)))].sort();
   document.getElementById('an').innerHTML=all.map(c=>
     `<button class="ab${present.has(c)?' has':''}${alpha===c?' sel':''}" onclick="selAlpha('${c}')">${c}</button>`
   ).join('');
 }
 function selAlpha(c){alpha=alpha===c?null:c;buildAlpha();renderDict();}
 
-// ── RENDER DICT ───────────────────────────────────────────────
 function typeClass(t){
   const m={verbo:'t-verbo',substantivo:'t-substantivo',adjetivo:'t-adjetivo',
     numeral:'t-numeral',pronome:'t-pronome','partícula':'t-partícula',
@@ -789,68 +506,77 @@ function renderDict(){
   const dl=document.getElementById('dl');
   const cc=document.getElementById('dcc');
   if(!dl)return;
-  if(cc)cc.textContent=`${fd.length} entrada${fd.length!==1?'s':''} encontrada${fd.length!==1?'s':''}`;
+  if(cc)cc.textContent=`${fd.length} entrada${fd.length!==1?'s':''} na nuvem`;
   if(!fd.length){dl.innerHTML='<div class="nr">Nenhuma entrada encontrada.</div>';return;}
   const q=document.getElementById('sr')?.value||'';
   const groups={};
-  fd.forEach(e=>{const l=firstChar(e[0]);if(!groups[l])groups[l]=[];groups[l].push(e);});
+  fd.forEach(e=>{const l=firstChar(e.word);if(!groups[l])groups[l]=[];groups[l].push(e);});
+  
   dl.innerHTML=Object.keys(groups).sort().map(l=>
     `<div class="as">${!q?`<div class="ah">${l}</div>`:''}<div class="de-list">${
-      groups[l].map(([w,ip,t,d])=>{
-        const idx=D.findIndex(e=>e[0]===w&&e[2]===t);
-        return `<div class="de" id="de-${idx}">
-          <span class="ew">${w}</span>
-          <span class="ei">[${ip||'—'}]</span>
-          <span class="et ${typeClass(t)}">${t}</span>
-          <span class="ed" id="ed-${idx}">${d}</span>
+      groups[l].map(e=>{
+        return `<div class="de" id="de-${e.id}">
+          <span class="ew">${e.word}</span>
+          <span class="ei">[${e.ipa||'—'}]</span>
+          <span class="et ${typeClass(e.type)}">${e.type}</span>
+          <span class="ed" id="ed-${e.id}">${e.trans}</span>
           <div class="de-actions">
-            <button class="btn-sm btn-edit" onclick="startEdit(${idx})">✎</button>
-            <button class="btn-sm btn-del" onclick="delEntry(${idx})">✕</button>
+            <button class="btn-sm btn-edit" onclick="startEdit('${e.id}')">✎</button>
+            <button class="btn-sm btn-del" onclick="delEntry('${e.id}')">✕</button>
           </div>
         </div>`;
       }).join('')}</div></div>`
   ).join('');
 }
 
-// ── EDIÇÃO INLINE ─────────────────────────────────────────────
-function startEdit(idx){
-  const edEl=document.getElementById('ed-'+idx);
-  const deEl=document.getElementById('de-'+idx);
-  if(!edEl||!D[idx])return;
-  const cur=D[idx][3];
-  edEl.innerHTML=`<input class="ed-input" id="ei-${idx}" value="${cur.replace(/"/g,'&quot;')}">`;
-  const actionsEl=deEl.querySelector('.de-actions');
+// ── EDIÇÃO E DELETE NO FIREBASE ──
+function startEdit(id){
+  const edEl=document.getElementById('ed-'+id);
+  const entry = D.find(e => e.id === id);
+  if(!edEl || !entry) return;
+  
+  edEl.innerHTML=`<input class="ed-input" id="ei-${id}" value="${entry.trans.replace(/"/g,'&quot;')}">`;
+  const actionsEl=document.getElementById('de-'+id).querySelector('.de-actions');
   actionsEl.innerHTML=`
-    <button class="btn-sm btn-ok" onclick="confirmEdit(${idx})">✓</button>
+    <button class="btn-sm btn-ok" onclick="confirmEdit('${id}')">✓</button>
     <button class="btn-sm btn-cancel" onclick="renderDict()">✕</button>`;
-  const inp=document.getElementById('ei-'+idx);
-  inp.focus();inp.select();
+  
+  const inp=document.getElementById('ei-'+id);
+  inp.focus(); inp.select();
   inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter')confirmEdit(idx);
+    if(e.key==='Enter')confirmEdit(id);
     if(e.key==='Escape')renderDict();
   });
 }
-function confirmEdit(idx){
-  const inp=document.getElementById('ei-'+idx);
-  if(!inp||!D[idx])return;
-  const val=inp.value.trim();
+
+async function confirmEdit(id){
+  const inp = document.getElementById('ei-'+id);
+  if(!inp) return;
+  const val = inp.value.trim();
   if(!val){toast('A tradução não pode estar vazia.','err');return;}
-  D[idx][3]=val;
-  saveLS();renderDict();
-  toast('Entrada atualizada!','ok');
+  
+  try {
+      await db.collection("mani_words").doc(id).update({ trans: val });
+      toast('Editado com sucesso!','ok');
+      // Não precisa chamar renderDict() pois o onSnapshot vai atualizar a tela automaticamente
+  } catch(e) {
+      toast('Erro ao editar na nuvem.','err');
+  }
 }
 
-// ── DELETE ────────────────────────────────────────────────────
-function delEntry(idx){
-  const w=D[idx]?.[0];
-  if(!w)return;
-  if(!confirm(`Remover "${w}" do dicionário?`))return;
-  D.splice(idx,1);
-  saveLS();updateHeaderCount();buildAlpha();renderDict();
-  toast(`"${w}" removido.`,'info');
+async function delEntry(id){
+  const entry = D.find(e => e.id === id);
+  if(!entry) return;
+  if(!confirm(`Remover "${entry.word}" permanentemente da nuvem?`)) return;
+  
+  try {
+      await db.collection("mani_words").doc(id).delete();
+      toast(`"${entry.word}" removido.`,'info');
+  } catch(e) {
+      toast('Erro ao remover.', 'err');
+  }
 }
 
-// ── TOAST ─────────────────────────────────────────────────────
 let toastTimer=null;
 function toast(msg,type='ok'){
   const el=document.getElementById('toast');
@@ -860,7 +586,358 @@ function toast(msg,type='ok'){
   toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-// ── INIT ─────────────────────────────────────────────────────
-loadData();sortD();
-buildFilters();buildAlpha();renderDict();updateHeaderCount();
+// ── MIGRAÇÃO DA BASE ANTIGA (Só aparece se o banco estiver vazio) ──
+const BASE_DATA=[
+  ["nɔ","nɔ","numeral","Zero (0)"],["uri","uɾi","numeral","Um (1)"],["paro","paɾo","numeral","Dois (2)"],
+  ["naji","naʒi","numeral","Três (3)"],["kλnko","kɐ̃nko","numeral","Quatro (4)"],
+  ["sinჰa","sinksa","numeral","Cinco (5)"],["terou","teɾou","numeral","Seis (6)"],
+  ["luṫa","luθa","numeral","Sete (7)"],["boru","boɾu","numeral","Oito (8)"],
+  ["mile","mile","numeral","Nove (9)"],["deko","deko","numeral","Dez (10)"],
+  ["domo","domo","numeral","Cem (100)"],["muli","muli","numeral","Mil (1.000)"],
+  ["manṫa","manθa","numeral","Milhão (1.000.000)"],
+  ["kɔrona","kɔɾona","substantivo","Domingo"],["milana","milana","substantivo","Segunda-feira"],
+  ["pana","pana","substantivo","Terça-feira"],["jina","ʒina","substantivo","Quarta-feira"],
+  ["vena","vena","substantivo","Quinta-feira"],["sana","sana","substantivo","Sexta-feira"],
+  ["lana","lana","substantivo","Sábado"],
+  ["iak","iak","interjeição","Olá, oi"],["navo","navo","interjeição","Tchau, até logo"],
+  ["dron","dɾon","interjeição","Obrigado"],["nɔv","nɔv","interjeição","De nada"],
+  ["pazɛr","pazɛɾ","interjeição","Desculpe"],["vɔpli","vɔpli","interjeição","Com licença"],
+  ["onim","onim","partícula","Sim (afirmação)"],["iჰo","ikso","partícula","Não (negação)"],
+  ["viλn","viɐ̃n","interrogativo","Quando (Tempo)"],["vie","vie","interrogativo","Onde (Lugar)"],
+  ["vier","vieɾ","interrogativo","Por que (Causa)"],["vin","vin","interrogativo","Como (Modo)"],
+  ["vio","vio","interrogativo","Quem (Agente)"],["vu","vu","interrogativo","O que (Objeto)"],
+  ["vɛu","vɛu","interrogativo","Quanto (Quantidade)"],["vi","vi","partícula","Marcador de pergunta fechada"],
+  ["თo","tʃo","determinativo","Artigo definido masculino singular"],
+  ["თa","tʃa","determinativo","Artigo definido feminino singular"],
+  ["თe","tʃe","determinativo","Artigo definido neutro"],
+  ["თi","tʃi","determinativo","Artigo definido inanimado"],
+  ["lut","lut","determinativo","Artigo indefinido (um, uma)"],
+  ["luts","luts","determinativo","Artigo indefinido plural (uns, umas)"],
+  ["kuji","kuʒi","determinativo","Este, esta"],["kamuji","kamuʒi","determinativo","Aquele, aquela"],
+  ["movo","movo","adjetivo","Bastante, em grande quantidade"],
+  ["mira","miɾa","adjetivo","Pouco, em quantidade reduzida"],
+  ["bistu","bistu","adjetivo","Algum, alguma"],
+  ["denko","denko","adjetivo","Tudo, totalidade"],
+  ["in","in","partícula","Em (marcador de lugar)"],
+  ["kin","kin","partícula","Marcador de passado"],
+  ["kλn","kɐ̃n","partícula","Marcador de futuro"],
+  ["o","o","partícula","Marcador temporal absoluto"],
+  ["oi","oi","conjunção","E (adição)"],["რis","ʁis","conjunção","Mas (oposição)"],
+  ["zier","zieɾ","conjunção","Porque (causa)"],["ɛi","ɛi","conjunção","Ou (alternância)"],
+  ["tubi","tubi","partícula","Se (condicional)"],["dɔn","dɔn","conjunção","Então, portanto"],
+  ["ɔli","ɔli","conjunção","Também"],["tulλ","tulɐ̃","conjunção","Afinal, enfim"],
+  ["trɔ","tɾɔ","partícula","Em direção a (movimento)"],
+  ["mɛnin","mɛnin","partícula","Entre"],["rɛzun","ɾɛzun","conjunção","Ao invés de"],
+  ["vλn","vɐ̃n","conjunção","Quando (subordinativa temporal)"],
+  ["vλnin","vɐ̃nin","conjunção","Enquanto (simultaneidade)"],
+  ["fluvel","fluvel","conjunção","Até que"],["ziɛrun","ziɛɾun","conjunção","Já que, visto que"],
+  ["რistubi","ʁistubi","conjunção","Embora, ainda que"],
+  ["zos","zos","partícula","Que (discurso indireto)"],
+  ["jɔ","jɔ","partícula","Vocativo — interpelação direta"],
+  ["რɔs","ʁɔs","partícula","Com (companhia)"],
+  ["λba","ɐ̃ba","advérbio","Em cima, sobre"],["λni","ɐ̃ni","advérbio","Embaixo, sob"],
+  ["miთa","miθa","advérbio","Bem, de forma positiva"],
+  ["mau","mau","pronome","Eu"],["tau","tau","pronome","Você, tu"],
+  ["lou","lou","pronome","Ele"],["lau","lau","pronome","Ela"],
+  ["leu","leu","pronome","Pessoa neutra (singular)"],
+  ["liu","liu","pronome","Isso, aquilo (inanimado)"],
+  ["maus","maus","pronome","Nós"],["taus","taus","pronome","Vocês"],
+  ["lous","lous","pronome","Eles"],["laus","laus","pronome","Elas"],
+  ["avita","avita","substantivo","Pessoa, indivíduo humano"],
+  ["boრi","boʁi","substantivo","Homem"],["kiრi","kiʁi","substantivo","Mulher"],
+  ["peრi","peʁi","substantivo","Pessoa de gênero neutro"],
+  ["piniavita","piniavita","substantivo","Criança"],
+  ["kirɔbavita","kiɾɔbavita","substantivo","Idoso"],
+  ["dapa","dapa","substantivo","Pai"],["nλnλ","nɐ̃nɐ̃","substantivo","Mãe"],
+  ["mimo","mimo","substantivo","Filho"],["mima","mima","substantivo","Filha"],
+  ["mime","mime","substantivo","Filho neutro"],
+  ["pat","pat","substantivo","Irmã"],["pot","pot","substantivo","Irmão"],
+  ["drovu","dɾovu","substantivo","Avô"],["drova","dɾova","substantivo","Avó"],
+  ["rovu","ɾovu","substantivo","Tio"],["rova","ɾova","substantivo","Tia"],
+  ["rovziku","ɾovziku","substantivo","Primo"],["rovzika","ɾovzika","substantivo","Prima"],
+  ["rλskimpɔn","ʁɐ̃skimpɔn","substantivo","Cônjuge, parceiro"],
+  ["bomiva","bomiva","substantivo","Amigo"],["maჰiva","maksiva","substantivo","Inimigo"],
+  ["fεmoroრi","fɛmoɾoʁi","substantivo","Namorado"],["fεmorokiრi","fɛmoɾokiʁi","substantivo","Namorada"],
+  ["korvu","koɾvu","substantivo","Corpo"],["koka","koka","substantivo","Cabeça"],
+  ["pɔro","pɔɾo","substantivo","Olho"],["finu","finu","substantivo","Nariz"],
+  ["vɔmu","vɔmu","substantivo","Boca"],["vɔbiu","vɔbiu","substantivo","Lábio"],
+  ["lukoi","lukoi","substantivo","Ouvido"],["gulεm","gulɛm","substantivo","Língua"],
+  ["marku","maɾku","substantivo","Dente"],["sukra","sukɾa","substantivo","Pescoço"],
+  ["pavila","pavila","substantivo","Peito, região torácica"],
+  ["sεlvu","sɛlvu","substantivo","Braço"],["kravu","kɾavu","substantivo","Mão"],
+  ["finji","finʒi","substantivo","Dedo"],["kalopu","kalopu","substantivo","Ombro"],
+  ["bijɔku","biʒɔku","substantivo","Cotovelo"],["pumbi","pumbi","substantivo","Perna"],
+  ["griko","gɾiko","substantivo","Joelho"],["talnu","talnu","substantivo","Pé"],
+  ["bouvu","bouvu","substantivo","Barriga, abdômen"],
+  ["dɔrva","dɔɾva","substantivo","Costas"],["drɔku","dɾɔku","substantivo","Osso"],
+  ["vikɔva","vikɔva","substantivo","Coração"],["suviza","suviza","substantivo","Pele"],
+  ["klapɔ","klapɔ","substantivo","Cabelo"],["bunɔ","bunɔ","substantivo","Sangue"],
+  ["vλvλnu","vɐ̃vɐ̃nu","substantivo","Pulso, batida rítmica vital"],
+  ["kɔro","kɔɾo","substantivo","Sol"],["mila","mila","substantivo","Lua"],
+  ["silεu","silɛu","substantivo","Estrela"],["sipa","sipa","substantivo","Céu"],
+  ["ṫelum","θelum","substantivo","Terra, solo, planeta"],
+  ["flua","flua","substantivo","Água"],["fluaponi","fluaponi","substantivo","Rio"],
+  ["fluaribi","fluaɾibi","substantivo","Chuva"],
+  ["fluakrinu","fluakrinu","substantivo","Mar"],["flunɛ","flunɛ","substantivo","Lago"],
+  ["ikra","ikɾa","substantivo","Gelo"],["nɔuva","nɔuva","substantivo","Neve"],
+  ["frigare","fɾigaɾe","substantivo","Fogo"],["iana","iana","substantivo","Ar"],
+  ["frisia","fɾisia","substantivo","Vento"],["lavurina","lavuɾina","substantivo","Natureza"],
+  ["maki","maki","substantivo","Árvore"],["julλm","ʒulɐ̃m","substantivo","Planta"],
+  ["εჰuma","ɛksuma","substantivo","Erva, planta medicinal"],
+  ["nεjλm","nɛʒɐ̃m","substantivo","Flor"],["parta","parta","substantivo","Folha"],
+  ["voneka","voneka","substantivo","Galho"],["pontɔ","pontɔ","substantivo","Semente"],
+  ["surioთa","suɾioθa","substantivo","Raiz"],
+  ["grλba","gɾɐ̃ba","substantivo","Montanha"],["grλva","gɾɐ̃va","substantivo","Vale"],
+  ["prozu","pɾozu","substantivo","Pedra"],["telupini","telupini","substantivo","Areia"],
+  ["sinka","sinka","substantivo","Ilha"],["nulva","nulva","substantivo","Sombra"],
+  ["kɔrimaki","kɔɾimaki","substantivo","Luz do sol filtrada pelas folhas das árvores"],
+  ["sivεlu","sivɛlu","substantivo","Nuvem"],
+  ["lomun","lomun","substantivo","Animal"],["nako","nako","substantivo","Gato"],
+  ["pogo","pogo","substantivo","Cão, cachorro"],["dλnთo","dɐ̃nʃo","substantivo","Pássaro"],
+  ["poჰთi","poksʃi","substantivo","Peixe"],["genbλr","genbɐ̃ɾ","substantivo","Cobra"],
+  ["pinilomun","pinilomun","substantivo","Inseto"],
+  ["pinigenbλr","pinigenbɐ̃ɾ","substantivo","Verme"],
+  ["omun","omun","substantivo","Ovo"],["nivada","nivada","substantivo","Pena (de pássaro)"],
+  ["krumu","krumu","substantivo","Chifre"],
+  ["flum","flum","substantivo","Tempo (cronologia)"],
+  ["mλza","mãza","substantivo","Dia (período de luz)"],
+  ["apεra","apɛɾa","substantivo","Manhã"],["jegou","ʒegou","substantivo","Tarde"],
+  ["nit","nit","substantivo","Noite"],["tukan","tukan","substantivo","Hoje"],
+  ["turmoi","tuɾmoi","substantivo","Ontem"],["pouna","pouna","substantivo","Amanhã"],
+  ["namu","namu","substantivo","Agora, momento presente"],
+  ["zɔrvu","zɔɾvu","substantivo","Mês"],["vɔrnu","vɔɾnu","substantivo","Ano"],
+  ["kamre","kamɾe","substantivo","Casa, habitação"],
+  ["ponu","ponu","substantivo","Rua, via urbana"],
+  ["lilum","lilum","substantivo","Caminho, trilha"],
+  ["grɔp","gɾɔp","substantivo","Chão"],["kɔbu","kɔbu","substantivo","Teto"],
+  ["levu","levu","substantivo","Cama"],["grovu","grovu","substantivo","Mesa"],
+  ["dɔbu","dɔbu","substantivo","Porta"],["fargλ","fargɐ̃","substantivo","Janela"],
+  ["drɔmpu","dɾɔmpu","substantivo","Parede"],["kirobu","kirobu","substantivo","Cadeira"],
+  ["koრi","korri","substantivo","Roupa"],["priთa","pricha","substantivo","Sapato"],
+  ["dia","dia","substantivo","Aqui (lugar próximo)"],
+  ["dio","dio","substantivo","Ali, lá (lugar distante)"],
+  ["ditu","ditu","substantivo","Dentro"],["diჰ","diks","substantivo","Fora"],
+  ["fɛmo","fɛmo","substantivo","Amor"],["vinila","vinila","substantivo","Vida"],
+  ["vorλn","voɾɐ̃n","substantivo","Mundo"],["lavi","lavi","substantivo","Luz"],
+  ["frεkila","fɾɛkila","substantivo","Liberdade"],
+  ["εuvra","ɛuvɾa","substantivo","Verdade"],["zɔuske","zɔuske","substantivo","Mentira"],
+  ["silum","silum","substantivo","Paz"],["grɔmbu","gɾɔmbu","substantivo","Guerra"],
+  ["vulεmia","vulɛmia","substantivo","Memória"],["nuvu","nuvu","substantivo","Silêncio"],
+  ["luvɔჰem","luvɔksem","substantivo","Pertencimento"],
+  ["kakinea","kakinea","substantivo","Hábito"],["kakiλso","kakiɐ̃so","substantivo","Rotina"],
+  ["menekuთa","menekuʃa","substantivo","Consciência"],
+  ["kakim","kakim","substantivo","Dinheiro"],["glofa","glofa","substantivo","Comida, alimento"],
+  ["drizka","dɾizka","substantivo","Café"],["idina","idina","substantivo","Idioma, língua"],
+  ["რamkon","ʁamkon","substantivo","Deus, entidade divina"],
+  ["რankavita","ʁankavita","substantivo","Espírito, pessoa imaterial"],
+  ["kuniṫa","kuniθa","substantivo","Nome"],
+  ["brizalia","bɾizalia","substantivo","Energia, vitalidade"],
+  ["mivolu","mivolu","substantivo","Cuidado, atenção delicada"],
+  ["εmoru","ɛmoɾu","substantivo","Nascimento"],
+  ["murλ","muɾɐ̃","substantivo","Tristeza"],["graki","gɾaki","substantivo","Raiva"],
+  ["gumira","gumiɾa","substantivo","Medo"],["krεრa","kɾɛʁa","substantivo","Angústia"],
+  ["pɔka","pɔka","substantivo","Surpresa"],["mεuvu","mεuvu","substantivo","Saudade"],
+  ["venɔlu","venɔlu","substantivo","Esperança"],
+  ["krilთi","kɾilʃi","substantivo","Ansiedade"],["lλgri","lɐ̃gɾi","substantivo","Culpa"],
+  ["lorimu","loɾimu","substantivo","Vergonha"],["mavel","mavɛl","substantivo","Inveja"],
+  ["grλkoru","gɾɐ̃koɾu","substantivo","Orgulho"],
+  ["jemiჰu","ʒemiksu","substantivo","Solidão"],
+  ["fentoli","fentoli","substantivo","Gratidão"],["droma","dɾoma","substantivo","Tédio"],
+  ["zɔpru","zɔpɾu","substantivo","Nojo, repulsa"],
+  ["lɔnu","lɔnu","substantivo","Sono"],["vεliu","vεliu","substantivo","Sonho"],
+  ["kilε","kilɛ","substantivo","Riso"],["flεru","flɛɾu","substantivo","Lágrima"],
+  ["vεkinura","vɛkinuɾa","substantivo","Curiosidade"],
+  ["grεvu","gɾɛvu","substantivo","Dor"],["fɔlvru","fɔlvɾu","substantivo","Febre"],
+  ["ribɛnevu","ɾibɛnevu","substantivo","Desmaio"],
+  ["voɔusku","voɔusku","substantivo","Náusea, enjoo"],
+  ["bunɔkar","bunɔkaɾ","substantivo","Ferida"],["voldεku","voldɛku","substantivo","Curativo"],
+  ["trakεmo","tɾakɛmo","substantivo","Emergência"],
+  ["suvade","suvaðe","substantivo","Paciente (de saúde)"],
+  ["vɔkru","vɔkɾu","substantivo","Fome"],["ziɛkru","ziɛkɾu","substantivo","Sede"],
+  ["tɔrpλ","tɔɾpɐ̃","substantivo","Pressão"],
+  ["lεkivo","lɛkivo","substantivo","Livro"],["druva","dɾuva","substantivo","Aula"],
+  ["kanoka","kanoka","substantivo","Nota, avaliação"],
+  ["menzεkra","menzɛkɾa","substantivo","Prova, avaliação formal"],
+  ["menzolu","menzolu","substantivo","Estágio"],
+  ["jetniru","ʒetniɾu","substantivo","Mestrado"],
+  ["vonju","vonʒu","substantivo","Pesquisa"],["fraudu","fɾaudu","substantivo","Aula vaga"],
+  ["mabilu","mabilu","substantivo","Jogo"],["prisi","pɾisi","substantivo","Partida (jogo)"],
+  ["trima","tɾima","substantivo","Vitória"],["kuven","kuvɛn","substantivo","Derrota"],
+  ["animε","animε","substantivo","Anime, animação japonesa"],
+  ["malλna","malɐ̃na","substantivo","Música"],["solλn","solɐ̃n","substantivo","Canto, canção"],
+  ["zentru","zentɾu","substantivo","Foco, atenção concentrada"],
+  ["vεljoku","vɛlʒoku","substantivo","Dispersão, atenção fragmentada"],
+  ["sku","sku","substantivo","Aparelho, dispositivo tecnológico"],
+  ["skufonu","skufonu","substantivo","Celular, aparelho portátil"],
+  ["rizsoi","ɾizsoi","substantivo","Tela"],["uɛbi","uɛbi","substantivo","Internet"],
+  ["virsoi","viɾsoi","substantivo","Vídeo"],
+  ["vokεgim","vokεgim","substantivo","Mensagem"],
+  ["pλnto","pɐ̃nto","substantivo","Marte (regente da terça-feira)"],
+  ["jinto","ʒinto","substantivo","Mercúrio (regente da quarta-feira)"],
+  ["vento","vento","substantivo","Júpiter (regente da quinta-feira)"],
+  ["santo","santo","substantivo","Vênus (regente da sexta-feira)"],
+  ["lanto","lanto","substantivo","Saturno (regente do sábado)"],
+  ["bemtɔ","bentɔ","adjetivo","Grande, de magnitude elevada"],
+  ["griku","gɾiku","adjetivo","Baixo, de estatura reduzida"],
+  ["puvɔ","puvɔ","adjetivo","Alto, de estatura elevada"],
+  ["drɔvu","dɾɔvu","adjetivo","Pesado"],["fijia","fiʒia","adjetivo","Leve"],
+  ["triჰu","tɾiksu","adjetivo","Rápido, veloz"],
+  ["drɔbu","dɾɔbu","adjetivo","Lento, vagaroso"],
+  ["ikon","ikon","adjetivo","Frio"],["brizo","bɾizo","adjetivo","Quente"],
+  ["pionთen","pionʃen","adjetivo","Forte, vigoroso"],
+  ["poron","poɾon","adjetivo","Fraco, débil"],
+  ["mugrɔ","mugɾɔ","adjetivo","Duro, rígido"],
+  ["lavika","lavika","adjetivo","Brilhante, reluzente"],
+  ["folutu","folutu","adjetivo","Cheio, pleno"],
+  ["nutu","nutu","adjetivo","Vazio"],
+  ["mɔnru","mɔnɾu","adjetivo","Perto, próximo"],
+  ["vɔrdλ","vɔɾdɐ̃","adjetivo","Longe, distante"],
+  ["midili","midili","adjetivo","Liso"],["rizti","ɾizti","adjetivo","Reto"],
+  ["ronpo","ɾonpo","adjetivo","Redondo"],["pizujo","pizuʒo","adjetivo","Podre"],
+  ["flunarito","flunaɾito","adjetivo","Molhado"],
+  ["supolu","supolu","adjetivo","Seco"],["zukiona","zukiona","adjetivo","Sujo"],
+  ["mεlnu","mɛlnu","adjetivo","Doce"],["navila","navila","adjetivo","Macio, suave ao toque"],
+  ["kakuno","kakuno","adjetivo","Novo, recente"],
+  ["kirɔba","kiɾɔba","adjetivo","Velho, de longa existência"],
+  ["bɔno","bɔno","adjetivo","Bom, bondoso"],
+  ["fumen","fumɛn","adjetivo","Mau, malicioso"],
+  ["kaliz","kaliz","adjetivo","Feliz"],["ludo","ludo","adjetivo","Unido, coeso"],
+  ["morku","moɾku","adjetivo","Doente"],["vivɔlu","vivɔlu","adjetivo","Saudável"],
+  ["pεzurλ","pɛzuɾɐ̃","adjetivo","Cansado"],
+  ["vilɔ","vilɔ","adjetivo","Bonito, belo"],["kɛvu","kɛvu","adjetivo","Feio, disforme"],
+  ["alvi","alvi","adjetivo","Branco"],["grunda","gɾunda","adjetivo","Preto"],
+  ["roka","ɾoka","adjetivo","Vermelho"],["natra","natɾa","adjetivo","Verde"],
+  ["sivλ","sivɐ̃","adjetivo","Azul"],["sɔra","sɔɾa","adjetivo","Amarelo"],
+  ["tɔpλr","tɔpɐ̃ɾ","adjetivo","Marrom"],["murmura","muɾmuɾa","adjetivo","Roxo"],
+  ["flɛru","flɛɾu","adjetivo","Laranja (cor)"],
+  ["lɔva","lɔva","adjetivo","Rosa (cor)"],["drelu","dɾelu","adjetivo","Cinza"],
+  ["ajλr","aʒɐ̃r","verbo","Fazer, agir, executar"],
+  ["apεrar","apɛɾaɾ","verbo","Amanhecer"],
+  ["apifir","apifiɾ","verbo","Lecionar, ensinar"],
+  ["bemtɔr","bentɔɾ","verbo","Engrandecer, expandir"],
+  ["bluvir","bluviɾ","verbo","Perder"],["bor","boɾ","verbo","Vir, chegar"],
+  ["brizor","bɾizoɾ","verbo","Aquecer"],["bunɔr","bunɔɾ","verbo","Sangrar"],
+  ["bur","buɾ","verbo","Ir, partir"],["desmir","desmiɾ","verbo","Morrer"],
+  ["diჰar","diksaɾ","verbo","Sair, exteriorizar"],["dɔlir","dɔliɾ","verbo","Ficar, permanecer"],
+  ["domɛnar","domɛnaɾ","verbo","Escolher"],["drɔvir","dɾɔviɾ","verbo","Sentar"],
+  ["εmorur","εmoɾuɾ","verbo","Nascer"],["faponir","faponir","verbo","Farejar"],
+  ["fɛmor","fɛmoɾ","verbo","Amar"],["flegor","flegoɾ","verbo","Queimar"],
+  ["fluar","fluaɾ","verbo","Aguar, liquefazer"],["fluvir","fluviɾ","verbo","Nadar"],
+  ["folutur","folutuɾ","verbo","Encher"],["frɔkir","fɾɔkiɾ","verbo","Quebrar"],
+  ["frisiar","fɾisiaɾ","verbo","Ventar, soprar"],["fruრir","fɾuʁiɾ","verbo","Esfregar"],
+  ["garemar","gaɾemaɾ","verbo","Trabalhar"],
+  ["giuvir","giuviɾ","verbo","Saborear"],["glofur","glofuɾ","verbo","Comer"],
+  ["glunɔr","glunɔɾ","verbo","Beber"],["gravir","gɾaviɾ","verbo","Trazer"],
+  ["grɛvomir","gɾɛvomiɾ","verbo","Discordar"],
+  ["gumirar","gumiɾaɾ","verbo","Ter medo, amedrontar-se"],
+  ["ikonar","ikonaɾ","verbo","Esfriar"],["jegour","ʒegouɾ","verbo","Entardecer"],
+  ["jetɛr","ʒetɛɾ","verbo","Saber, conhecer"],
+  ["jivar","ʒivaɾ","verbo","Falar"],["kalɛvir","kalɛviɾ","verbo","Acordar"],
+  ["kalizar","kalizaɾ","verbo","Alegrar-se"],
+  ["kamalor","kamaloɾ","verbo","Lavar, limpar"],
+  ["kanir","kaniɾ","verbo","Contar, enumerar"],["kar","kaɾ","verbo","Caminhar"],
+  ["kɛpivir","kɛpiviɾ","verbo","Entender, compreender"],
+  ["klɔvar","klɔvaɾ","verbo","Fechar"],
+  ["klovɛmir","klovɛmiɾ","verbo","Construir"],["klunir","klunir","verbo","Esconder"],
+  ["konvir","konviɾ","verbo","Reunir"],
+  ["kɔbarλr","kɔbaɾɐ̃ɾ","verbo","Empurrar"],
+  ["kɔror","kɔɾoɾ","verbo","Brilhar, ensolarar"],
+  ["krovar","kɾovaɾ","verbo","Cozinhar"],["krɔzir","kɾɔziɾ","verbo","Agarrar"],
+  ["kunitar","kunitaɾ","verbo","Nomear"],
+  ["kuroჰur","kuɾoksur","verbo","Matar"],["kuჰar","kuksaɾ","verbo","Caçar"],
+  ["lavikar","lavikaɾ","verbo","Reluzir, tornar-se brilhante"],
+  ["lɔkar","lɔkaɾ","verbo","Abrir"],["lɔnar","lɔnaɾ","verbo","Deitar, repousar"],
+  ["lɔnur","lɔnuɾ","verbo","Dormir"],["lukir","lukiɾ","verbo","Ouvir"],
+  ["lumɛr","lumɛɾ","verbo","Sorrir"],["luჰilar","luksilaɾ","verbo","Melhorar"],
+  ["maჰilar","maksilaɾ","verbo","Piorar, deteriorar"],
+  ["markir","markiɾ","verbo","Morder"],["mener","meneɾ","verbo","Pensar"],
+  ["menzor","menzoɾ","verbo","Aprender, estudar"],
+  ["milar","milaɾ","verbo","Luar, iluminar pela lua"],
+  ["mivor","mivoɾ","verbo","Criar, inventar"],["molir","moliɾ","verbo","Tocar"],
+  ["mugrɔr","mugrɔɾ","verbo","Endurecer"],
+  ["namir","namiɾ","verbo","Curar, restaurar a saúde"],
+  ["natrar","natɾaɾ","verbo","Esverdear"],["nɛbir","nɛbiɾ","verbo","Esquecer"],
+  ["nɛlar","nɛlaɾ","verbo","Ler"],["nɛvir","nɛviɾ","verbo","Dar"],
+  ["nitar","nitaɾ","verbo","Anoitecer"],["pabear","pabeaɾ","verbo","Brincar"],
+  ["parრerar","paɾbeɾaɾ","verbo","Bater, golpear"],
+  ["piluvar","piluvaɾ","verbo","Pular, saltar"],["piugir","piugiɾ","verbo","Suar"],
+  ["piumar","piumaɾ","verbo","Puxar, atrair"],
+  ["plɔmir","plɔmiɾ","verbo","Ajudar, auxiliar"],
+  ["pɔtar","pɔtaɾ","verbo","Poder (modal)"],
+  ["pɔṫir","pɔθiɾ","verbo","Crescer, expandir-se"],
+  ["pozir","poziɾ","verbo","Ter, possuir"],["pruvir","pɾuviɾ","verbo","Tentar"],
+  ["puvεr","puvɛɾ","verbo","Subir, ascender"],
+  ["rɛvir","ɾɛviɾ","verbo","Voltar, retornar"],
+  ["ribɛr","ɾibɛɾ","verbo","Cair"],["rikilar","ɾikilaɾ","verbo","Decidir"],
+  ["riskar","ɾiskaɾ","verbo","Cortar"],["ritλr","ɾitɐ̃ɾ","verbo","Dançar"],
+  ["ritorer","ɾitoɾeɾ","verbo","Acertar"],
+  ["rɔr","ɾɔɾ","verbo","Correr"],["რisar","ʁisaɾ","verbo","Opor-se"],
+  ["რujirar","ʁuʒiɾaɾ","verbo","Mudar, transformar"],
+  ["რuvir","ʁuviɾ","verbo","Levar (para longe)"],
+  ["რuთur","buθuɾ","verbo","Lutar, combater"],
+  ["safiar","safiaɾ","verbo","Começar, iniciar"],
+  ["sibλr","sibɐ̃ɾ","verbo","Respirar"],["siჰar","siksaɾ","verbo","Pescar"],
+  ["skivar","skivaɾ","verbo","Escrever"],
+  ["soir","soiɾ","verbo","Ver (percepção visual)"],
+  ["sɔlir","sɔliɾ","verbo","Voar"],["solλnr","solɐ̃nɾ","verbo","Cantar"],
+  ["susmir","susmiɾ","verbo","Errar, desviar-se"],
+  ["takir","takiɾ","verbo","Receber"],["ṫonar","θonaɾ","verbo","Usar, utilizar"],
+  ["ṫopir","θopiɾ","verbo","Segurar"],
+  ["ṫunir","θuniɾ","verbo","Precisar (modal)"],
+  ["tɔmir","tɔmiɾ","verbo","Pedir, solicitar"],
+  ["trɛpakir","tɾɛpakiɾ","verbo","Seguir (acompanhar)"],
+  ["trɛvolar","tɾɛvolaɾ","verbo","Confiar"],["vɛmir","vɛmiɾ","verbo","Mostrar"],
+  ["vimur","vimuɾ","verbo","Ser, estar (existência)"],
+  ["vinilar","vinilaɾ","verbo","Viver"],["viრur","viʁuɾ","verbo","Virar, rotacionar"],
+  ["vokar","vokaɾ","verbo","Dizer, declarar"],
+  ["vɔjir","vɔʒiɾ","verbo","Chamar, invocar"],
+  ["voldɛr","voldɛɾ","verbo","Proteger, guardar"],
+  ["vunir","vunir","verbo","Querer, desejar (modal)"],
+  ["zɛkir","zɛkiɾ","verbo","Lançar, projetar"],
+  ["zɛmir","zɛmiɾ","verbo","Encontrar, deparar-se"],
+  ["zɛvir","zɛviɾ","verbo","Levantar-se, erguer-se"],
+  ["zɛvomir","zɛvomiɾ","verbo","Concordar"],["ziskir","ziskiɾ","verbo","Roubar"],
+  ["zɔrar","zɔɾaɾ","verbo","Esperar, aguardar"],
+  ["zuniჰar","zuniksaɾ","verbo","Terminar, encerrar"],
+  ["λsor","ɐ̃soɾ","verbo","Sentir (físico ou emocional)"],
+  ["kilεr","kilɛɾ","verbo","Rir"],["flεrur","flɛɾuɾ","verbo","Chorar"],
+  ["fentolir","fentoliɾ","verbo","Agradecer"],
+  ["pontɔr","pontɔɾ","verbo","Semear"]
+];
+
+async function migrateBaseData() {
+  toast('Iniciando migração (isso pode levar alguns segundos)...', 'info');
+  document.getElementById('migration-box').style.display = 'none';
+  
+  try {
+      const batchArrays = [];
+      let i = 0;
+      const batchSize = 100;
+      
+      const allObjects = BASE_DATA.map(e => ({ word: e[0], ipa: e[1], type: e[2], trans: e[3] }));
+      
+      while (i < allObjects.length) {
+          batchArrays.push(allObjects.slice(i, i + batchSize));
+          i += batchSize;
+      }
+      
+      for (const b of batchArrays) {
+          const batch = db.batch();
+          b.forEach(item => {
+              const docRef = db.collection("mani_words").doc();
+              batch.set(docRef, item);
+          });
+          await batch.commit();
+      }
+      toast('Migração concluída! O banco está vivo na nuvem.', 'ok');
+  } catch (e) {
+      toast('Erro na migração.', 'err');
+      document.getElementById('migration-box').style.display = 'block';
+  }
+}
+
+// ── INIT ──
+updateDerivOptions();
+buildFilters();
+loadFromCloud();
 </script>
