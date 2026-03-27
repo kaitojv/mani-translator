@@ -548,8 +548,44 @@ const BASE_DATA=[
 ["pontɔr","pontɔɾ","verbo","Semear"],
 ];
 
+// ── GERAÇÃO DE DERIVAÇÕES ────────────────────────────────────
+function generateDerivatives(base){
+  const result=[...base];
+  const exists=new Set(base.map(e=>e[0]));
+  const add=e=>{if(!exists.has(e[0])){result.push(e);exists.add(e[0]);}};
+
+  base.forEach(([w,,tp,df])=>{
+    const d=df.toLowerCase().split(',')[0].split(';')[0].trim();
+    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+    if(tp==='verbo'){
+      const st=w.replace(/r$/,'');
+      add([w+'λ',       '','adjetivo',    cap(d)+'; estado resultante']);
+      add([st+'av',     '','substantivo', 'Aquele que '+d]);
+      add([w+'ṫi',      '','substantivo', 'O conceito de '+d]);
+      add([w+'iჰa',     '','advérbio',    'De modo: '+d]);
+    }
+
+    if(tp==='substantivo'){
+      add([w+'noma',    '','substantivo', 'Conjunto de '+d]);
+    }
+
+    if(tp==='adjetivo'){
+      const isVow=/[aeiouɛɔλɐ]$/i.test(w);
+      const vb=isVow?w+'r':w+'ar';
+      const st=vb.replace(/r$/,'');
+      add([vb,          '','verbo',       'Tornar-se '+d]);
+      add([vb+'λ',      '','adjetivo',    cap(d)+'; estado derivado']);
+      add([st+'av',     '','substantivo', 'Aquilo que '+d]);
+      add([vb+'ṫi',     '','substantivo', 'A essência de '+d]);
+      add([vb+'iჰa',    '','advérbio',    'De forma '+d]);
+    }
+  });
+  return result;
+}
+
 // ── PERSISTÊNCIA ──────────────────────────────────────────────
-const LS_KEY='maniDict_v1';
+const LS_KEY='maniDict_v2';
 let D=[];
 
 function loadData(){
@@ -557,7 +593,7 @@ function loadData(){
     const raw=localStorage.getItem(LS_KEY);
     if(raw){D=JSON.parse(raw);return;}
   }catch(e){}
-  D=[...BASE_DATA];
+  D=generateDerivatives(BASE_DATA);
   saveLS();
 }
 function saveLS(){
@@ -654,7 +690,7 @@ function exportDict(){
 // ── RESET ────────────────────────────────────────────────────
 function resetDict(){
   if(!confirm('Isso apagará todas as entradas personalizadas e restaurará o dicionário original. Continuar?'))return;
-  D=[...BASE_DATA];
+  D=generateDerivatives(BASE_DATA);
   sortD();saveLS();updateHeaderCount();
   buildAlpha();renderDict();
   toast('Dicionário restaurado para o original.','info');
