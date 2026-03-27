@@ -123,10 +123,29 @@ select.fi option{background:var(--s2)}
 
 .nr{text-align:center;padding:40px;color:var(--tx2);font-size:.95rem}
 
+/* ── RESPONSIVIDADE MOBILE TURBINADA ── */
 @media(max-width:720px){
-  .hdr{padding:14px 18px}.nav{padding:0 14px}.content{padding:18px 14px}
-  .cp-grid{grid-template-columns:1fr}.deriv-grid{grid-template-columns:1fr}
-  .ew{min-width:90px}.ei{min-width:70px}
+  .hdr { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .hdr-stat { margin-left: 0; }
+  .logo { font-size: 2rem; }
+  .nav { padding: 0; display: flex; width: 100%; }
+  .nb { flex: 1; text-align: center; padding: 14px 5px; font-size: .9rem; }
+  .content { padding: 20px 14px; }
+  
+  .cp-grid, .deriv-grid { grid-template-columns: 1fr; }
+  
+  .btn-row { flex-direction: column; gap: 12px; }
+  .btn { width: 100%; justify-content: center; }
+  
+  .de { flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; position: relative; }
+  .ew { min-width: auto; font-size: 1.1rem; }
+  .ei { min-width: auto; margin-bottom: 4px; }
+  .ed { width: 100%; min-width: auto; margin-top: 4px; line-height: 1.4; }
+  .de-actions { margin-left: 0; width: 100%; justify-content: flex-end; margin-top: 10px; border-top: 1px solid var(--bd); padding-top: 12px; }
+  
+  .ed-input { width: 100%; }
+  
+  .toast { left: 20px; right: 20px; bottom: 20px; text-align: center; }
 }
 </style>
 
@@ -144,10 +163,8 @@ select.fi option{background:var(--s2)}
   </nav>
   <div class="content">
 
-    <!-- CRIAR PALAVRA -->
     <section class="tab on" id="tab-criar">
       <div class="cp-grid">
-        <!-- FORMULÁRIO -->
         <div class="card">
           <div class="card-title">Nova Entrada</div>
           <div class="fg">
@@ -183,7 +200,6 @@ select.fi option{background:var(--s2)}
           </div>
         </div>
 
-        <!-- DERIVAÇÕES -->
         <div class="card">
           <div class="card-title">Derivações Automáticas</div>
           <div class="deriv-grid" id="deriv-grid">
@@ -210,7 +226,6 @@ select.fi option{background:var(--s2)}
       </div>
     </section>
 
-    <!-- DICIONÁRIO -->
     <section class="tab" id="tab-dictionary">
       <div class="dc-wrap">
         <div class="sr-wrap">
@@ -321,7 +336,7 @@ const BASE_DATA=[
 ["ṫelum","θelum","substantivo","Terra, solo, planeta"],
 ["flua","flua","substantivo","Água"],["fluaponi","fluaponi","substantivo","Rio"],
 ["fluaribi","fluaɾibi","substantivo","Chuva"],
-["fluakrinu","fluakɾinu","substantivo","Mar"],["flunɛ","flunɛ","substantivo","Lago"],
+["fluakrinu","fluakrinu","substantivo","Mar"],["flunɛ","flunɛ","substantivo","Lago"],
 ["ikra","ikɾa","substantivo","Gelo"],["nɔuva","nɔuva","substantivo","Neve"],
 ["frigare","fɾigaɾe","substantivo","Fogo"],["iana","iana","substantivo","Ar"],
 ["frisia","fɾisia","substantivo","Vento"],["lavurina","lavuɾina","substantivo","Natureza"],
@@ -387,14 +402,14 @@ const BASE_DATA=[
 ["jemiჰu","ʒemiksu","substantivo","Solidão"],
 ["fentoli","fentoli","substantivo","Gratidão"],["droma","dɾoma","substantivo","Tédio"],
 ["zɔpru","zɔpɾu","substantivo","Nojo, repulsa"],
-["lɔnu","lɔnu","substantivo","Sono"],["vεliu","vɛliu","substantivo","Sonho"],
+["lɔnu","lɔnu","substantivo","Sono"],["vεliu","vεliu","substantivo","Sonho"],
 ["kilε","kilɛ","substantivo","Riso"],["flεru","flɛɾu","substantivo","Lágrima"],
 ["vεkinura","vɛkinuɾa","substantivo","Curiosidade"],
-["grεvu","gɾɛvu","substantivo","Dor"],["fɔlvru","fɔlvɾu","substantivo","Febre"],
+["grεvu","gɾεvu","substantivo","Dor"],["fɔlvru","fɔlvɾu","substantivo","Febre"],
 ["ribɛnevu","ɾibɛnevu","substantivo","Desmaio"],
 ["voɔusku","voɔusku","substantivo","Náusea, enjoo"],
 ["bunɔkar","bunɔkaɾ","substantivo","Ferida"],["voldεku","voldɛku","substantivo","Curativo"],
-["trakεmo","tɾakɛmo","substantivo","Emergência"],
+["trakεmo","tɾakεmo","substantivo","Emergência"],
 ["suvade","suvaðe","substantivo","Paciente (de saúde)"],
 ["vɔkru","vɔkɾu","substantivo","Fome"],["ziɛkru","ziɛkɾu","substantivo","Sede"],
 ["tɔrpλ","tɔɾpɐ̃","substantivo","Pressão"],
@@ -414,7 +429,7 @@ const BASE_DATA=[
 ["skufonu","skufonu","substantivo","Celular, aparelho portátil"],
 ["rizsoi","ɾizsoi","substantivo","Tela"],["uɛbi","uɛbi","substantivo","Internet"],
 ["virsoi","viɾsoi","substantivo","Vídeo"],
-["vokεgim","vokɛgim","substantivo","Mensagem"],
+["vokεgim","vokεgim","substantivo","Mensagem"],
 ["pλnto","pɐ̃nto","substantivo","Marte (regente da terça-feira)"],
 ["jinto","ʒinto","substantivo","Mercúrio (regente da quarta-feira)"],
 ["vento","vento","substantivo","Júpiter (regente da quinta-feira)"],
@@ -439,14 +454,14 @@ const BASE_DATA=[
 ["ronpo","ɾonpo","adjetivo","Redondo"],["pizujo","pizuʒo","adjetivo","Podre"],
 ["flunarito","flunaɾito","adjetivo","Molhado"],
 ["supolu","supolu","adjetivo","Seco"],["zukiona","zukiona","adjetivo","Sujo"],
-["mεlnu","mɛlnu","adjetivo","Doce"],["navila","navila","adjetivo","Macio, suave ao toque"],
+["mεlnu","mεlnu","adjetivo","Doce"],["navila","navila","adjetivo","Macio, suave ao toque"],
 ["kakuno","kakuno","adjetivo","Novo, recente"],
 ["kirɔba","kiɾɔba","adjetivo","Velho, de longa existência"],
 ["bɔno","bɔno","adjetivo","Bom, bondoso"],
 ["fumen","fumɛn","adjetivo","Mau, malicioso"],
 ["kaliz","kaliz","adjetivo","Feliz"],["ludo","ludo","adjetivo","Unido, coeso"],
 ["morku","moɾku","adjetivo","Doente"],["vivɔlu","vivɔlu","adjetivo","Saudável"],
-["pεzurλ","pɛzuɾɐ̃","adjetivo","Cansado"],
+["pεzurλ","pεzuɾɐ̃","adjetivo","Cansado"],
 ["vilɔ","vilɔ","adjetivo","Bonito, belo"],["kɛvu","kɛvu","adjetivo","Feio, disforme"],
 ["alvi","alvi","adjetivo","Branco"],["grunda","gɾunda","adjetivo","Preto"],
 ["roka","ɾoka","adjetivo","Vermelho"],["natra","natɾa","adjetivo","Verde"],
@@ -455,7 +470,7 @@ const BASE_DATA=[
 ["flɛru","flɛɾu","adjetivo","Laranja (cor)"],
 ["lɔva","lɔva","adjetivo","Rosa (cor)"],["drelu","dɾelu","adjetivo","Cinza"],
 ["ajλr","aʒɐ̃r","verbo","Fazer, agir, executar"],
-["apεrar","apɛɾaɾ","verbo","Amanhecer"],
+["apεrar","apεɾaɾ","verbo","Amanhecer"],
 ["apifir","apifiɾ","verbo","Lecionar, ensinar"],
 ["bemtɔr","bentɔɾ","verbo","Engrandecer, expandir"],
 ["bluvir","bluviɾ","verbo","Perder"],["bor","boɾ","verbo","Vir, chegar"],
@@ -463,7 +478,7 @@ const BASE_DATA=[
 ["bur","buɾ","verbo","Ir, partir"],["desmir","desmiɾ","verbo","Morrer"],
 ["diჰar","diksaɾ","verbo","Sair, exteriorizar"],["dɔlir","dɔliɾ","verbo","Ficar, permanecer"],
 ["domɛnar","domɛnaɾ","verbo","Escolher"],["drɔvir","dɾɔviɾ","verbo","Sentar"],
-["εmorur","ɛmoɾuɾ","verbo","Nascer"],["faponir","faponir","verbo","Farejar"],
+["εmorur","εmoɾuɾ","verbo","Nascer"],["faponir","faponir","verbo","Farejar"],
 ["fɛmor","fɛmoɾ","verbo","Amar"],["flegor","flegoɾ","verbo","Queimar"],
 ["fluar","fluaɾ","verbo","Aguar, liquefazer"],["fluvir","fluviɾ","verbo","Nadar"],
 ["folutur","folutuɾ","verbo","Encher"],["frɔkir","fɾɔkiɾ","verbo","Quebrar"],
@@ -509,7 +524,7 @@ const BASE_DATA=[
 ["pɔtar","pɔtaɾ","verbo","Poder (modal)"],
 ["pɔṫir","pɔθiɾ","verbo","Crescer, expandir-se"],
 ["pozir","poziɾ","verbo","Ter, possuir"],["pruvir","pɾuviɾ","verbo","Tentar"],
-["puvεr","puvɛɾ","verbo","Subir, ascender"],
+["puvεr","puvεɾ","verbo","Subir, ascender"],
 ["rɛvir","ɾɛviɾ","verbo","Voltar, retornar"],
 ["ribɛr","ɾibɛɾ","verbo","Cair"],["rikilar","ɾikilaɾ","verbo","Decidir"],
 ["riskar","ɾiskaɾ","verbo","Cortar"],["ritλr","ɾitɐ̃ɾ","verbo","Dançar"],
@@ -543,44 +558,58 @@ const BASE_DATA=[
 ["zɔrar","zɔɾaɾ","verbo","Esperar, aguardar"],
 ["zuniჰar","zuniksaɾ","verbo","Terminar, encerrar"],
 ["λsor","ɐ̃soɾ","verbo","Sentir (físico ou emocional)"],
-["kilεr","kilɛɾ","verbo","Rir"],["flεrur","flɛɾuɾ","verbo","Chorar"],
+["kilεr","kilεɾ","verbo","Rir"],["flεrur","flεɾuɾ","verbo","Chorar"],
 ["fentolir","fentoliɾ","verbo","Agradecer"],
 ["pontɔr","pontɔɾ","verbo","Semear"],
 ];
 
-// ── GERAÇÃO DE DERIVAÇÕES ────────────────────────────────────
+// ── GERAÇÃO DE DERIVAÇÕES AUTOMÁTICAS E PLURAIS ────────────────────────────
 function generateDerivatives(base){
   const result=[...base];
   const exists=new Set(base.map(e=>e[0]));
   const add=e=>{if(!exists.has(e[0])){result.push(e);exists.add(e[0]);}};
 
-  base.forEach(([w,,tp,df])=>{
+  // 1. Derivações (Ação->Estado / Qualidade->Ação / etc)
+  base.forEach(([w,ip,tp,df])=>{
     const d=df.toLowerCase().split(',')[0].split(';')[0].trim();
     const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+    const ipaBase = ip ? ip.replace(/r$/, '') : '';
 
     if(tp==='verbo'){
       const st=w.replace(/r$/,'');
-      add([w+'λ',       '','adjetivo',    cap(d)+'; estado resultante']);
-      add([st+'av',     '','substantivo', 'Aquele que '+d]);
-      add([w+'ṫi',      '','substantivo', 'O conceito de '+d]);
-      add([w+'iჰa',     '','advérbio',    'De modo: '+d]);
+      add([w+'λ',       ip?ip+'ẽ':'','adjetivo',    cap(d)+'; estado resultante']);
+      add([st+'av',     ipaBase?ipaBase+'av':'','substantivo', 'Aquele que '+d]);
+      add([w+'ṫi',      ip?ip+'θi':'','substantivo', 'O conceito de '+d]);
+      add([w+'iჰa',     ip?ip+'iksa':'','advérbio',    'De modo: '+d]);
     }
 
-    if(tp==='substantivo'){
-      add([w+'noma',    '','substantivo', 'Conjunto de '+d]);
+    if(tp==='substantivo' || tp==='adjetivo'){
+      add([w+'noma',    ip?ip+'noma':'','substantivo', 'Conjunto de '+d]);
     }
 
     if(tp==='adjetivo'){
       const isVow=/[aeiouɛɔλɐ]$/i.test(w);
       const vb=isVow?w+'r':w+'ar';
+      const verbIpa = ip ? (isVow ? ip+'r' : ip+'ar') : '';
       const st=vb.replace(/r$/,'');
-      add([vb,          '','verbo',       'Tornar-se '+d]);
-      add([vb+'λ',      '','adjetivo',    cap(d)+'; estado derivado']);
-      add([st+'av',     '','substantivo', 'Aquilo que '+d]);
-      add([vb+'ṫi',     '','substantivo', 'A essência de '+d]);
-      add([vb+'iჰa',    '','advérbio',    'De forma '+d]);
+      const verbTrans = 'Tornar-se '+d;
+
+      add([vb,          verbIpa,'verbo',       verbTrans]);
+      add([vb+'λ',      verbIpa?verbIpa+'ẽ':'','adjetivo',    cap(d)+'; estado derivado']);
+      add([st+'av',     verbIpa?verbIpa.replace(/r$/,'')+'av':'','substantivo', 'Aquilo que '+verbTrans.toLowerCase()]);
+      add([vb+'ṫi',     verbIpa?verbIpa+'θi':'','substantivo', 'A essência de '+d]);
+      add([vb+'iჰa',    verbIpa?verbIpa+'iksa':'','advérbio',    'De forma '+d]);
     }
   });
+
+  // 2. Pluralização Universal
+  const current = [...result];
+  current.forEach(([w, ip, tp, df])=>{
+    if(['substantivo', 'adjetivo', 'determinativo'].includes(tp) && !w.endsWith('s')){
+       add([w+'s', ip?ip+'s':'', tp, df + ' (Plural)']);
+    }
+  });
+
   return result;
 }
 
@@ -593,7 +622,9 @@ function loadData(){
     const raw=localStorage.getItem(LS_KEY);
     if(raw){D=JSON.parse(raw);return;}
   }catch(e){}
-  D=generateDerivatives(BASE_DATA);
+  
+  // CORREÇÃO AQUI: Garante que os derivados e os plurais sejam gerados na primeira vez!
+  D=generateDerivatives(BASE_DATA); 
   saveLS();
 }
 function saveLS(){
@@ -616,7 +647,7 @@ function updateHeaderCount(){
   if(el)el.textContent=D.length;
 }
 
-// ── DERIVAÇÃO ─────────────────────────────────────────────────
+// ── DERIVAÇÃO DO FORMULÁRIO ─────────────────────────────────────────────────
 function getBase(word,type){
   return type==='verbo'?word.replace(/r$/,''):word;
 }
@@ -690,10 +721,12 @@ function exportDict(){
 // ── RESET ────────────────────────────────────────────────────
 function resetDict(){
   if(!confirm('Isso apagará todas as entradas personalizadas e restaurará o dicionário original. Continuar?'))return;
+  
+  // CORREÇÃO AQUI TAMBÉM: Quando reseta, ele roda toda a fábrica de plurais!
   D=generateDerivatives(BASE_DATA);
   sortD();saveLS();updateHeaderCount();
   buildAlpha();renderDict();
-  toast('Dicionário restaurado para o original.','info');
+  toast('Dicionário restaurado e plurais gerados!','info');
 }
 
 // ── TAB SWITCH ───────────────────────────────────────────────
