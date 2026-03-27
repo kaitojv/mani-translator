@@ -223,14 +223,7 @@ select.fi option{background:var(--s2)}
 <div class="toast" id="toast"></div>
 
 <script>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// ── CONFIGURAÇÃO FIREBASE (Substitua as chaves aqui!) ──
 const firebaseConfig = {
   apiKey: "AIzaSyCBDH9UqYXcliyiER9L-JUkiJdWuVnOV4M",
   authDomain: "dicionario-mani.firebaseapp.com",
@@ -240,10 +233,6 @@ const firebaseConfig = {
   appId: "1:168308043752:web:b8c45c45152b64ae6cfe5d",
   measurementId: "G-JJJG3WX9CD"
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 // Inicializa o Firebase
 firebase.initializeApp(firebaseConfig);
