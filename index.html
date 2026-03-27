@@ -3,33 +3,22 @@
 :root{
   --bg:#080812;--s1:#10101e;--s2:#171728;--s3:#1f1f38;
   --acc:#8b6bd4;--acc2:#b08cf0;--acc3:#d4b8ff;
-  --tx:#e2e2f0;--tx2:#8888aa;--tx3:#44446688;
-  --bd:#222238;--bd2:#2e2e50;
-  --vb:#3a6fa8;--no:#4a9970;--adj:#9a4a3a;--num:#8a7a3a;--other:#4a4a8a;
+  --tx:#e2e2f0;--tx2:#8888aa;--tx3:#444466;
+  --bd:#222238;--bd2:#2e2e50;--bd3:#3a3a60;
+  --ok:#3a7a5a;--er:#8a3a3a;
 }
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 
 /* HEADER */
-.hdr{
-  background:linear-gradient(135deg,#080812 0%,#130d24 40%,#0a1030 100%);
-  border-bottom:1px solid var(--bd2);
-  padding:20px 36px;display:flex;align-items:center;gap:20px;
-}
-.logo-wrap{display:flex;align-items:baseline;gap:10px}
-.logo{
-  font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;
-  background:linear-gradient(135deg,var(--acc3) 0%,#80d4ff 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.hdr{background:linear-gradient(135deg,#080812 0%,#130d24 40%,#0a1030 100%);border-bottom:1px solid var(--bd2);padding:20px 36px;display:flex;align-items:center;gap:16px}
+.logo{font-size:2.4rem;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--acc3) 0%,#80d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .logo-sub{font-size:.75rem;color:var(--tx2);letter-spacing:.2em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--bd2);border-radius:20px}
+.hdr-stat{margin-left:auto;font-size:.78rem;color:var(--tx3);display:flex;align-items:center;gap:6px}
+.hdr-stat span{color:var(--acc2);font-weight:700}
 
 /* NAV */
 .nav{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 36px;display:flex;gap:4px}
-.nb{
-  background:none;border:none;border-bottom:2px solid transparent;
-  color:var(--tx2);font-size:.95rem;font-family:inherit;cursor:pointer;
-  padding:14px 20px;transition:all .2s;
-}
+.nb{background:none;border:none;border-bottom:2px solid transparent;color:var(--tx2);font-size:.95rem;font-family:inherit;cursor:pointer;padding:14px 20px;transition:all .2s}
 .nb:hover{color:var(--tx)}
 .nb.on{color:var(--acc3);border-bottom-color:var(--acc)}
 
@@ -37,67 +26,84 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .content{max-width:1140px;margin:0 auto;padding:32px 36px}
 .tab{display:none}.tab.on{display:block}
 
-/* === TRANSLATOR === */
-.tr-wrap{display:flex;flex-direction:column;gap:18px}
-.dir-row{display:flex;align-items:center;gap:10px}
-.dir-seg{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:4px;display:flex;gap:2px}
-.db{background:none;border:none;color:var(--tx2);padding:8px 18px;border-radius:7px;cursor:pointer;font-family:inherit;font-size:.88rem;transition:all .2s}
-.db.on{background:var(--acc);color:#fff;box-shadow:0 2px 12px rgba(139,107,212,.4)}
-.hint{font-size:.78rem;color:var(--tx3)}
+/* ── CRIAR PALAVRA ── */
+.cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px}
+.card-title{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--acc2);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
 
-.panels{display:grid;grid-template-columns:1fr 56px 1fr;border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--s1);min-height:260px}
-.pn{display:flex;flex-direction:column}
-.pn-hdr{padding:12px 18px;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);background:var(--s2);border-bottom:1px solid var(--bd)}
-.pn-ta{flex:1;background:none;border:none;padding:18px;color:var(--tx);font-size:1.05rem;font-family:inherit;resize:none;outline:none;line-height:1.65}
-.pn-ta::placeholder{color:var(--bd2)}
-.pn-out{flex:1;padding:18px;font-size:1.05rem;line-height:1.65;min-height:180px}
-.ph{color:var(--tx3);font-size:.95rem}
-.tr-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--s2);border-left:1px solid var(--bd);border-right:1px solid var(--bd);gap:10px;padding:12px 6px}
-.tr-btn{
-  background:linear-gradient(135deg,var(--acc),#7c4fcc);border:none;color:#fff;
-  width:40px;height:100px;border-radius:10px;cursor:pointer;font-family:inherit;
-  font-size:.8rem;font-weight:700;writing-mode:vertical-rl;letter-spacing:.05em;
-  transition:all .2s;display:flex;align-items:center;justify-content:center;
-}
-.tr-btn:hover{transform:scaleY(1.04);box-shadow:0 0 18px rgba(139,107,212,.5)}
-.tr-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.spin{width:14px;height:14px;border:2px solid var(--bd2);border-top-color:var(--acc2);border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
-@keyframes sp{to{transform:rotate(360deg)}}
-.ld{display:flex;align-items:center;gap:8px;color:var(--tx2);font-size:.9rem}
-.tr-res{white-space:pre-wrap;color:var(--tx)}
-.gn{margin-top:14px;padding:10px 14px;background:rgba(139,107,212,.1);border:1px solid rgba(139,107,212,.25);border-radius:8px;font-size:.82rem;color:var(--tx2)}
-.err{color:#e88080;font-size:.9rem}
+.fg{display:flex;flex-direction:column;gap:14px}
+.fl{font-size:.8rem;color:var(--tx2);margin-bottom:5px;display:block}
+.fi{width:100%;padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
+.fi:focus{border-color:var(--acc)}
+.fi::placeholder{color:var(--tx3)}
+select.fi option{background:var(--s2)}
 
-/* === DICTIONARY === */
-.dc-wrap{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+.deriv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cb-wrap{display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;cursor:pointer;transition:border-color .2s}
+.cb-wrap:hover{border-color:var(--acc)}
+.cb-wrap input{width:15px;height:15px;accent-color:var(--acc);cursor:pointer;flex-shrink:0}
+.cb-wrap .cb-label{font-size:.82rem;color:var(--tx2)}
+.cb-wrap .cb-suf{font-size:.78rem;color:var(--acc2);margin-left:auto;font-family:monospace}
+
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 22px;border:none;border-radius:9px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-save{background:linear-gradient(135deg,var(--acc),#7c4fcc);color:#fff;box-shadow:0 2px 16px rgba(139,107,212,.3)}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(139,107,212,.5)}
+.btn-export{background:var(--s2);border:1px solid var(--bd2);color:var(--tx2)}
+.btn-export:hover{border-color:var(--acc);color:var(--tx)}
+.btn-reset{background:var(--s2);border:1px solid var(--er);color:#e88080}
+.btn-reset:hover{background:rgba(138,58,58,.15)}
+.btn-sm{padding:4px 10px;font-size:.75rem;border-radius:6px;border:none;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-edit{background:rgba(139,107,212,.12);border:1px solid rgba(139,107,212,.25);color:var(--acc2)}
+.btn-edit:hover{background:rgba(139,107,212,.25);color:var(--acc3)}
+.btn-del{background:rgba(138,58,58,.1);border:1px solid rgba(138,58,58,.25);color:#e88080}
+.btn-del:hover{background:rgba(138,58,58,.2)}
+.btn-ok{background:rgba(58,122,90,.2);border:1px solid rgba(58,122,90,.4);color:#80d4a8}
+.btn-ok:hover{background:rgba(58,122,90,.35)}
+.btn-cancel{background:rgba(80,80,100,.15);border:1px solid var(--bd);color:var(--tx2)}
+.btn-cancel:hover{background:rgba(80,80,100,.3)}
+
+/* Preview */
+.preview{min-height:60px}
+.prev-title{font-size:.75rem;color:var(--tx3);margin-bottom:10px}
+.prev-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:var(--s3);border:1px solid var(--bd2);border-radius:20px;font-size:.82rem;margin:3px}
+.prev-chip .pw{color:var(--acc3);font-weight:700}
+.prev-chip .pt{color:var(--tx2)}
+.prev-chip .ps{font-size:.7rem;color:var(--acc);font-family:monospace}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:10px;font-size:.88rem;font-weight:600;z-index:999;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-ok{background:rgba(58,122,90,.95);border:1px solid rgba(80,180,120,.4);color:#c0f0d8}
+.toast-err{background:rgba(138,58,58,.95);border:1px solid rgba(220,100,100,.4);color:#f0c0c0}
+.toast-info{background:rgba(58,80,138,.95);border:1px solid rgba(100,140,220,.4);color:#c0d4f8}
+
+/* ── DICIONÁRIO ── */
+.dc-wrap{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
 .sr-wrap{position:relative}
-.sr-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--tx2);pointer-events:none}
-#sr{width:100%;padding:13px 14px 13px 42px;background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--tx);font-size:.98rem;font-family:inherit;outline:none;transition:border-color .2s}
+.sr-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--tx2);pointer-events:none;font-size:.9rem}
+#sr{width:100%;padding:12px 14px 12px 40px;background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--tx);font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
 #sr:focus{border-color:var(--acc)}
 #sr::placeholder{color:var(--tx2)}
-.fr{display:flex;gap:7px;flex-wrap:wrap}
+.fr{display:flex;gap:6px;flex-wrap:wrap}
 .fb{padding:6px 15px;border:1px solid var(--bd);background:var(--s2);color:var(--tx2);border-radius:20px;cursor:pointer;font-size:.83rem;font-family:inherit;transition:all .2s}
 .fb:hover{border-color:var(--acc);color:var(--tx)}
 .fb.on{background:var(--acc);border-color:var(--acc);color:#fff}
 
-.an{display:flex;flex-wrap:wrap;gap:3px;padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;margin-bottom:20px}
-.ab{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:none;border:none;border-radius:5px;color:var(--bd2);font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .15s}
+.an{display:flex;flex-wrap:wrap;gap:3px;padding:9px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;margin-bottom:18px}
+.ab{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:none;border:none;border-radius:5px;color:var(--tx3);font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .15s}
 .ab.has{color:var(--acc2)}.ab.has:hover{background:var(--s3);color:var(--tx)}
 .ab.sel{background:var(--acc);color:#fff}
 
-.dc-count{font-size:.8rem;color:var(--tx2);margin-bottom:10px}
-.as{margin-bottom:22px}
-.ah{font-size:1.15rem;font-weight:700;color:var(--acc3);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--bd)}
-.de-list{display:flex;flex-direction:column;gap:6px}
-.de{
-  background:var(--s1);border:1px solid var(--bd);border-radius:9px;
-  padding:12px 16px;display:flex;align-items:baseline;gap:11px;
-  transition:border-color .2s;flex-wrap:wrap;
-}
-.de:hover{border-color:var(--acc)}
-.ew{font-size:1rem;font-weight:700;color:var(--acc3);min-width:130px}
-.ei{font-size:.78rem;color:var(--tx2);font-style:italic;min-width:110px}
-.et{font-size:.7rem;padding:2px 9px;border-radius:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.dc-count{font-size:.78rem;color:var(--tx3);margin-bottom:8px}
+.as{margin-bottom:20px}
+.ah{font-size:1.1rem;font-weight:700;color:var(--acc3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.de-list{display:flex;flex-direction:column;gap:5px}
+.de{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px;transition:border-color .2s;flex-wrap:wrap}
+.de:hover{border-color:var(--bd3)}
+.ew{font-size:.95rem;font-weight:700;color:var(--acc3);min-width:120px}
+.ei{font-size:.75rem;color:var(--tx3);font-style:italic;min-width:100px}
+.et{font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 .t-verbo{background:rgba(58,111,168,.18);color:#7ab0e8;border:1px solid rgba(58,111,168,.3)}
 .t-substantivo{background:rgba(74,153,112,.18);color:#80d4a8;border:1px solid rgba(74,153,112,.3)}
 .t-adjetivo{background:rgba(154,74,58,.18);color:#e89a80;border:1px solid rgba(154,74,58,.3)}
@@ -109,60 +115,102 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .t-advérbio{background:rgba(60,120,80,.18);color:#90d4a8;border:1px solid rgba(60,120,80,.3)}
 .t-determinativo{background:rgba(100,60,120,.18);color:#c090e0;border:1px solid rgba(100,60,120,.3)}
 .t-default{background:rgba(80,80,100,.18);color:#aaaacc;border:1px solid rgba(80,80,100,.3)}
-.ed{font-size:.88rem;color:var(--tx2);flex:1;min-width:180px}
+.ed{font-size:.85rem;color:var(--tx2);flex:1;min-width:140px}
+.de-actions{display:flex;gap:5px;margin-left:auto;flex-shrink:0}
+
+/* Inline edit */
+.ed-input{flex:1;min-width:140px;padding:4px 9px;background:var(--s3);border:1px solid var(--acc);border-radius:6px;color:var(--tx);font-size:.85rem;font-family:inherit;outline:none}
+
 .nr{text-align:center;padding:40px;color:var(--tx2);font-size:.95rem}
 
 @media(max-width:720px){
-  .hdr{padding:14px 18px}.nav{padding:0 14px}
-  .content{padding:18px 14px}
-  .panels{grid-template-columns:1fr}
-  .tr-mid{flex-direction:row;padding:10px 14px;border:none;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
-  .tr-btn{writing-mode:horizontal-tb;width:120px;height:38px}
-  .ew{min-width:100px}.ei{min-width:80px}
+  .hdr{padding:14px 18px}.nav{padding:0 14px}.content{padding:18px 14px}
+  .cp-grid{grid-template-columns:1fr}.deriv-grid{grid-template-columns:1fr}
+  .ew{min-width:90px}.ei{min-width:70px}
 }
 </style>
 
 <div id="app">
   <header class="hdr">
-    <div class="logo-wrap">
+    <div style="display:flex;align-items:baseline;gap:10px">
       <div class="logo">Mani</div>
       <div class="logo-sub">Língua Construída</div>
     </div>
+    <div class="hdr-stat">Dicionário: <span id="total-count">0</span> entradas</div>
   </header>
   <nav class="nav">
-    <button class="nb on" id="nb-translator" onclick="sw('translator')">⟷ Tradutor</button>
+    <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
   </nav>
   <div class="content">
 
-    <!-- TRANSLATOR -->
-    <section class="tab on" id="tab-translator">
-      <div class="tr-wrap">
-        <div class="dir-row">
-          <div class="dir-seg">
-            <button class="db on" id="dir-pt-mani" onclick="setDir('pt-mani')">Português → Mani</button>
-            <button class="db" id="dir-mani-pt" onclick="setDir('mani-pt')">Mani → Português</button>
+    <!-- CRIAR PALAVRA -->
+    <section class="tab on" id="tab-criar">
+      <div class="cp-grid">
+        <!-- FORMULÁRIO -->
+        <div class="card">
+          <div class="card-title">Nova Entrada</div>
+          <div class="fg">
+            <div>
+              <label class="fl">Palavra base (Mani) *</label>
+              <input class="fi" id="f-word" placeholder="ex: flumak" oninput="livePreview()">
+            </div>
+            <div>
+              <label class="fl">Tradução (Português) *</label>
+              <input class="fi" id="f-trans" placeholder="ex: relógio, instrumento de tempo" oninput="livePreview()">
+            </div>
+            <div>
+              <label class="fl">Classe Gramatical *</label>
+              <select class="fi" id="f-type" onchange="livePreview()">
+                <option value="">— selecione —</option>
+                <option value="verbo">Verbo</option>
+                <option value="substantivo">Substantivo</option>
+                <option value="adjetivo">Adjetivo</option>
+                <option value="numeral">Numeral</option>
+                <option value="pronome">Pronome</option>
+                <option value="advérbio">Advérbio</option>
+                <option value="conjunção">Conjunção</option>
+                <option value="partícula">Partícula</option>
+                <option value="determinativo">Determinativo</option>
+                <option value="interjeição">Interjeição</option>
+                <option value="interrogativo">Interrogativo</option>
+              </select>
+            </div>
+            <div>
+              <label class="fl">Pronúncia IPA <span style="color:var(--tx3)">(opcional)</span></label>
+              <input class="fi" id="f-ipa" placeholder="ex: fluˈmak" oninput="livePreview()">
+            </div>
           </div>
-          <span class="hint">Ctrl+Enter para traduzir</span>
         </div>
-        <div class="panels">
-          <div class="pn">
-            <div class="pn-hdr" id="lbl-in">Português</div>
-            <textarea class="pn-ta" id="inp" placeholder="Digite o texto aqui..." rows="8"
-              onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter')translate()"></textarea>
+
+        <!-- DERIVAÇÕES -->
+        <div class="card">
+          <div class="card-title">Derivações Automáticas</div>
+          <div class="deriv-grid" id="deriv-grid">
+            <label class="cb-wrap"><input type="checkbox" id="d-noma" onchange="livePreview()"><span class="cb-label">Coletivo</span><span class="cb-suf">-noma</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="d-ti" onchange="livePreview()"><span class="cb-label">Abstrato</span><span class="cb-suf">-ṫi</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="d-av" onchange="livePreview()"><span class="cb-label">Agente</span><span class="cb-suf">-av</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="d-lam" onchange="livePreview()"><span class="cb-label">Adj. Resultante</span><span class="cb-suf">-λ</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="d-isha" onchange="livePreview()"><span class="cb-label">Advérbio de Modo</span><span class="cb-suf">-iჰa</span></label>
           </div>
-          <div class="tr-mid">
-            <button class="tr-btn" id="trbtn" onclick="translate()">Traduzir</button>
+
+          <div style="margin-top:20px">
+            <div class="card-title" style="margin-bottom:12px">Pré-visualização</div>
+            <div class="preview" id="preview"><span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span></div>
           </div>
-          <div class="pn">
-            <div class="pn-hdr" id="lbl-out">Mani</div>
-            <div class="pn-out" id="out"><span class="ph">A tradução aparecerá aqui…</span></div>
+
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn btn-save" onclick="saveWord()">✓ Salvar no Dicionário</button>
+            <button class="btn btn-export" onclick="exportDict()">⬇ Exportar JS</button>
+          </div>
+          <div style="margin-top:10px">
+            <button class="btn btn-reset" onclick="resetDict()">↺ Resetar para original</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- DICTIONARY -->
+    <!-- DICIONÁRIO -->
     <section class="tab" id="tab-dictionary">
       <div class="dc-wrap">
         <div class="sr-wrap">
@@ -178,11 +226,11 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────
-const D=[
-// [palavra, ipa, tipo, definição_pt]
-// Numerais
+// ── DADOS BASE ────────────────────────────────────────────────
+const BASE_DATA=[
 ["nɔ","nɔ","numeral","Zero (0)"],["uri","uɾi","numeral","Um (1)"],["paro","paɾo","numeral","Dois (2)"],
 ["naji","naʒi","numeral","Três (3)"],["kλnko","kɐ̃nko","numeral","Quatro (4)"],
 ["sinჰa","sinksa","numeral","Cinco (5)"],["terou","teɾou","numeral","Seis (6)"],
@@ -190,22 +238,18 @@ const D=[
 ["mile","mile","numeral","Nove (9)"],["deko","deko","numeral","Dez (10)"],
 ["domo","domo","numeral","Cem (100)"],["muli","muli","numeral","Mil (1.000)"],
 ["manṫa","manθa","numeral","Milhão (1.000.000)"],
-// Dias
 ["kɔrona","kɔɾona","substantivo","Domingo"],["milana","milana","substantivo","Segunda-feira"],
 ["pana","pana","substantivo","Terça-feira"],["jina","ʒina","substantivo","Quarta-feira"],
 ["vena","vena","substantivo","Quinta-feira"],["sana","sana","substantivo","Sexta-feira"],
 ["lana","lana","substantivo","Sábado"],
-// Interjeições
 ["iak","iak","interjeição","Olá, oi"],["navo","navo","interjeição","Tchau, até logo"],
 ["dron","dɾon","interjeição","Obrigado"],["nɔv","nɔv","interjeição","De nada"],
 ["pazɛr","pazɛɾ","interjeição","Desculpe"],["vɔpli","vɔpli","interjeição","Com licença"],
 ["onim","onim","partícula","Sim (afirmação)"],["iჰo","ikso","partícula","Não (negação)"],
-// Interrogativos
 ["viλn","viɐ̃n","interrogativo","Quando (Tempo)"],["vie","vie","interrogativo","Onde (Lugar)"],
 ["vier","vieɾ","interrogativo","Por que (Causa)"],["vin","vin","interrogativo","Como (Modo)"],
 ["vio","vio","interrogativo","Quem (Agente)"],["vu","vu","interrogativo","O que (Objeto)"],
-["vɛu","vɛu","interrogativo","Quanto (Quantidade)"],["vi","vi","partícula","Marcador de pergunta fechada (sim/não)"],
-// Determinativos
+["vɛu","vɛu","interrogativo","Quanto (Quantidade)"],["vi","vi","partícula","Marcador de pergunta fechada"],
 ["თo","tʃo","determinativo","Artigo definido masculino singular"],
 ["თa","tʃa","determinativo","Artigo definido feminino singular"],
 ["თe","tʃe","determinativo","Artigo definido neutro"],
@@ -213,12 +257,10 @@ const D=[
 ["lut","lut","determinativo","Artigo indefinido (um, uma)"],
 ["luts","luts","determinativo","Artigo indefinido plural (uns, umas)"],
 ["kuji","kuʒi","determinativo","Este, esta"],["kamuji","kamuʒi","determinativo","Aquele, aquela"],
-// Quantificadores
 ["movo","movo","adjetivo","Bastante, em grande quantidade"],
 ["mira","miɾa","adjetivo","Pouco, em quantidade reduzida"],
 ["bistu","bistu","adjetivo","Algum, alguma"],
 ["denko","denko","adjetivo","Tudo, totalidade"],
-// Partículas / conjunções
 ["in","in","partícula","Em (marcador de lugar)"],
 ["kin","kin","partícula","Marcador de passado"],
 ["kλn","kɐ̃n","partícula","Marcador de futuro"],
@@ -234,23 +276,21 @@ const D=[
 ["fluvel","fluvel","conjunção","Até que"],["ziɛrun","ziɛɾun","conjunção","Já que, visto que"],
 ["რistubi","ʁistubi","conjunção","Embora, ainda que"],
 ["zos","zos","partícula","Que (discurso indireto)"],
-["jɔ","jɔ","partícula","Vocativo (ei, ó) — interpelação direta"],
+["jɔ","jɔ","partícula","Vocativo — interpelação direta"],
 ["რɔs","ʁɔs","partícula","Com (companhia)"],
 ["λba","ɐ̃ba","advérbio","Em cima, sobre"],["λni","ɐ̃ni","advérbio","Embaixo, sob"],
 ["miთa","miθa","advérbio","Bem, de forma positiva"],
-// Pronomes
 ["mau","mau","pronome","Eu"],["tau","tau","pronome","Você, tu"],
 ["lou","lou","pronome","Ele"],["lau","lau","pronome","Ela"],
 ["leu","leu","pronome","Pessoa neutra (singular)"],
 ["liu","liu","pronome","Isso, aquilo (inanimado)"],
 ["maus","maus","pronome","Nós"],["taus","taus","pronome","Vocês"],
 ["lous","lous","pronome","Eles"],["laus","laus","pronome","Elas"],
-// Pessoas e família
 ["avita","avita","substantivo","Pessoa, indivíduo humano"],
 ["boრi","boʁi","substantivo","Homem"],["kiრi","kiʁi","substantivo","Mulher"],
 ["peრi","peʁi","substantivo","Pessoa de gênero neutro"],
 ["piniavita","piniavita","substantivo","Criança"],
-["kirɔbavita","kiɾɔbavita","substantivo","Idoso, pessoa de longa existência"],
+["kirɔbavita","kiɾɔbavita","substantivo","Idoso"],
 ["dapa","dapa","substantivo","Pai"],["nλnλ","nɐ̃nɐ̃","substantivo","Mãe"],
 ["mimo","mimo","substantivo","Filho"],["mima","mima","substantivo","Filha"],
 ["mime","mime","substantivo","Filho neutro"],
@@ -261,7 +301,6 @@ const D=[
 ["rλskimpɔn","ʁɐ̃skimpɔn","substantivo","Cônjuge, parceiro"],
 ["bomiva","bomiva","substantivo","Amigo"],["maჰiva","maksiva","substantivo","Inimigo"],
 ["fεmoroრi","fɛmoɾoʁi","substantivo","Namorado"],["fεmorokiრi","fɛmoɾokiʁi","substantivo","Namorada"],
-// Corpo
 ["korvu","koɾvu","substantivo","Corpo"],["koka","koka","substantivo","Cabeça"],
 ["pɔro","pɔɾo","substantivo","Olho"],["finu","finu","substantivo","Nariz"],
 ["vɔmu","vɔmu","substantivo","Boca"],["vɔbiu","vɔbiu","substantivo","Lábio"],
@@ -277,7 +316,6 @@ const D=[
 ["vikɔva","vikɔva","substantivo","Coração"],["suviza","suviza","substantivo","Pele"],
 ["klapɔ","klapɔ","substantivo","Cabelo"],["bunɔ","bunɔ","substantivo","Sangue"],
 ["vλvλnu","vɐ̃vɐ̃nu","substantivo","Pulso, batida rítmica vital"],
-// Natureza e cosmos
 ["kɔro","kɔɾo","substantivo","Sol"],["mila","mila","substantivo","Lua"],
 ["silεu","silɛu","substantivo","Estrela"],["sipa","sipa","substantivo","Céu"],
 ["ṫelum","θelum","substantivo","Terra, solo, planeta"],
@@ -297,7 +335,6 @@ const D=[
 ["sinka","sinka","substantivo","Ilha"],["nulva","nulva","substantivo","Sombra"],
 ["kɔrimaki","kɔɾimaki","substantivo","Luz do sol filtrada pelas folhas das árvores"],
 ["sivεlu","sivɛlu","substantivo","Nuvem"],
-// Animais
 ["lomun","lomun","substantivo","Animal"],["nako","nako","substantivo","Gato"],
 ["pogo","pogo","substantivo","Cão, cachorro"],["dλnთo","dɐ̃nʃo","substantivo","Pássaro"],
 ["poჰთi","poksʃi","substantivo","Peixe"],["genbλr","genbɐ̃ɾ","substantivo","Cobra"],
@@ -305,7 +342,6 @@ const D=[
 ["pinigenbλr","pinigenbɐ̃ɾ","substantivo","Verme"],
 ["omun","omun","substantivo","Ovo"],["nivada","nivada","substantivo","Pena (de pássaro)"],
 ["krumu","krumu","substantivo","Chifre"],
-// Tempo
 ["flum","flum","substantivo","Tempo (cronologia)"],
 ["mλza","mãza","substantivo","Dia (período de luz)"],
 ["apεra","apɛɾa","substantivo","Manhã"],["jegou","ʒegou","substantivo","Tarde"],
@@ -313,7 +349,6 @@ const D=[
 ["turmoi","tuɾmoi","substantivo","Ontem"],["pouna","pouna","substantivo","Amanhã"],
 ["namu","namu","substantivo","Agora, momento presente"],
 ["zɔrvu","zɔɾvu","substantivo","Mês"],["vɔrnu","vɔɾnu","substantivo","Ano"],
-// Casa e espaço
 ["kamre","kamɾe","substantivo","Casa, habitação"],
 ["ponu","ponu","substantivo","Rua, via urbana"],
 ["lilum","lilum","substantivo","Caminho, trilha"],
@@ -324,9 +359,7 @@ const D=[
 ["koრi","korri","substantivo","Roupa"],["priთa","pricha","substantivo","Sapato"],
 ["dia","dia","substantivo","Aqui (lugar próximo)"],
 ["dio","dio","substantivo","Ali, lá (lugar distante)"],
-["ditu","ditu","substantivo","Dentro (posição interna)"],
-["diჰ","diks","substantivo","Fora (posição externa)"],
-// Conceitos abstratos
+["ditu","ditu","substantivo","Dentro"],["diჰ","diks","substantivo","Fora"],
 ["fɛmo","fɛmo","substantivo","Amor"],["vinila","vinila","substantivo","Vida"],
 ["vorλn","voɾɐ̃n","substantivo","Mundo"],["lavi","lavi","substantivo","Luz"],
 ["frεkila","fɾɛkila","substantivo","Liberdade"],
@@ -344,7 +377,6 @@ const D=[
 ["brizalia","bɾizalia","substantivo","Energia, vitalidade"],
 ["mivolu","mivolu","substantivo","Cuidado, atenção delicada"],
 ["εmoru","ɛmoɾu","substantivo","Nascimento"],
-// Emoções
 ["murλ","muɾɐ̃","substantivo","Tristeza"],["graki","gɾaki","substantivo","Raiva"],
 ["gumira","gumiɾa","substantivo","Medo"],["krεრa","kɾɛʁa","substantivo","Angústia"],
 ["pɔka","pɔka","substantivo","Surpresa"],["mεuvu","mɛuvu","substantivo","Saudade"],
@@ -358,7 +390,6 @@ const D=[
 ["lɔnu","lɔnu","substantivo","Sono"],["vεliu","vɛliu","substantivo","Sonho"],
 ["kilε","kilɛ","substantivo","Riso"],["flεru","flɛɾu","substantivo","Lágrima"],
 ["vεkinura","vɛkinuɾa","substantivo","Curiosidade"],
-// Saúde
 ["grεvu","gɾɛvu","substantivo","Dor"],["fɔlvru","fɔlvɾu","substantivo","Febre"],
 ["ribɛnevu","ɾibɛnevu","substantivo","Desmaio"],
 ["voɔusku","voɔusku","substantivo","Náusea, enjoo"],
@@ -367,33 +398,28 @@ const D=[
 ["suvade","suvaðe","substantivo","Paciente (de saúde)"],
 ["vɔkru","vɔkɾu","substantivo","Fome"],["ziɛkru","ziɛkɾu","substantivo","Sede"],
 ["tɔrpλ","tɔɾpɐ̃","substantivo","Pressão"],
-// Educação e conhecimento
 ["lεkivo","lɛkivo","substantivo","Livro"],["druva","dɾuva","substantivo","Aula"],
 ["kanoka","kanoka","substantivo","Nota, avaliação"],
 ["menzεkra","menzɛkɾa","substantivo","Prova, avaliação formal"],
 ["menzolu","menzolu","substantivo","Estágio"],
 ["jetniru","ʒetniɾu","substantivo","Mestrado"],
 ["vonju","vonʒu","substantivo","Pesquisa"],["fraudu","fɾaudu","substantivo","Aula vaga"],
-// Jogos / entretenimento
 ["mabilu","mabilu","substantivo","Jogo"],["prisi","pɾisi","substantivo","Partida (jogo)"],
 ["trima","tɾima","substantivo","Vitória"],["kuven","kuvɛn","substantivo","Derrota"],
 ["animε","animɛ","substantivo","Anime, animação japonesa"],
 ["malλna","malɐ̃na","substantivo","Música"],["solλn","solɐ̃n","substantivo","Canto, canção"],
 ["zentru","zentɾu","substantivo","Foco, atenção concentrada"],
 ["vεljoku","vɛlʒoku","substantivo","Dispersão, atenção fragmentada"],
-// Tecnologia
 ["sku","sku","substantivo","Aparelho, dispositivo tecnológico"],
 ["skufonu","skufonu","substantivo","Celular, aparelho portátil"],
 ["rizsoi","ɾizsoi","substantivo","Tela"],["uɛbi","uɛbi","substantivo","Internet"],
 ["virsoi","viɾsoi","substantivo","Vídeo"],
 ["vokεgim","vokɛgim","substantivo","Mensagem"],
-// Planetas (regentes dos dias)
 ["pλnto","pɐ̃nto","substantivo","Marte (regente da terça-feira)"],
 ["jinto","ʒinto","substantivo","Mercúrio (regente da quarta-feira)"],
 ["vento","vento","substantivo","Júpiter (regente da quinta-feira)"],
 ["santo","santo","substantivo","Vênus (regente da sexta-feira)"],
 ["lanto","lanto","substantivo","Saturno (regente do sábado)"],
-// Adjetivos físicos
 ["bemtɔ","bentɔ","adjetivo","Grande, de magnitude elevada"],
 ["griku","gɾiku","adjetivo","Baixo, de estatura reduzida"],
 ["puvɔ","puvɔ","adjetivo","Alto, de estatura elevada"],
@@ -416,21 +442,18 @@ const D=[
 ["mεlnu","mɛlnu","adjetivo","Doce"],["navila","navila","adjetivo","Macio, suave ao toque"],
 ["kakuno","kakuno","adjetivo","Novo, recente"],
 ["kirɔba","kiɾɔba","adjetivo","Velho, de longa existência"],
-// Adjetivos morais / estados
 ["bɔno","bɔno","adjetivo","Bom, bondoso"],
 ["fumen","fumɛn","adjetivo","Mau, malicioso"],
 ["kaliz","kaliz","adjetivo","Feliz"],["ludo","ludo","adjetivo","Unido, coeso"],
 ["morku","moɾku","adjetivo","Doente"],["vivɔlu","vivɔlu","adjetivo","Saudável"],
 ["pεzurλ","pɛzuɾɐ̃","adjetivo","Cansado"],
 ["vilɔ","vilɔ","adjetivo","Bonito, belo"],["kɛvu","kɛvu","adjetivo","Feio, disforme"],
-// Cores
 ["alvi","alvi","adjetivo","Branco"],["grunda","gɾunda","adjetivo","Preto"],
 ["roka","ɾoka","adjetivo","Vermelho"],["natra","natɾa","adjetivo","Verde"],
 ["sivλ","sivɐ̃","adjetivo","Azul"],["sɔra","sɔɾa","adjetivo","Amarelo"],
 ["tɔpλr","tɔpɐ̃ɾ","adjetivo","Marrom"],["murmura","muɾmuɾa","adjetivo","Roxo"],
 ["flɛru","flɛɾu","adjetivo","Laranja (cor)"],
 ["lɔva","lɔva","adjetivo","Rosa (cor)"],["drelu","dɾelu","adjetivo","Cinza"],
-// Verbos
 ["ajλr","aʒɐ̃r","verbo","Fazer, agir, executar"],
 ["apεrar","apɛɾaɾ","verbo","Amanhecer"],
 ["apifir","apifiɾ","verbo","Lecionar, ensinar"],
@@ -444,7 +467,7 @@ const D=[
 ["fɛmor","fɛmoɾ","verbo","Amar"],["flegor","flegoɾ","verbo","Queimar"],
 ["fluar","fluaɾ","verbo","Aguar, liquefazer"],["fluvir","fluviɾ","verbo","Nadar"],
 ["folutur","folutuɾ","verbo","Encher"],["frɔkir","fɾɔkiɾ","verbo","Quebrar"],
-["frisiar","fɾisiaɾ","verbo","Ventar, soprar"],["fruრir","fɾuʁiɾ","verbo","Esfregar, friccionar"],
+["frisiar","fɾisiaɾ","verbo","Ventar, soprar"],["fruრir","fɾuʁiɾ","verbo","Esfregar"],
 ["garemar","gaɾemaɾ","verbo","Trabalhar"],
 ["giuvir","giuviɾ","verbo","Saborear"],["glofur","glofuɾ","verbo","Comer"],
 ["glunɔr","glunɔɾ","verbo","Beber"],["gravir","gɾaviɾ","verbo","Trazer"],
@@ -453,28 +476,28 @@ const D=[
 ["ikonar","ikonaɾ","verbo","Esfriar"],["jegour","ʒegouɾ","verbo","Entardecer"],
 ["jetɛr","ʒetɛɾ","verbo","Saber, conhecer"],
 ["jivar","ʒivaɾ","verbo","Falar"],["kalɛvir","kalɛviɾ","verbo","Acordar"],
-["kalizar","kalizaɾ","verbo","Alegrar-se, tornar-se feliz"],
+["kalizar","kalizaɾ","verbo","Alegrar-se"],
 ["kamalor","kamaloɾ","verbo","Lavar, limpar"],
 ["kanir","kaniɾ","verbo","Contar, enumerar"],["kar","kaɾ","verbo","Caminhar"],
 ["kɛpivir","kɛpiviɾ","verbo","Entender, compreender"],
 ["klɔvar","klɔvaɾ","verbo","Fechar"],
 ["klovɛmir","klovɛmiɾ","verbo","Construir"],["klunir","klunir","verbo","Esconder"],
-["konvir","konviɾ","verbo","Reunir, convergir"],
+["konvir","konviɾ","verbo","Reunir"],
 ["kɔbarλr","kɔbaɾɐ̃ɾ","verbo","Empurrar"],
 ["kɔror","kɔɾoɾ","verbo","Brilhar, ensolarar"],
-["krovar","kɾovaɾ","verbo","Cozinhar"],["krɔzir","kɾɔziɾ","verbo","Agarrar, prender"],
-["kunitar","kunitaɾ","verbo","Nomear, batizar"],
+["krovar","kɾovaɾ","verbo","Cozinhar"],["krɔzir","kɾɔziɾ","verbo","Agarrar"],
+["kunitar","kunitaɾ","verbo","Nomear"],
 ["kuroჰur","kuɾoksur","verbo","Matar"],["kuჰar","kuksaɾ","verbo","Caçar"],
 ["lavikar","lavikaɾ","verbo","Reluzir, tornar-se brilhante"],
 ["lɔkar","lɔkaɾ","verbo","Abrir"],["lɔnar","lɔnaɾ","verbo","Deitar, repousar"],
 ["lɔnur","lɔnuɾ","verbo","Dormir"],["lukir","lukiɾ","verbo","Ouvir"],
-["lumɛr","lumɛɾ","verbo","Sorrir"],["luჰilar","luksilaɾ","verbo","Melhorar, tornar-se bom"],
+["lumɛr","lumɛɾ","verbo","Sorrir"],["luჰilar","luksilaɾ","verbo","Melhorar"],
 ["maჰilar","maksilaɾ","verbo","Piorar, deteriorar"],
 ["markir","markiɾ","verbo","Morder"],["mener","meneɾ","verbo","Pensar"],
 ["menzor","menzoɾ","verbo","Aprender, estudar"],
 ["milar","milaɾ","verbo","Luar, iluminar pela lua"],
-["mivor","mivoɾ","verbo","Criar, inventar"],["molir","moliɾ","verbo","Tocar (contato físico)"],
-["mugrɔr","mugɾɔɾ","verbo","Endurecer, tornar-se rígido"],
+["mivor","mivoɾ","verbo","Criar, inventar"],["molir","moliɾ","verbo","Tocar"],
+["mugrɔr","mugɾɔɾ","verbo","Endurecer"],
 ["namir","namiɾ","verbo","Curar, restaurar a saúde"],
 ["natrar","natɾaɾ","verbo","Esverdear"],["nɛbir","nɛbiɾ","verbo","Esquecer"],
 ["nɛlar","nɛlaɾ","verbo","Ler"],["nɛvir","nɛviɾ","verbo","Dar"],
@@ -483,15 +506,15 @@ const D=[
 ["piluvar","piluvaɾ","verbo","Pular, saltar"],["piugir","piugiɾ","verbo","Suar"],
 ["piumar","piumaɾ","verbo","Puxar, atrair"],
 ["plɔmir","plɔmiɾ","verbo","Ajudar, auxiliar"],
-["pɔtar","pɔtaɾ","verbo","Poder (modal de capacidade)"],
+["pɔtar","pɔtaɾ","verbo","Poder (modal)"],
 ["pɔṫir","pɔθiɾ","verbo","Crescer, expandir-se"],
 ["pozir","poziɾ","verbo","Ter, possuir"],["pruvir","pɾuviɾ","verbo","Tentar"],
 ["puvεr","puvɛɾ","verbo","Subir, ascender"],
 ["rɛvir","ɾɛviɾ","verbo","Voltar, retornar"],
 ["ribɛr","ɾibɛɾ","verbo","Cair"],["rikilar","ɾikilaɾ","verbo","Decidir"],
 ["riskar","ɾiskaɾ","verbo","Cortar"],["ritλr","ɾitɐ̃ɾ","verbo","Dançar"],
-["ritorer","ɾitoɾeɾ","verbo","Acertar, obter o resultado correto"],
-["rɔr","ɾɔɾ","verbo","Correr"],["რisar","ʁisaɾ","verbo","Opor-se, resistir"],
+["ritorer","ɾitoɾeɾ","verbo","Acertar"],
+["rɔr","ɾɔɾ","verbo","Correr"],["რisar","ʁisaɾ","verbo","Opor-se"],
 ["რujirar","ʁuʒiɾaɾ","verbo","Mudar, transformar"],
 ["რuvir","ʁuviɾ","verbo","Levar (para longe)"],
 ["რuთur","buθuɾ","verbo","Lutar, combater"],
@@ -503,9 +526,9 @@ const D=[
 ["susmir","susmiɾ","verbo","Errar, desviar-se"],
 ["takir","takiɾ","verbo","Receber"],["ṫonar","θonaɾ","verbo","Usar, utilizar"],
 ["ṫopir","θopiɾ","verbo","Segurar"],
-["ṫunir","θuniɾ","verbo","Precisar (modal de necessidade)"],
+["ṫunir","θuniɾ","verbo","Precisar (modal)"],
 ["tɔmir","tɔmiɾ","verbo","Pedir, solicitar"],
-["trɛpakir","tɾɛpakirɾ","verbo","Seguir (acompanhar)"],
+["trɛpakir","tɾɛpakiɾ","verbo","Seguir (acompanhar)"],
 ["trɛvolar","tɾɛvolaɾ","verbo","Confiar"],["vɛmir","vɛmiɾ","verbo","Mostrar"],
 ["vimur","vimuɾ","verbo","Ser, estar (existência)"],
 ["vinilar","vinilaɾ","verbo","Viver"],["viრur","viʁuɾ","verbo","Virar, rotacionar"],
@@ -522,10 +545,26 @@ const D=[
 ["λsor","ɐ̃soɾ","verbo","Sentir (físico ou emocional)"],
 ["kilεr","kilɛɾ","verbo","Rir"],["flεrur","flɛɾuɾ","verbo","Chorar"],
 ["fentolir","fentoliɾ","verbo","Agradecer"],
-["pontɔr","pontɔɾ","verbo","Semear"],["piluvar","piluvaɾ","verbo","Pular, saltar"],
+["pontɔr","pontɔɾ","verbo","Semear"],
 ];
 
-// ── SORT ────────────────────────────────────────────────────
+// ── PERSISTÊNCIA ──────────────────────────────────────────────
+const LS_KEY='maniDict_v1';
+let D=[];
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){D=JSON.parse(raw);return;}
+  }catch(e){}
+  D=[...BASE_DATA];
+  saveLS();
+}
+function saveLS(){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(D));}catch(e){}
+}
+
+// ── NORMALIZAÇÃO ──────────────────────────────────────────────
 function nn(s){
   return s.toLowerCase()
     .replace(/[λ]/g,'a').replace(/[ɛε]/g,'e').replace(/[ɔ]/g,'o')
@@ -534,14 +573,97 @@ function nn(s){
     .replace(/[ʁ]/g,'r').replace(/[ʃ]/g,'ch').replace(/[θ]/g,'th')
     .replace(/[ɐ]/g,'a').replace(/[ɾ]/g,'r');
 }
-D.sort((a,b)=>nn(a[0]).localeCompare(nn(b[0]),'pt'));
+function sortD(){D.sort((a,b)=>nn(a[0]).localeCompare(nn(b[0]),'pt'));}
+function firstChar(w){return nn(w)[0].toUpperCase();}
+function updateHeaderCount(){
+  const el=document.getElementById('total-count');
+  if(el)el.textContent=D.length;
+}
 
-// ── STATE ───────────────────────────────────────────────────
-let tab='translator',dir='pt-mani',filt='all',alpha=null,busy=false;
+// ── DERIVAÇÃO ─────────────────────────────────────────────────
+function getBase(word,type){
+  return type==='verbo'?word.replace(/r$/,''):word;
+}
+function buildDerivs(word,trans,type,ipa){
+  const b=getBase(word,type);
+  const bi=ipa?getBase(ipa,type):'';
+  const entries=[];
+  if(document.getElementById('d-noma').checked)
+    entries.push([b+'noma',bi?bi+'noma':'','substantivo','Conjunto de '+trans.toLowerCase()]);
+  if(document.getElementById('d-ti').checked)
+    entries.push([b+'ṫi',bi?bi+'θi':'','substantivo','Conceito de '+trans.toLowerCase()]);
+  if(document.getElementById('d-av').checked)
+    entries.push([b+'av',bi?bi+'av':'','substantivo','Aquele que '+trans.toLowerCase()]);
+  if(document.getElementById('d-lam').checked)
+    entries.push([b+'λ',bi?bi+'ɐ̃':'','adjetivo','Relativo a '+trans.toLowerCase()]);
+  if(document.getElementById('d-isha').checked)
+    entries.push([b+'iჰa',bi?bi+'iksa':'','advérbio','De modo '+trans.toLowerCase()]);
+  return entries;
+}
 
-// ── TAB SWITCH ──────────────────────────────────────────────
+// ── PREVIEW ───────────────────────────────────────────────────
+function livePreview(){
+  const w=document.getElementById('f-word').value.trim();
+  const t=document.getElementById('f-trans').value.trim();
+  const tp=document.getElementById('f-type').value;
+  const ip=document.getElementById('f-ipa').value.trim();
+  const prev=document.getElementById('preview');
+  if(!w||!t||!tp){
+    prev.innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha os campos obrigatórios…</span>';
+    return;
+  }
+  const all=[[w,ip,tp,t],...buildDerivs(w,t,tp,ip)];
+  prev.innerHTML='<div class="prev-title">Entradas a adicionar:</div>'+
+    all.map(([pw,pi,pt,pd])=>
+      `<span class="prev-chip"><span class="pw">${pw}</span><span class="ps">${pt}</span><span class="pt">${pd}</span></span>`
+    ).join('');
+}
+
+// ── SALVAR ────────────────────────────────────────────────────
+function saveWord(){
+  const w=document.getElementById('f-word').value.trim();
+  const t=document.getElementById('f-trans').value.trim();
+  const tp=document.getElementById('f-type').value;
+  const ip=document.getElementById('f-ipa').value.trim();
+  if(!w){toast('Preencha a palavra em Mani.','err');return;}
+  if(!t){toast('Preencha a tradução.','err');return;}
+  if(!tp){toast('Selecione a classe gramatical.','err');return;}
+  const dup=D.find(e=>e[0]===w);
+  if(dup){toast(`"${w}" já existe no dicionário.`,'err');return;}
+  const all=[[w,ip,tp,t],...buildDerivs(w,t,tp,ip)];
+  all.forEach(e=>D.push(e));
+  sortD();saveLS();updateHeaderCount();
+  buildAlpha();renderDict();
+  const n=all.length;
+  toast(`${n} entrada${n>1?'s':''} adicionada${n>1?'s':''}!`,'ok');
+  // Limpar form
+  ['f-word','f-trans','f-ipa'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('f-type').value='';
+  ['d-noma','d-ti','d-av','d-lam','d-isha'].forEach(id=>{document.getElementById(id).checked=false;});
+  document.getElementById('preview').innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span>';
+}
+
+// ── EXPORT ────────────────────────────────────────────────────
+function exportDict(){
+  const lines=D.map(e=>`  ${JSON.stringify(e)}`).join(',\n');
+  const code=`let D=[\n${lines}\n];`;
+  navigator.clipboard.writeText(code).then(()=>toast('Código JS copiado!','info'))
+    .catch(()=>toast('Falha ao copiar.','err'));
+}
+
+// ── RESET ────────────────────────────────────────────────────
+function resetDict(){
+  if(!confirm('Isso apagará todas as entradas personalizadas e restaurará o dicionário original. Continuar?'))return;
+  D=[...BASE_DATA];
+  sortD();saveLS();updateHeaderCount();
+  buildAlpha();renderDict();
+  toast('Dicionário restaurado para o original.','info');
+}
+
+// ── TAB SWITCH ───────────────────────────────────────────────
+let currentTab='criar',filt='all',alpha=null;
 function sw(t){
-  tab=t;
+  currentTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   document.getElementById('tab-'+t).classList.add('on');
@@ -549,69 +671,12 @@ function sw(t){
   if(t==='dictionary'){buildAlpha();renderDict();}
 }
 
-// ── DIRECTION ───────────────────────────────────────────────
-function setDir(d){
-  dir=d;
-  document.querySelectorAll('.db').forEach(x=>x.classList.remove('on'));
-  document.getElementById('dir-'+d).classList.add('on');
-  const isPT=d==='pt-mani';
-  document.getElementById('lbl-in').textContent=isPT?'Português':'Mani';
-  document.getElementById('lbl-out').textContent=isPT?'Mani':'Português';
-  document.getElementById('inp').placeholder=isPT?'Digite em Português…':'Digite em Mani…';
-  document.getElementById('out').innerHTML='<span class="ph">A tradução aparecerá aqui…</span>';
-}
-
-// ── TRANSLATE ────────────────────────────────────────────────
-// ── TRANSLATE ────────────────────────────────────────────────
-async function translate(){
-  const txt=document.getElementById('inp').value.trim();
-  if(!txt||busy)return;
-  busy=true;
-  const btn=document.getElementById('trbtn');
-  btn.disabled=true;btn.textContent='…';
-  document.getElementById('out').innerHTML='<div class="ld"><div class="spin"></div>Traduzindo…</div>';
-
-  try{
-    // Faz a chamada para o seu arquivo traduzir.py na Vercel
-    const r=await fetch("/api/traduzir", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ 
-        texto: txt,
-        direcao: dir 
-      })
-    });
-    
-    const data=await r.json();
-    if(data.erro) throw new Error(data.erro);
-
-    const full=data.traducao||'';
-    const pts=full.split('---');
-    const tr=pts[0].trim();
-    const note=pts[1]?.trim();
-    
-    let html=`<div class="tr-res">${tr}</div>`;
-    if(note)html+=`<div class="gn">📐 ${note}</div>`;
-    document.getElementById('out').innerHTML=html;
-    
-  }catch(e){
-    console.error(e);
-    document.getElementById('out').innerHTML='<div class="err">Erro de conexão. Verifique o servidor.</div>';
-  }
-  
-  busy=false;btn.disabled=false;btn.textContent='Traduzir';
-}
-
-// ── DICTIONARY ───────────────────────────────────────────────
-
-// ── DICTIONARY ───────────────────────────────────────────────
-const FILTERS=[
-  ['all','Todos'],['verbo','Verbos'],['substantivo','Substantivos'],
-  ['adjetivo','Adjetivos'],['numeral','Numerais'],['outros','Outros']
-];
+// ── FILTROS ───────────────────────────────────────────────────
+const FILTERS=[['all','Todos'],['verbo','Verbos'],['substantivo','Substantivos'],
+  ['adjetivo','Adjetivos'],['numeral','Numerais'],['outros','Outros']];
 function buildFilters(){
   document.getElementById('fr').innerHTML=FILTERS.map(([v,l])=>
-    `<button class="fb ${v===filt?'on':''}" onclick="setFilt(this,'${v}')">${l}</button>`
+    `<button class="fb${v===filt?' on':''}" onclick="setFilt(this,'${v}')">${l}</button>`
   ).join('');
 }
 function setFilt(btn,f){
@@ -621,24 +686,10 @@ function setFilt(btn,f){
   buildAlpha();renderDict();
 }
 
-function firstChar(w){return nn(w)[0].toUpperCase();}
-function allChars(){return[...new Set(D.map(e=>firstChar(e[0])))].sort();}
-
-function buildAlpha(){
-  const chars=allChars();
-  document.getElementById('an').innerHTML=chars.map(c=>
-    `<button class="ab has ${alpha===c?'sel':''}" onclick="selAlpha('${c}')">${c}</button>`
-  ).join('');
-}
-function selAlpha(c){
-  alpha=alpha===c?null:c;
-  buildAlpha();renderDict();
-}
-
 function getFiltered(){
   const q=(document.getElementById('sr')?.value||'').toLowerCase();
   return D.filter(([w,,t,d])=>{
-    if(filt!=='all'&&filt!=='outros'){if(t!==filt)return false;}
+    if(filt!=='all'&&filt!=='outros'&&t!==filt)return false;
     if(filt==='outros'&&['verbo','substantivo','adjetivo','numeral'].includes(t))return false;
     if(alpha&&firstChar(w)!==alpha)return false;
     if(q){const nw=nn(w);return nw.includes(q)||w.toLowerCase().includes(q)||d.toLowerCase().includes(q);}
@@ -646,6 +697,16 @@ function getFiltered(){
   });
 }
 
+function buildAlpha(){
+  const present=new Set(getFiltered().map(e=>firstChar(e[0])));
+  const all=[...new Set(D.map(e=>firstChar(e[0])))].sort();
+  document.getElementById('an').innerHTML=all.map(c=>
+    `<button class="ab${present.has(c)?' has':''}${alpha===c?' sel':''}" onclick="selAlpha('${c}')">${c}</button>`
+  ).join('');
+}
+function selAlpha(c){alpha=alpha===c?null:c;buildAlpha();renderDict();}
+
+// ── RENDER DICT ───────────────────────────────────────────────
 function typeClass(t){
   const m={verbo:'t-verbo',substantivo:'t-substantivo',adjetivo:'t-adjetivo',
     numeral:'t-numeral',pronome:'t-pronome','partícula':'t-partícula',
@@ -661,25 +722,76 @@ function renderDict(){
   if(!dl)return;
   if(cc)cc.textContent=`${fd.length} entrada${fd.length!==1?'s':''} encontrada${fd.length!==1?'s':''}`;
   if(!fd.length){dl.innerHTML='<div class="nr">Nenhuma entrada encontrada.</div>';return;}
-
   const q=document.getElementById('sr')?.value||'';
   const groups={};
   fd.forEach(e=>{const l=firstChar(e[0]);if(!groups[l])groups[l]=[];groups[l].push(e);});
-
   dl.innerHTML=Object.keys(groups).sort().map(l=>
-    `<div class="as">${!q?`<div class="ah">${l}</div>`:''}
-    <div class="de-list">${groups[l].map(([w,ip,t,d])=>
-      `<div class="de">
-        <span class="ew">${w}</span>
-        <span class="ei">[${ip}]</span>
-        <span class="et ${typeClass(t)}">${t}</span>
-        <span class="ed">${d}</span>
-      </div>`).join('')}</div></div>`
+    `<div class="as">${!q?`<div class="ah">${l}</div>`:''}<div class="de-list">${
+      groups[l].map(([w,ip,t,d])=>{
+        const idx=D.findIndex(e=>e[0]===w&&e[2]===t);
+        return `<div class="de" id="de-${idx}">
+          <span class="ew">${w}</span>
+          <span class="ei">[${ip||'—'}]</span>
+          <span class="et ${typeClass(t)}">${t}</span>
+          <span class="ed" id="ed-${idx}">${d}</span>
+          <div class="de-actions">
+            <button class="btn-sm btn-edit" onclick="startEdit(${idx})">✎</button>
+            <button class="btn-sm btn-del" onclick="delEntry(${idx})">✕</button>
+          </div>
+        </div>`;
+      }).join('')}</div></div>`
   ).join('');
 }
 
-// ── INIT ────────────────────────────────────────────────────
-buildFilters();
-buildAlpha();
-renderDict();
+// ── EDIÇÃO INLINE ─────────────────────────────────────────────
+function startEdit(idx){
+  const edEl=document.getElementById('ed-'+idx);
+  const deEl=document.getElementById('de-'+idx);
+  if(!edEl||!D[idx])return;
+  const cur=D[idx][3];
+  edEl.innerHTML=`<input class="ed-input" id="ei-${idx}" value="${cur.replace(/"/g,'&quot;')}">`;
+  const actionsEl=deEl.querySelector('.de-actions');
+  actionsEl.innerHTML=`
+    <button class="btn-sm btn-ok" onclick="confirmEdit(${idx})">✓</button>
+    <button class="btn-sm btn-cancel" onclick="renderDict()">✕</button>`;
+  const inp=document.getElementById('ei-'+idx);
+  inp.focus();inp.select();
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter')confirmEdit(idx);
+    if(e.key==='Escape')renderDict();
+  });
+}
+function confirmEdit(idx){
+  const inp=document.getElementById('ei-'+idx);
+  if(!inp||!D[idx])return;
+  const val=inp.value.trim();
+  if(!val){toast('A tradução não pode estar vazia.','err');return;}
+  D[idx][3]=val;
+  saveLS();renderDict();
+  toast('Entrada atualizada!','ok');
+}
+
+// ── DELETE ────────────────────────────────────────────────────
+function delEntry(idx){
+  const w=D[idx]?.[0];
+  if(!w)return;
+  if(!confirm(`Remover "${w}" do dicionário?`))return;
+  D.splice(idx,1);
+  saveLS();updateHeaderCount();buildAlpha();renderDict();
+  toast(`"${w}" removido.`,'info');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+let toastTimer=null;
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=`toast toast-${type} show`;
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+loadData();sortD();
+buildFilters();buildAlpha();renderDict();updateHeaderCount();
 </script>
