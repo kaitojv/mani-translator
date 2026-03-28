@@ -195,8 +195,19 @@ select.fi option{background:var(--s2)}
             <div class="preview" id="preview"><span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span></div>
           </div>
 
+          <div style="margin-top:10px; display:none;" id="wrap-sinonimo">
+            <label class="cb-wrap" style="border-color: var(--er);">
+              <input type="checkbox" id="f-sinonimo">
+              <span class="cb-label" id="txt-sinonimo" style="color: #e88080;">Aviso de sinônimo aqui</span>
+            </label>
+          </div>
+
           <div class="btn-row" style="margin-top:20px">
             <button class="btn btn-save" onclick="saveWord()">✓ Salvar na Nuvem</button>
+          </div>
+          
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn btn-save" onclick="()">✓ Salvar na Nuvem</button>
           </div>
           
           <div id="migration-box" style="display:none;">
@@ -408,7 +419,24 @@ async function saveWord(){
   const ip=document.getElementById('f-ipa').value.trim();
   
   if(!w || !t || !tp) { toast('Preencha os campos obrigatórios.', 'err'); return; }
-  if(D.find(e => e.word === w)) { toast(`"${w}" já existe!`, 'err'); return; }
+  
+  // Trava 1: Palavra exata já existe
+  if(D.find(e => e.word.toLowerCase() === w.toLowerCase())) { 
+      toast(`A palavra "${w}" já existe no dicionário!`, 'err'); 
+      return; 
+  }
+
+  // Trava 2: Tradução repetida (Sinônimos)
+  const tradExistente = D.find(e => e.trans.toLowerCase() === t.toLowerCase());
+  const checkSinonimo = document.getElementById('f-sinonimo');
+  const wrapSinonimo = document.getElementById('wrap-sinonimo');
+
+  if(tradExistente && !checkSinonimo.checked) {
+      document.getElementById('txt-sinonimo').textContent = `A tradução "${t}" já pertence a "${tradExistente.word}". Marque aqui para adicionar como sinônimo.`;
+      wrapSinonimo.style.display = 'block';
+      toast('Tradução já existente encontrada.', 'info');
+      return;
+  }
   
   toast('Salvando...', 'info');
   const all=[{word: w, ipa: ip, type: tp, trans: t}, ...buildDerivs(w,t,tp,ip)];
