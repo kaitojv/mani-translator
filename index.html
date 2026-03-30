@@ -572,7 +572,7 @@ function loadFromCloud() {
       if(D.length < 50) document.getElementById('migration-box').style.display = 'block';
       else document.getElementById('migration-box').style.display = 'none';
 
-      sortD(); updateHeaderCount(); buildAlpha(); renderDict();
+      sortD(); updateHeaderCount(); buildAlpha(); renderDict(); atualizarListaMapa();
   }, (error) => {
       toast('Erro ao conectar com a nuvem.', 'err');
   });
