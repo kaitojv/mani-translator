@@ -155,6 +155,7 @@ select.fi option{background:var(--s2)}
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
     <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
+    <button class="nb" id="nb-mapa" onclick="sw('mapa')">🌳 Mapa de Raízes</button>
   </nav>
   <div class="content">
 
@@ -280,6 +281,26 @@ select.fi option{background:var(--s2)}
         </button>
       </div>
     </section>
+
+    <section class="tab" id="tab-mapa">
+      <div class="dc-wrap" style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <div class="card-title" style="margin-bottom: 10px; font-size: 1rem;">Árvore Etimológica</div>
+        <p style="font-size: 0.85rem; color: var(--tx2); margin-bottom: 25px;">Digite uma raiz primordial (ex: verbo base ou substantivo) para visualizar toda a família de palavras geradas a partir dela.</p>
+        
+        <div class="sr-wrap" style="max-width: 400px; margin: 0 auto 30px auto;">
+          <div style="position:relative; flex: 1;">
+            <span class="sr-ico">🌳</span>
+            <input type="text" id="input-mapa-raiz" list="lista-palavras-mapa" placeholder="Digite uma palavra em Mani..." style="width:100%; padding:12px 14px 12px 40px; background:var(--s2); border:1px solid var(--bd); border-radius:11px; color:var(--tx); outline:none;">
+            <datalist id="lista-palavras-mapa"></datalist>
+          </div>
+          <button class="btn btn-save" onclick="desenharMapa()" style="padding: 10px 20px;">Mapear</button>
+        </div>
+
+        <div id="mapa-render-area" style="padding: 20px 0;">
+          <div style="color: var(--tx3); font-style: italic;">A árvore aparecerá aqui...</div>
+        </div>
+      </div>
+    </section>
         
   </div>
 </div>
@@ -337,6 +358,85 @@ function updateHeaderCount(){
   if(el)el.textContent=D.length;
 }
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+  // ── MAPA DE RAÍZES (ÁRVORE ETIMOLÓGICA) ──
+
+function atualizarListaMapa() {
+  // Preenche o autocompletar com as palavras do seu Firebase
+  const datalist = document.getElementById('lista-palavras-mapa');
+  if (datalist) {
+    datalist.innerHTML = D.map(e => `<option value="${e.word}">`).join('');
+  }
+}
+
+function desenharMapa() {
+  const input = document.getElementById('input-mapa-raiz').value.trim().toLowerCase();
+  const container = document.getElementById('mapa-render-area');
+
+  if (!input) {
+     container.innerHTML = '<div style="color:var(--tx2);">Digite uma palavra para mapear.</div>';
+     return;
+  }
+
+  // 1. Busca a palavra exata no dicionário atual
+  const rootWord = D.find(e => e.word.toLowerCase() === input);
+  if (!rootWord) {
+     container.innerHTML = `<div style="color:var(--er);">Palavra "${input}" não encontrada na nuvem.</div>`;
+     return;
+  }
+
+  // 2. Descobre a 'base' estrutural da palavra
+  let base = rootWord.word;
+  // Se for verbo, tira o 'r' final para achar as raízes derivadas corretamente
+  if (rootWord.type === 'verbo' && base.endsWith('r')) {
+      base = base.slice(0, -1);
+  }
+
+  // 3. Encontra todos os 'filhos' (palavras que começam com a base, mas não são a própria palavra)
+  let derivados = D.filter(e => e.word !== rootWord.word && e.word.startsWith(base));
+
+  // 4. Constrói o visual da Árvore
+  let html = `
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div style="background: var(--s2); border: 2px solid var(--acc); padding: 20px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(139,107,212,0.2); z-index: 2;">
+        <div style="font-size: 2rem; font-weight: 900; color: var(--acc3);">${rootWord.word}</div>
+        <div class="et ${typeClass(rootWord.type)}" style="display: inline-block; margin: 8px 0;">${rootWord.type}</div>
+        <div style="font-size: 0.95rem; color: var(--tx);">${rootWord.trans}</div>
+      </div>
+  `;
+
+  if (derivados.length > 0) {
+    // Organiza em ordem alfabética para ficar bonito
+    derivados.sort((a,b) => a.word.localeCompare(b.word));
+
+    html += `
+      <div style="width: 2px; height: 40px; background: var(--acc2); opacity: 0.6;"></div>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; padding: 25px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px dashed var(--bd2); max-width: 100%;">
+    `;
+
+    derivados.forEach(d => {
+      html += `
+        <div style="background: var(--s1); border: 1px solid var(--bd); padding: 15px; border-radius: 10px; min-width: 160px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+          <div style="font-size: 1.3rem; font-weight: bold; color: var(--acc2);">${d.word}</div>
+          <div class="et ${typeClass(d.type)}" style="display: inline-block; margin: 6px 0;">${d.type}</div>
+          <div style="font-size: 0.85rem; color: var(--tx2); line-height: 1.3;">${d.trans}</div>
+        </div>
+      `;
+    });
+
+    html += `</div>`; // Fecha container dos filhos
+  } else {
+    html += `
+      <div style="margin-top: 30px; color: var(--tx3); font-style: italic; background: var(--s1); padding: 10px 20px; border-radius: 20px;">
+        Esta palavra é uma folha solitária. Nenhuma derivação encontrada.
+      </div>
+    `;
+  }
+
+  html += `</div>`; // Fecha o flex-direction column principal
+  container.innerHTML = html;
+}
 
 // ── LÓGICA DE DERIVAÇÃO ──
 function getBaseForVerb(word) { return word.replace(/r$/,''); }
