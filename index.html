@@ -205,6 +205,7 @@ select.fi option{background:var(--s2)}
           <div style="background: rgba(139,107,212,0.1); border-left: 5px solid var(--acc2); padding: 25px; border-radius: 0 12px 12px 0; margin: 35px 0; position: relative; z-index: 1;">
             <p style="font-size: 1.3rem; color: var(--acc3); line-height: 1.6; font-weight: bold; margin: 0;">
               O Mani inverte essa lógica. A ordem natural é OVA — Objeto, Verbo, Agente.
+              O sujeito da frase é o último a ser falado, o ambiente vem primeiro.
             </p>
           </div>
 
@@ -553,13 +554,265 @@ function desenharMapa() {
   container.innerHTML = html;
 }
 
-  // ── SISTEMA DA APOSTILA INTERATIVA ──
+ // ── BANCO DE DADOS DA APOSTILA OFICIAL MANI (COMPLETA) ──
 const APOSTILA_MANI = [
-  { id: 1, titulo: "1. Introdução — O que é o Mani", conteudo: "<p>O Mani nasceu de uma pergunta simples: e se o idioma espelhasse a maneira como a natureza funciona, e não como o ego humano gosta de se organizar?</p><p>A ordem natural é OVA — Objeto, Verbo, Agente.</p>" },
-  { id: 2, titulo: "2. Fonologia — Os sons do idioma", conteudo: "<p>O Mani possui uma identidade sonora única. Letras como o <b>L</b> puro, o <b>რ</b> (som de Rr), o <b>ჰ</b> (som de Ks) e o <b>თ</b> (som de ch/sh) dão a textura da língua.</p>" },
-  { id: 3, titulo: "3. O sistema dos 10 Slots", conteudo: "A língua constrói a frase em camadas. A Antecipação Contextual se divide assim:<br><br><b>0:</b> Condicional<br><b>1:</b> Interrogativa<br><b>2:</b> Tempo absoluto<br><b>3:</b> Lugar / Espaço<br><b>...</b>" }
-  // Adicionaremos os outros capítulos aqui
-];
+  { 
+    id: 1, 
+    titulo: "1. Introdução — O que é o Mani", 
+    conteudo: `
+      <p>O Mani nasceu de uma pergunta simples: e se o idioma espelhasse a maneira como a natureza funciona, e não como o ego humano gosta de se organizar?</p>
+      <p style="margin-top:10px;">Na maior parte das línguas, a frase começa pelo sujeito (ex: Eu vi o pássaro). O falante se coloca no centro e só depois conta o que aconteceu.</p>
+      <div style="background:var(--s2); padding:15px; border-radius:8px; border-left:4px solid var(--acc); margin:15px 0;">
+        <b style="color:var(--acc3);">O Mani inverte essa lógica. A ordem natural é OVA — Objeto, Verbo, Agente.</b><br>
+        Primeiro o mundo, depois a ação, por último quem age. O sujeito chega no fim, como uma assinatura.
+      </div>
+      <p>A segunda característica central é ser uma língua <b>aglutinante</b>. Cada afixo carrega um único significado gramatical. Se você conhece as peças, pode desmontar qualquer palavra e entender o que ela diz.</p>
+    ` 
+  },
+  { 
+    id: 2, 
+    titulo: "2. Fonologia — Os sons do idioma", 
+    conteudo: `
+      <p>O princípio básico: cada caractere tem um único som, sem exceções por posição ou contexto. O que está escrito, você pronuncia.</p>
+      <h3 style="color:var(--acc2); margin:15px 0 5px;">As Oito Vogais</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Grafia</th><th>Som (exemplo PT)</th><th>Descrição</th></tr>
+        <tr><td style="padding:4px 0;"><b>a</b></td><td>pai</td><td>vogal aberta central</td></tr>
+        <tr><td style="padding:4px 0;"><b>λ</b></td><td>mãe</td><td>vogal central nasalada — o único som nasal</td></tr>
+        <tr><td style="padding:4px 0;"><b>e</b> / <b>ɛ</b></td><td>vê / pé</td><td>fechada anterior / aberta anterior</td></tr>
+        <tr><td style="padding:4px 0;"><b>i</b></td><td>vi</td><td>fechada anterior alta</td></tr>
+        <tr><td style="padding:4px 0;"><b>o</b> / <b>ɔ</b></td><td>vô / pó</td><td>fechada posterior / aberta posterior</td></tr>
+        <tr><td style="padding:4px 0;"><b>u</b></td><td>tu</td><td>fechada posterior alta</td></tr>
+      </table>
+      <h3 style="color:var(--acc2); margin:15px 0 5px;">Consoantes Especiais</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Grafia</th><th>Som</th><th>Como pronunciar</th></tr>
+        <tr><td style="padding:4px 0;"><b>რ</b></td><td>RR</td><td>vibrante múltipla gutural (ex: 'carro')</td></tr>
+        <tr><td style="padding:4px 0;"><b>r</b></td><td>r</td><td>vibrante simples (ex: 'caro')</td></tr>
+        <tr><td style="padding:4px 0;"><b>ჰ</b></td><td>KS/X</td><td>fricativa dupla (ex: 'táxi')</td></tr>
+        <tr><td style="padding:4px 0;"><b>ṫ</b></td><td>TH</td><td>dental aspirada (língua entre os dentes)</td></tr>
+        <tr><td style="padding:4px 0;"><b>თ</b></td><td>CH/SH</td><td>sibilante palatal (ex: 'chuva')</td></tr>
+        <tr><td style="padding:4px 0;"><b>l</b></td><td>l</td><td>lateral alveolar pura (nunca velarizado)</td></tr>
+      </table>
+      <p><b>O Apóstrofo ( ' )</b>: Não é um acento, mas uma consoante invisível (pausa glotal) que interrompe o fluxo de ar e protege a integridade do radical.</p>
+    ` 
+  },
+  { 
+    id: 3, 
+    titulo: "3. Sua primeira frase — A lógica OVA", 
+    conteudo: `
+      <p>O Mani coloca o mundo antes do ego. O objeto abre a cena, o verbo descreve o ato, e o agente encerra.</p>
+      <div style="background:var(--s3); padding:10px; border:1px solid var(--bd2); border-radius:6px; margin:10px 0; font-family:monospace;">
+        <b>ir'dλnთos kin soir'lo</b><br>
+        [os pássaros] [ele viu] [ele] → ele viu os pássaros
+      </div>
+      <p style="margin-top:15px;"><b>A ordem adaptada SVO:</b> Para facilitar a transição de línguas ocidentais, o Mani aceita SVO. O pronome livre assume a posição inicial.</p>
+      <div style="background:var(--s3); padding:10px; border:1px solid var(--bd2); border-radius:6px; margin:10px 0; font-family:monospace;">
+        <b>lou kin soir ir'dλnთos</b><br>
+        [ele] [ele viu] [os pássaros] → ele viu os pássaros
+      </div>
+    ` 
+  },
+  { 
+    id: 4, 
+    titulo: "4. O sistema dos 10 Slots", 
+    conteudo: `
+      <p>A frase organiza-se em posições fixas numeradas de 0 a 10. O ouvinte nunca é surpreendido devido à <b>Antecipação Contextual</b>.</p>
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin:15px 0;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Slot</th><th>Função</th><th>Exemplos</th></tr>
+        <tr><td style="padding:4px 0;"><b>0</b></td><td>Condicional</td><td>tubi</td></tr>
+        <tr><td style="padding:4px 0;"><b>1</b></td><td>Interrogativa</td><td>vi, vio, vu...</td></tr>
+        <tr><td style="padding:4px 0;"><b>2</b></td><td>Tempo absoluto</td><td>o namu, o nit</td></tr>
+        <tr><td style="padding:4px 0;"><b>3</b></td><td>Lugar / Espaço</td><td>in kamre, trɔ maki</td></tr>
+        <tr><td style="padding:4px 0;"><b>4</b></td><td>Negação</td><td>iჰo</td></tr>
+        <tr><td style="padding:4px 0;"><b>5</b></td><td>Modalidade</td><td>vunir, pɔtar</td></tr>
+        <tr><td style="padding:4px 0;"><b>6</b></td><td>Objeto (Alvo)</td><td>ir'avita</td></tr>
+        <tr><td style="padding:4px 0;"><b>7</b></td><td>Advérbio</td><td>fɛmoriჰa</td></tr>
+        <tr><td style="padding:4px 0;"><b>8</b></td><td>Gatilho temporal</td><td>kin, kλn</td></tr>
+        <tr><td style="padding:4px 0;"><b>9</b></td><td>Verbo'Agente</td><td>soir'ma</td></tr>
+        <tr><td style="padding:4px 0;"><b>10</b></td><td>Adjuntos</td><td>რos tau, ɛs'mau</td></tr>
+      </table>
+      <p><b>Notas:</b> <code>tubi</code> sempre abre a frase (Slot 0). No Slot 3, <code>in</code> indica posição estática, <code>trɔ</code> indica movimento. No Slot 10, <code>რos</code> (companhia) e <code>ɛs'</code> (agente passivo) nunca coexistem.</p>
+    ` 
+  },
+  { 
+    id: 5, 
+    titulo: "5. Substantivos — Casos e declinação nominal", 
+    conteudo: `
+      <p>A relação do substantivo com o verbo é marcada por prefixos:</p>
+      <ul style="margin-left:20px; line-height:1.8;">
+        <li><b>Nominativo:</b> Sem prefixo (Sujeito).</li>
+        <li><b>Acusativo:</b> <code>ir'</code> (Objeto Direto). Obrigatório para animados e pronomes.</li>
+        <li><b>Genitivo:</b> <code>un'</code> (Posse). O possuidor precede o possuído (ex: <i>un'mau kamre</i>).</li>
+        <li><b>Ablativo:</b> <code>ɛs'</code> (Origem/Agente da passiva).</li>
+        <li><b>Comparativo:</b> <code>vel'</code> (Referência).</li>
+      </ul>
+      <p style="margin-top:15px;"><b>Bloco Nominal:</b> O prefixo de caso é colado apenas à primeira palavra do bloco (ex: <i>ir'bɔno avita</i>).</p>
+      <p><b>Plural e Coletivo:</b> Plural leva <code>-s</code>. Coletivo leva <code>-noma</code> (ex: <i>maki</i> = árvore → <i>makinoma</i> = floresta).</p>
+    ` 
+  },
+  { 
+    id: 6, 
+    titulo: "6. Artigos, determinativos e quantificadores", 
+    conteudo: `
+      <p>Os artigos definidos variam por gênero (Masc: <code>თo</code>, Fem: <code>თa</code>, Neutro: <code>თe</code>, Inanimado: <code>თi</code>). O artigo zero é usado para abstrações.</p>
+      <p>Indefinidos: <code>lut</code> (um) e <code>luts</code> (uns).</p>
+      <h3 style="color:var(--acc2); margin:15px 0 5px;">Quantificadores</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Forma</th><th>Significado</th><th>Forma</th><th>Significado</th></tr>
+        <tr><td style="padding:4px 0;">movo(s)</td><td>bastante / muitos</td><td>bistu(s)</td><td>algum / alguns</td></tr>
+        <tr><td style="padding:4px 0;">mira(s)</td><td>pouco / poucos</td><td>denko(s)</td><td>tudo / todos</td></tr>
+      </table>
+      <p><b>O vocativo:</b> A partícula <code>jɔ</code> precede o nome de quem é chamado e vem antes do Slot 0 (ex: <i>jɔ, bomiva!</i>).</p>
+    ` 
+  },
+  { 
+    id: 7, 
+    titulo: "7. Verbos — O coração do Mani", 
+    conteudo: `
+      <p>Todo verbo original termina obrigatoriamente em <b>-r</b> (ex: <i>vokar, soir, fɛmor</i>).</p>
+      <p><b>Aglutinação:</b> O agente é colado ao verbo via apóstrofo: <code>[Radical-r] + ' + [Sufixo]</code>.</p>
+      <ul style="margin-left:20px; line-height:1.6; columns: 2;">
+        <li>1ª s: <b>'ma</b></li><li>1ª p: <b>'mas</b></li>
+        <li>2ª s: <b>'ta</b></li><li>2ª p: <b>'tas</b></li>
+        <li>3ª s.M: <b>'lo</b></li><li>3ª p.M: <b>'los</b></li>
+        <li>3ª s.F: <b>'la</b></li><li>3ª p.F: <b>'las</b></li>
+        <li>3ª s.N: <b>'le</b></li><li>3ª p.N: <b>'les</b></li>
+        <li>Impess: <b>'li</b></li><li>Impess p: <b>'lis</b></li>
+      </ul>
+      <p style="margin-top:15px;">Sujeitos unidos por <code>oi</code> (e) seguem hierarquia: se inclui o falante usa <b>'mas</b>; se inclui só o ouvinte usa <b>'tas</b>.</p>
+    ` 
+  },
+  { 
+    id: 8, 
+    titulo: "8. Tempo verbal — Passado, presente e futuro", 
+    conteudo: `
+      <p>O tempo é um gatilho externo (Slot 8) colado antes do verbo principal.</p>
+      <ul style="margin-left:20px; line-height:1.8;">
+        <li><b>Presente:</b> (Sem gatilho) → <i>soir'ma</i> (eu vejo).</li>
+        <li><b>Passado:</b> <code>kin</code> → <i>kin soir'ma</i> (eu vi).</li>
+        <li><b>Futuro:</b> <code>kλn</code> → <i>kλn soir'ma</i> (eu verei).</li>
+      </ul>
+      <p style="margin-top:15px;">Para tempo absoluto, usa-se a partícula <code>o</code> no Slot 2: <i>o namu</i> (agora), <i>o tukan</i> (hoje), <i>o pouna</i> (amanhã), <i>o nit</i> (à noite).</p>
+    ` 
+  },
+  { 
+    id: 9, 
+    titulo: "9. Zero-cópula — Quando 'ser' some", 
+    conteudo: `
+      <p>Quando o predicado é um adjetivo, substantivo classificatório ou advérbio, o verbo <b>vimur</b> (ser/estar) é omitido. O agente se aglutina direto ao predicado.</p>
+      <div style="background:var(--s3); padding:10px; border:1px solid var(--bd2); border-radius:6px; margin:10px 0;">
+        <b>bɔno'lo</b> → ele é bom<br>
+        <b>in kamre'li</b> → está em casa
+      </div>
+      <p>O uso explícito de <i>vimur</i> é reservado apenas para ênfase existencial (afirmar a essência). Horas também usam zero-cópula (ex: <i>paro fle'li</i> = são duas horas).</p>
+    ` 
+  },
+  { 
+    id: 10, 
+    titulo: "10. Verbos modais", 
+    conteudo: `
+      <p>Os verbos modais ocupam o Slot 5, antes do objeto e do verbo principal:</p>
+      <ul style="margin-left:20px; line-height:1.8;">
+        <li><b>vunir</b>: querer / ter vontade.</li>
+        <li><b>pɔtar</b>: poder / ter capacidade.</li>
+        <li><b>ṫunir</b>: precisar / necessitar.</li>
+      </ul>
+      <p style="margin-top:15px;"><b>Regra de Ouro:</b> O gatilho temporal (kin/kλn) e o sufixo de agente permanecem no verbo principal, nunca no modal.<br>Ex: <i>vunir kλn soir'ma</i> (eu vou querer ver).</p>
+    ` 
+  },
+  { 
+    id: 11, 
+    titulo: "11. Aspecto imperfectivo — Ações em curso", 
+    conteudo: `
+      <p>Descreve ações em andamento (gerúndio). É formado inserindo o infixo <b>-ium-</b> entre o radical e o agente.</p>
+      <p>Fórmula: <code>[Radical] + ium + ' + [Agente]</code></p>
+      <ul style="margin-left:20px; line-height:1.8;">
+        <li>ajλr'ma → <b>ajλriu'ma</b> (estou fazendo).</li>
+        <li>kar'ta → <b>karium'ta</b> (está caminhando).</li>
+      </ul>
+      <p style="margin-top:15px;">Pode ser combinado com tempos no Slot 8: <i>kin fɛmorium'la</i> (ela estava amando).</p>
+    ` 
+  },
+  { 
+    id: 12, 
+    titulo: "12. Vozes gramaticais — Ativa, passiva e reflexiva", 
+    conteudo: `
+      <p><b>Voz Passiva:</b> O alvo perde o prefixo <code>ir'</code> e torna-se sujeito. O verbo recebe o infixo <b>-em-</b>. O agente passa ao Slot 10 com <code>ɛs'</code>.<br>
+      <i>lomun soirem'li ɛs'mau</i> (o animal é visto por mim).</p>
+      <p><b>Voz Reflexiva:</b> Ocorre duplicação silábica do pronome livre no Slot 6 (ex: <i>mau</i> → <i>mamau</i>, <i>tau</i> → <i>tatau</i>).<br>
+      <i>mamau soir'ma</i> (eu me vejo).</p>
+      <p><b>Imperativo:</b> Usa o radical-r nu, sem agente (ex: <i>vokar!</i> = fala!).</p>
+    ` 
+  },
+  { 
+    id: 13, 
+    titulo: "13. Derivação — Como o léxico cresce", 
+    conteudo: `
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Sufixo</th><th>Função</th><th>Exemplo</th></tr>
+        <tr><td style="padding:4px 0;"><b>-noma</b></td><td>coletivo / lugar</td><td>makinoma (floresta)</td></tr>
+        <tr><td style="padding:4px 0;"><b>-ṫi</b></td><td>estado abstrato</td><td>vimurṫi (existência)</td></tr>
+        <tr><td style="padding:4px 0;"><b>-av</b></td><td>agente</td><td>jetɛrav (sábio)</td></tr>
+        <tr><td style="padding:4px 0;"><b>-iჰa</b></td><td>advérbio de modo</td><td>jetɛriჰa (sabiamente)</td></tr>
+        <tr><td style="padding:4px 0;"><b>-λ</b></td><td>adjetivo resultante</td><td>lɔkarλ (aberto)</td></tr>
+      </table>
+      <p><b>Derivação Recíproca:</b> Do verbo para o adjetivo usa-se <code>-λ</code> (ex: desmir → desmirλ). Do adjetivo para o verbo, usa-se <code>-r</code> (com vogal de apoio <code>-a-</code> após consoantes).</p>
+    ` 
+  },
+  { 
+    id: 14, 
+    titulo: "14. Pronomes e suas formas", 
+    conteudo: `
+      <p>Os pronomes declinam como os substantivos:</p>
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:10px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Pessoa</th><th>Livre</th><th>Acusativo</th><th>Genitivo</th><th>Clítico</th></tr>
+        <tr><td style="padding:3px 0;">1ª s</td><td>mau</td><td>ir'mau</td><td>un'mau</td><td>'ma</td></tr>
+        <tr><td style="padding:3px 0;">1ª p</td><td>maus</td><td>ir'maus</td><td>un'maus</td><td>'mas</td></tr>
+        <tr><td style="padding:3px 0;">2ª s</td><td>tau</td><td>ir'tau</td><td>un'tau</td><td>'ta</td></tr>
+        <tr><td style="padding:3px 0;">3ª masc s</td><td>lou</td><td>ir'lou</td><td>un'lou</td><td>'lo</td></tr>
+        <tr><td style="padding:3px 0;">3ª fem s</td><td>lau</td><td>ir'lau</td><td>un'lau</td><td>'la</td></tr>
+        <tr><td style="padding:3px 0;">3ª neut s</td><td>leu</td><td>ir'leu</td><td>un'leu</td><td>'le</td></tr>
+        <tr><td style="padding:3px 0;">3ª imp s</td><td>liu</td><td>ir'liu</td><td>un'liu</td><td>'li</td></tr>
+      </table>
+    ` 
+  },
+  { 
+    id: 15, 
+    titulo: "15. Perguntas e interrogativos", 
+    conteudo: `
+      <p>Para perguntas fechadas (sim/não), coloque <b>vi</b> no Slot 1:<br><i>vi kin bor'ta?</i> (você veio?).</p>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-top:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Palavra</th><th>Tradução</th><th>Exemplo</th></tr>
+        <tr><td style="padding:4px 0;">viλn</td><td>quando</td><td>viλn kin bor'lo?</td></tr>
+        <tr><td style="padding:4px 0;">vie</td><td>onde</td><td>vie vimur'li?</td></tr>
+        <tr><td style="padding:4px 0;">vier</td><td>por quê</td><td>vier iჰo kin bor'ta?</td></tr>
+        <tr><td style="padding:4px 0;">vin</td><td>como</td><td>vin vimur'ta?</td></tr>
+        <tr><td style="padding:4px 0;">vio</td><td>quem</td><td>vio kin soir ir'mau?</td></tr>
+        <tr><td style="padding:4px 0;">vu</td><td>o quê</td><td>vu kin ajλr'la?</td></tr>
+      </table>
+    ` 
+  },
+  { 
+    id: 16, 
+    titulo: "16. Condicionais, subordinadas e conjunções", 
+    conteudo: `
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Conjunção</th><th>Tradução / Função</th></tr>
+        <tr><td style="padding:4px 0;"><b>oi</b> / <b>რis</b> / <b>ɛi</b></td><td>e / mas / ou (adição, oposição, alternância)</td></tr>
+        <tr><td style="padding:4px 0;"><b>zier</b> / <b>dɔn</b></td><td>porque / então (causa, consequência)</td></tr>
+        <tr><td style="padding:4px 0;"><b>tubi</b></td><td>se (dependência - Slot 0)</td></tr>
+        <tr><td style="padding:4px 0;"><b>vλn</b> / <b>vλnin</b></td><td>quando / enquanto (tempo)</td></tr>
+        <tr><td style="padding:4px 0;"><b>რistubi</b></td><td>embora (concessão)</td></tr>
+        <tr><td style="padding:4px 0;"><b>zos</b></td><td>que (discurso indireto)</td></tr>
+      </table>
+    ` 
+  },
+  { 
+    id: 17, 
+    titulo: "17. Números e tempo cronológico", 
+    conteudo: `
+      <p>Bases numéricas: 0: <b>nɔ</b>, 1:
 
 let capituloAtivo = 1;
 
