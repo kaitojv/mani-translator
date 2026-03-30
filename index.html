@@ -154,6 +154,7 @@ select.fi option{background:var(--s2)}
   <nav class="nav">
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
+    <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
   </nav>
   <div class="content">
 
@@ -241,6 +242,35 @@ select.fi option{background:var(--s2)}
       <div class="dc-count" id="dcc"></div>
       <div id="dl"></div>
     </section>
+
+    <section class="tab" id="tab-gerador">
+      <div class="card" style="max-width: 650px; margin: 0 auto; text-align: center;">
+        <div class="card-title" style="margin-bottom: 20px;">Gerador Fonotático de Mani</div>
+        <p style="font-size: 0.9em; color: var(--tx2); margin-bottom: 25px;">Gere raízes que respeitam as regras da língua e envie direto para a criação com suas derivações automáticas.</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap;">
+          <select class="fi" id="qtd-silabas" style="max-width: 180px; cursor: pointer;">
+            <option value="1">1 Sílaba (ex: kɔr)</option>
+            <option value="2" selected>2 Sílabas (ex: maku)</option>
+            <option value="3">3 Sílabas</option>
+            <option value="4">4 Sílabas</option>
+            <option value="5">5 Sílabas</option>
+            <option value="aleatorio">🎲 Sílabas Aleatórias</option>
+          </select>
+
+          <select class="fi" id="gerador-classe" style="max-width: 180px; cursor: pointer;">
+            <option value="aleatorio">🎲 Classe Aleatória</option>
+            <option value="verbo">Verbo (-r)</option>
+            <option value="substantivo">Substantivo</option>
+            <option value="adjetivo">Adjetivo (Vogal)</option>
+          </select>
+          
+          <button class="btn btn-save" onclick="gerarPalavraMani()" style="padding: 10px 25px;">Gerar Raiz</button>
+        </div>
+        
+        <div style="background: var(--s2); border: 1px dashed var(--bd3); padding: 30px; border-radius: 12px; margin-bottom: 15px; position: relative;">
+          <div id="etiqueta-classe" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx3);">...</div>
+          <span id="resultado-gerador" style="font-size: 2.5rem; font-weight: 800; color: var(--acc3
   </div>
 </div>
 
@@ -582,6 +612,97 @@ function renderDict(){
   }
 }
 
+// ── GERADOR FONOTÁTICO E MORFOLÓGICO ──
+const consoantesMani = ['p', 't', 'k', 'b', 'd', 'g', 'm', 'n', 'v', 's', 'z', 'l', 'j', 'r', 'L', 'რ', 'ჰ', 'თ'];
+const vogaisMani = ['a', 'e', 'i', 'o', 'u', 'ɔ', 'ɛ'];
+let palavraGeradaAtual = '';
+let classeGeradaAtual = '';
+
+function sortearLetra(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function gerarPalavraMani() {
+  const qtdSelect = document.getElementById('qtd-silabas').value;
+  const classeSelect = document.getElementById('gerador-classe').value;
+  
+  let numSilabas = qtdSelect === 'aleatorio' ? Math.floor(Math.random() * 4) + 1 : parseInt(qtdSelect);
+  
+  const classesMani = ['verbo', 'substantivo', 'adjetivo'];
+  classeGeradaAtual = classeSelect === 'aleatorio' ? classesMani[Math.floor(Math.random() * classesMani.length)] : classeSelect;
+
+  let padraoDinamico = '';
+  const silabasPossiveis = ['CV', 'CV', 'CV', 'CVC', 'V']; 
+
+  for (let i = 0; i < numSilabas; i++) {
+    padraoDinamico += silabasPossiveis[Math.floor(Math.random() * silabasPossiveis.length)];
+  }
+
+  palavraGeradaAtual = '';
+  for (let i = 0; i < padraoDinamico.length; i++) {
+    if (padraoDinamico[i] === 'C') {
+      palavraGeradaAtual += sortearLetra(consoantesMani);
+    } else if (padraoDinamico[i] === 'V') {
+      palavraGeradaAtual += sortearLetra(vogaisMani);
+    }
+  }
+
+  // ESCULPIR A PALAVRA COM BASE NA CLASSE GRAMATICAL
+  const ultimaLetra = palavraGeradaAtual.slice(-1);
+  const terminaEmVogal = vogaisMani.includes(ultimaLetra);
+
+  if (classeGeradaAtual === 'verbo') {
+    if (ultimaLetra !== 'r' && ultimaLetra !== 'რ') {
+      if (terminaEmVogal) {
+        palavraGeradaAtual += 'r'; // ex: maku -> makur
+      } else {
+        palavraGeradaAtual += 'ar'; // ex: mak -> makar
+      }
+    }
+  } else if (classeGeradaAtual === 'adjetivo') {
+    if (!terminaEmVogal) {
+      palavraGeradaAtual += sortearLetra(vogaisMani); // Garante que adjetivos terminem suaves
+    }
+  }
+
+  // Atualizar Interface
+  const divResultado = document.getElementById('resultado-gerador');
+  const etiquetaClasse = document.getElementById('etiqueta-classe');
+  
+  divResultado.textContent = palavraGeradaAtual;
+  etiquetaClasse.textContent = classeGeradaAtual;
+  etiquetaClasse.className = `et ${typeClass(classeGeradaAtual)}`; // Usa o seu CSS de cores nativo!
+  
+  document.getElementById('btn-enviar-criacao').style.display = 'inline-block';
+  
+  // Efeito visual
+  divResultado.style.color = '#fff';
+  setTimeout(() => { divResultado.style.color = 'var(--acc3)'; }, 200);
+}
+
+function enviarPalavraGerada() {
+  // Preenche a aba de criação
+  document.getElementById('f-word').value = palavraGeradaAtual;
+  document.getElementById('f-type').value = classeGeradaAtual;
+  document.getElementById('f-trans').value = ''; // Limpa a tradução para você digitar
+  document.getElementById('f-trans').focus(); // Já coloca o cursor na tradução
+  
+  // Muda de aba e aciona o seu motor de derivação
+  sw('criar');
+  updateDerivOptions();
+  
+  // Marcar checkboxes comuns automaticamente para poupar tempo
+  setTimeout(() => {
+      if(classeGeradaAtual === 'verbo' && document.getElementById('d-v-agente')) {
+          document.getElementById('d-v-agente').checked = true;
+          document.getElementById('d-v-abstrato').checked = true;
+      } else if ((classeGeradaAtual === 'substantivo' || classeGeradaAtual === 'adjetivo') && document.getElementById('d-s-plural')) {
+          document.getElementById('d-s-plural').checked = true;
+      }
+      livePreview(); // Mostra o resumo final
+  }, 100);
+}
+  
 // ── EDIÇÃO COMPLETA E DELETE NO FIREBASE ──
 function startEdit(id){
   const row = document.getElementById('de-'+id);
