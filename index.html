@@ -86,6 +86,23 @@ select.fi option{background:var(--s2)}
 .toast-err{background:rgba(138,58,58,.95);border:1px solid rgba(220,100,100,.4);color:#f0c0c0}
 .toast-info{background:rgba(58,80,138,.95);border:1px solid rgba(100,140,220,.4);color:#c0d4f8}
 
+  /* ── ABA COMUNICAÇÃO: ANALISADOR & LEITOR ── */
+.com-split { display: flex; flex-direction: column; gap: 30px; }
+.gloss-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+.gloss-word { background: var(--s2); border: 1px solid var(--bd2); border-radius: 10px; padding: 12px; min-width: 130px; }
+.gloss-orig { font-size: 1.1rem; font-weight: 800; color: var(--acc3); margin-bottom: 4px; }
+.gloss-morph { font-family: monospace; font-size: 0.75rem; color: var(--acc); border-bottom: 1px dashed var(--bd3); padding-bottom: 4px; margin-bottom: 6px; }
+.gloss-trans { font-size: 0.9rem; color: var(--tx); font-weight: bold; }
+.gloss-tag { display: inline-block; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; background: var(--s3); color: var(--tx2); margin-right: 3px; border: 1px solid var(--bd); text-transform: uppercase; }
+
+/* Estilos do Leitor Interativo */
+.leitor-area { background: var(--s1); padding: 25px; border-radius: 12px; border: 1px solid var(--bd); font-size: 1.15rem; line-height: 1.7; color: var(--tx); white-space: pre-wrap; min-height: 150px; }
+.mani-word { cursor: help; border-bottom: 1px dashed var(--tx3); transition: 0.2s; position: relative; display: inline-block; }
+.mani-word:hover { color: var(--acc3); border-bottom-color: var(--acc3); background: rgba(139,107,212,0.1); }
+
+/* Tooltip flutuante */
+#leitor-tooltip { position: fixed; background: var(--s1); border: 1px solid var(--acc); padding: 12px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 10000; pointer-events: none; opacity: 0; transition: opacity 0.15s; max-width: 280px; }
+
   
 
 /* ── DICIONÁRIO ── */
@@ -157,6 +174,7 @@ select.fi option{background:var(--s2)}
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
     <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
     <button class="nb" id="nb-mapa" onclick="sw('mapa')">🌳 Mapa de Raízes</button>
+    <button class="nb" id="nb-comunicacao" onclick="sw('comunicacao')">💬 Comunicação & Análise</button>
   </nav>
   <div class="content">
 
@@ -372,6 +390,44 @@ select.fi option{background:var(--s2)}
         </div>
       </div>
     </section>
+
+    <section class="tab" id="tab-comunicacao">
+  <div class="com-split">
+    
+    <div class="card">
+      <div class="card-title">🔍 Analisador Morfossintático</div>
+      <p style="font-size: 0.8rem; color: var(--tx2); margin-bottom: 12px;">Analise a estrutura de clíticos e prefixos de caso em tempo real.</p>
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="input-analisador" class="fi" style="flex:1;" placeholder="Digite uma frase (Ex: in makinoma kλn borium'les)..." onkeypress="if(event.key==='Enter') executarAnaliseMani()">
+        <button class="btn btn-save" onclick="executarAnaliseMani()">Analisar</button>
+      </div>
+      <div id="resultado-analisador" class="gloss-grid">
+        <span style="color:var(--tx3); font-size: 0.85rem; font-style: italic;">As palavras decompostas aparecerão aqui...</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 Escrita e Posts Interativos</div>
+      <p style="font-size: 0.8rem; color: var(--tx2); margin-bottom: 12px;">Escreva seus textos e passe o mouse para ver a tradução inteligente.</p>
+      
+      <div id="leitor-modo-edicao">
+        <textarea id="input-leitor" class="fi" style="min-height: 120px; resize: vertical; margin-bottom: 10px;" placeholder="Escreva seu texto em Mani aqui..."></textarea>
+        <button class="btn btn-ok" onclick="iniciarLeitura()">📖 Ativar Hover de Tradução</button>
+      </div>
+      
+      <div id="leitor-modo-leitura" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 0.7rem; color: var(--acc2); text-transform: uppercase;">Modo Leitura Ativo</span>
+          <button class="btn-sm btn-cancel" onclick="voltarEdicaoLeitor()">✎ Editar Texto</button>
+        </div>
+        <div id="area-texto-leitura" class="leitor-area"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="leitor-tooltip"></div>
         
   </div>
 </div>
@@ -508,6 +564,116 @@ function desenharMapa() {
   html += `</div>`; // Fecha o flex-direction column principal
   container.innerHTML = html;
 }
+
+  // ── CONFIGURAÇÕES MORFOLÓGICAS MANI ──
+const REGRAS_MANI = {
+    cliticos: ["'mas", "'ma", "'tas", "'ta", "'los", "'lo", "'las", "'la", "'les", "'le", "'li"],
+    prefixos: ["ir'", "un'", "εs'"],
+    sufixos: ["ium", "s"]
+};
+
+function dissecarPalavra(raw) {
+    let p = raw.toLowerCase().replace(/[.,;!?]/g, '').trim();
+    let res = { original: raw, base: p, tags: [], encontrada: null };
+
+    // 1. Busca Direta
+    let busca = D.find(e => e.word.toLowerCase() === p);
+    if (busca) { res.encontrada = busca; return res; }
+
+    // 2. Decomposição (Prefixos -> Clíticos -> Sufixos)
+    let temp = p;
+    
+    // Prefixos de Caso
+    REGRAS_MANI.prefixos.forEach(pref => {
+        if (temp.startsWith(pref)) {
+            res.tags.push(pref);
+            temp = temp.slice(pref.length);
+        }
+    });
+
+    // Clíticos Pessoais
+    REGRAS_MANI.cliticos.forEach(clit => {
+        if (temp.endsWith(clit)) {
+            res.tags.push(clit);
+            temp = temp.slice(0, -clit.length);
+        }
+    });
+
+    // Gerúndios e Plurais
+    REGRAS_MANI.sufixos.forEach(suf => {
+        if (temp.endsWith(suf)) {
+            res.tags.push(suf);
+            temp = temp.slice(0, -suf.length);
+        }
+    });
+
+    // Busca com a raiz limpa
+    res.encontrada = D.find(e => e.word.toLowerCase() === temp) || 
+                     D.find(e => e.word.toLowerCase() === temp + 'r'); // Tenta recuperar infinitivo
+    res.base = temp;
+    return res;
+}
+
+// ── FUNÇÕES DO ANALISADOR ──
+function executarAnaliseMani() {
+    const texto = document.getElementById('input-analisador').value;
+    const container = document.getElementById('resultado-analisador');
+    const palavras = texto.split(/\s+/);
+    let html = '';
+
+    palavras.forEach(p => {
+        const d = dissecarPalavra(p);
+        if (d.encontrada) {
+            html += `
+            <div class="gloss-word">
+                <div class="gloss-orig">${d.original}</div>
+                <div class="gloss-morph">${d.encontrada.word} ${d.tags.map(t => '+ '+t).join(' ')}</div>
+                <div class="gloss-trans">${d.encontrada.trans}</div>
+                <div style="margin-top:5px">${d.tags.map(t => `<span class="gloss-tag">${t}</span>`).join('')}</div>
+            </div>`;
+        } else {
+            html += `<div class="gloss-word" style="border-color:var(--er)"><div class="gloss-orig">${p}</div><div style="color:var(--er); font-size:0.8rem;">? Não listada</div></div>`;
+        }
+    });
+    container.innerHTML = html;
+}
+
+// ── FUNÇÕES DO LEITOR ──
+function iniciarLeitura() {
+    const texto = document.getElementById('input-leitor').value;
+    if (!texto) return;
+    document.getElementById('leitor-modo-edicao').style.display = 'none';
+    document.getElementById('leitor-modo-leitura').style.display = 'block';
+
+    const area = document.getElementById('area-texto-leitura');
+    area.innerHTML = texto.split(/(\s+)/).map(p => {
+        if (p.trim().length === 0) return p;
+        return `<span class="mani-word" onmouseover="mapaTooltip(event, '${p.replace(/'/g, "\\'")}')" onmouseout="fecharTooltip()">${p}</span>`;
+    }).join('');
+}
+
+function voltarEdicaoLeitor() {
+    document.getElementById('leitor-modo-edicao').style.display = 'block';
+    document.getElementById('leitor-modo-leitura').style.display = 'none';
+}
+
+function mapaTooltip(e, p) {
+    const d = dissecarPalavra(p);
+    const tip = document.getElementById('leitor-tooltip');
+    if (!d.encontrada) return;
+
+    tip.innerHTML = `
+        <div style="color:var(--acc3); font-weight:bold; font-size:1.1rem;">${d.encontrada.word}</div>
+        <div style="color:var(--tx2); font-size:0.7rem; text-transform:uppercase;">${d.encontrada.type}</div>
+        <div style="color:var(--tx); margin-top:4px;">${d.encontrada.trans}</div>
+        ${d.tags.length ? `<div style="margin-top:8px; border-top:1px solid var(--bd2); padding-top:4px; font-size:0.75rem; color:var(--acc2);">Morfemas: ${d.tags.join(', ')}</div>` : ''}
+    `;
+    tip.style.opacity = '1';
+    tip.style.left = (e.clientX + 15) + 'px';
+    tip.style.top = (e.clientY + 15) + 'px';
+}
+
+function fecharTooltip() { document.getElementById('leitor-tooltip').style.opacity = '0'; }
 
 // ── LÓGICA DE DERIVAÇÃO ──
 function getBaseForVerb(word) { return word.replace(/r$/,''); }
