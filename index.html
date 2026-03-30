@@ -1,4 +1,9 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mani - Língua Construída</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -83,7 +88,7 @@ select.fi option{background:var(--s2)}
 
 /* ── DICIONÁRIO ── */
 .dc-wrap{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
-.sr-wrap{position:relative}
+.sr-wrap{position:relative; display:flex; gap:10px;}
 .sr-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--tx2);pointer-events:none;font-size:.9rem}
 #sr{width:100%;padding:12px 14px 12px 40px;background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--tx);font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
 #sr:focus{border-color:var(--acc)}
@@ -127,8 +132,11 @@ select.fi option{background:var(--s2)}
   .hdr{padding:14px 18px}.nav{padding:0 14px}.content{padding:18px 14px}
   .cp-grid{grid-template-columns:1fr}.deriv-grid{grid-template-columns:1fr}
   .ew{min-width:90px}.ei{min-width:70px}
+  .sr-wrap{flex-direction: column;}
 }
 </style>
+</head>
+<body>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -195,19 +203,15 @@ select.fi option{background:var(--s2)}
             <div class="preview" id="preview"><span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span></div>
           </div>
 
-          <div style="margin-top:10px; display:none;" id="wrap-sinonimo">
-            <label class="cb-wrap" style="border-color: var(--er);">
+          <div style="margin-top:15px; display:none; padding:10px; border-radius:8px; border:1px solid var(--er); background:rgba(138,58,58,.1);" id="wrap-sinonimo">
+            <label class="cb-wrap" style="border:none; background:transparent; padding:0;">
               <input type="checkbox" id="f-sinonimo">
-              <span class="cb-label" id="txt-sinonimo" style="color: #e88080;">Aviso de sinônimo aqui</span>
+              <span class="cb-label" id="txt-sinonimo" style="color: #e88080; font-weight:bold;">Aviso de sinônimo aqui</span>
             </label>
           </div>
 
           <div class="btn-row" style="margin-top:20px">
             <button class="btn btn-save" onclick="saveWord()">✓ Salvar na Nuvem</button>
-          </div>
-          
-          <div class="btn-row" style="margin-top:20px">
-            <button class="btn btn-save" onclick="()">✓ Salvar na Nuvem</button>
           </div>
           
           <div id="migration-box" style="display:none;">
@@ -219,14 +223,14 @@ select.fi option{background:var(--s2)}
 
     <section class="tab" id="tab-dictionary">
       <div class="dc-wrap">
-        <div class="sr-wrap" style="display: flex; gap: 10px;">
+        <div class="sr-wrap">
           <div style="position:relative; flex: 1;">
             <span class="sr-ico">🔍</span>
             <input type="text" id="sr" placeholder="Buscar em Mani ou Português…" oninput="renderDict()">
           </div>
           <select id="sort-select" onchange="toggleSort(this.value)" class="fi" style="width: auto; padding: 0 14px; font-size: 0.85rem; cursor:pointer;">
-            <option value="alpha">Alfabética</option>
-            <option value="date">Recentes</option>
+            <option value="alpha">Ordem Alfabética</option>
+            <option value="date">Adições Recentes</option>
           </select>
         </div>
         <div class="fr" id="fr"></div>
@@ -241,39 +245,22 @@ select.fi option{background:var(--s2)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIGURAÇÃO FIREBASE (Substitua as chaves aqui!) ──
+// ── CONFIGURAÇÃO FIREBASE (COLE AS SUAS CHAVES AQUI!) ──
 const firebaseConfig = {
-  apiKey: "AIzaSyCBDH9UqYXcliyiER9L-JUkiJdWuVnOV4M",
-  authDomain: "dicionario-mani.firebaseapp.com",
-  projectId: "dicionario-mani",
-  storageBucket: "dicionario-mani.firebasestorage.app",
-  messagingSenderId: "168308043752",
-  appId: "1:168308043752:web:b8c45c45152b64ae6cfe5d",
-  measurementId: "G-JJJG3WX9CD"
+  apiKey: "COLE_AQUI_SUA_API_KEY",
+  authDomain: "COLE_AQUI_SEU_AUTH_DOMAIN",
+  projectId: "COLE_AQUI_SEU_PROJECT_ID",
+  storageBucket: "COLE_AQUI_SEU_STORAGE_BUCKET",
+  messagingSenderId: "COLE_AQUI_SEU_SENDER_ID",
+  appId: "COLE_AQUI_SEU_APP_ID"
 };
 
-// Inicializa o Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ── ESTADO E NORMALIZAÇÃO ──
-let D = [];
-let sortOrder = 'alpha'; // Novo estado de ordenação
-
-function sortD(){
-  if (sortOrder === 'alpha') {
-    D.sort((a,b)=>nn(a.word).localeCompare(nn(b.word),'pt'));
-  } else {
-    // Ordena do maior (mais recente) para o menor
-    D.sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
-  }
-}
-
-function toggleSort(order) {
-  sortOrder = order;
-  sortD();
-  renderDict();
-}
+let D = []; 
+let sortOrder = 'alpha';
 
 function nn(s){
   return s.toLowerCase()
@@ -283,7 +270,24 @@ function nn(s){
     .replace(/[ʁ]/g,'r').replace(/[ʃ]/g,'ch').replace(/[θ]/g,'th')
     .replace(/[ɐ]/g,'a').replace(/[ɾ]/g,'r');
 }
-function sortD(){D.sort((a,b)=>nn(a.word).localeCompare(nn(b.word),'pt'));}
+
+function sortD(){
+  if (sortOrder === 'alpha') {
+    D.sort((a,b)=>nn(a.word).localeCompare(nn(b.word),'pt'));
+  } else {
+    // Ordena por data decrescente (mais recente primeiro)
+    D.sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
+  }
+}
+
+function toggleSort(order) {
+  sortOrder = order;
+  sortD();
+  renderDict();
+  // Mostra ou esconde as letras do alfabeto (an) dependendo da ordem
+  document.getElementById('an').style.display = (order === 'alpha') ? 'flex' : 'none';
+}
+
 function firstChar(w){return nn(w)[0].toUpperCase();}
 function updateHeaderCount(){
   const el=document.getElementById('total-count');
@@ -314,7 +318,6 @@ function buildDerivs(word,trans,type,ipa){
             entries.push({word: word+'iჰa', ipa: ipaBase ? ipa+'iksa' : '', type: 'advérbio', trans: 'De modo: '+d});
     } 
     else if (type === 'adjetivo' || type === 'substantivo') {
-        // Lógica Unificada: Substantivos e Adjetivos geram a cadeia verbal da mesma forma
         let verbForm = getBaseForAdjectiveToVerb(word);
         let verbTrans = (type === 'adjetivo') ? 'Tornar-se ' + d : 'Ação associada a ' + d;
         let verbIpa = ipa ? (/[aeiouɛɔλɐ]$/i.test(word) ? ipa+'r' : ipa+'ar') : '';
@@ -332,7 +335,6 @@ function buildDerivs(word,trans,type,ipa){
             entries.push({word: verbForm+'ṫi', ipa: verbIpa ? verbIpa+'θi' : '', type: 'substantivo', trans: 'Essência/Ação de '+d});
         if(document.getElementById('d-a-adv-modo')?.checked)
             entries.push({word: verbForm+'iჰa', ipa: verbIpa ? verbIpa+'iksa' : '', type: 'advérbio', trans: 'De forma associada a '+d});
-
         if(document.getElementById('d-s-coletivo')?.checked)
              entries.push({word: word+'noma', ipa: ipa ? ipa+'noma' : '', type: 'substantivo', trans: 'Conjunto de '+d});
     }
@@ -423,7 +425,7 @@ function loadFromCloud() {
           D.push(data);
       });
       
-      // Regra atualizada: Se tiver menos de 50 palavras, mostra o botão para injetar a base
+      // Regra de migração original
       if(D.length < 50) document.getElementById('migration-box').style.display = 'block';
       else document.getElementById('migration-box').style.display = 'none';
 
@@ -441,10 +443,27 @@ async function saveWord(){
   const ip=document.getElementById('f-ipa').value.trim();
   
   if(!w || !t || !tp) { toast('Preencha os campos obrigatórios.', 'err'); return; }
-  if(D.find(e => e.word.toLowerCase() === w.toLowerCase())) { toast(`A palavra "${w}" já existe!`, 'err'); return; }
+  
+  // Trava 1: Palavra Exata
+  if(D.find(e => e.word.toLowerCase() === w.toLowerCase())) { 
+      toast(`A palavra "${w}" já existe!`, 'err'); 
+      return; 
+  }
+
+  // Trava 2: Sinónimo / Tradução Repetida
+  const tradExistente = D.find(e => e.trans.toLowerCase() === t.toLowerCase());
+  const checkSinonimo = document.getElementById('f-sinonimo');
+  const wrapSinonimo = document.getElementById('wrap-sinonimo');
+
+  if(tradExistente && !checkSinonimo.checked) {
+      document.getElementById('txt-sinonimo').textContent = `A tradução "${t}" já pertence a "${tradExistente.word}". Marque esta caixa para guardar como sinónimo.`;
+      wrapSinonimo.style.display = 'block';
+      toast('Tradução existente encontrada.', 'info');
+      return;
+  }
   
   toast('Salvando...', 'info');
-  const now = Date.now(); // Carimba a hora exata
+  const now = Date.now(); // Carimbo de tempo
   
   const baseWord = {word: w, ipa: ip, type: tp, trans: t, createdAt: now};
   const derivs = buildDerivs(w,t,tp,ip).map(d => ({...d, createdAt: now}));
@@ -462,14 +481,13 @@ async function saveWord(){
       
       ['f-word','f-trans','f-ipa'].forEach(id=> document.getElementById(id).value='');
       document.getElementById('f-type').value='';
+      wrapSinonimo.style.display = 'none';
+      checkSinonimo.checked = false;
       updateDerivOptions();
       document.getElementById('preview').innerHTML='<span style="color:var(--tx3);font-size:.82rem">Preencha o formulário para ver…</span>';
   } catch (e) {
       toast('Erro ao salvar na nuvem.', 'err');
   }
-}
-
-
 }
 
 // ── INTERFACE DO DICIONÁRIO ──
@@ -501,13 +519,14 @@ function getFiltered(){
   return D.filter(e=>{
     if(filt!=='all'&&filt!=='outros'&&e.type!==filt)return false;
     if(filt==='outros'&&['verbo','substantivo','adjetivo','numeral'].includes(e.type))return false;
-    if(alpha&&firstChar(e.word)!==alpha)return false;
+    if(alpha && sortOrder === 'alpha' && firstChar(e.word)!==alpha)return false;
     if(q){const nw=nn(e.word);return nw.includes(q)||e.word.toLowerCase().includes(q)||e.trans.toLowerCase().includes(q);}
     return true;
   });
 }
 
 function buildAlpha(){
+  if(sortOrder !== 'alpha') return; // Só controi alfabeto se estiver na vista alfabética
   const present=new Set(getFiltered().map(e=>firstChar(e.word)));
   const all=[...new Set(D.map(e=>firstChar(e.word)))].sort();
   document.getElementById('an').innerHTML=all.map(c=>
@@ -524,7 +543,6 @@ function typeClass(t){
   return m[t]||'t-default';
 }
 
-// ── RENDERIZAÇÃO DO DICIONÁRIO ──
 function renderDict(){
   const fd=getFiltered();
   const dl=document.getElementById('dl');
@@ -555,10 +573,11 @@ function renderDict(){
         groups[l].map(e => renderItem(e)).join('')}</div></div>`
     ).join('');
   } else {
-    // Quando ordenado por data, mostra uma lista contínua
+    // Modo Recentes: Renderiza como uma lista contínua
     dl.innerHTML = `<div class="as"><div class="ah">Últimas Adições</div><div class="de-list">${
       fd.map(e => renderItem(e)).join('')}</div></div>`;
   }
+}
 
 // ── EDIÇÃO COMPLETA E DELETE NO FIREBASE ──
 function startEdit(id){
@@ -566,7 +585,6 @@ function startEdit(id){
   const entry = D.find(e => e.id === id);
   if(!row || !entry) return;
   
-  // Transforma a linha inteira em inputs editáveis
   row.innerHTML=`
     <input class="ed-input" id="ei-w-${id}" value="${entry.word}" style="width:100px; font-weight:bold; color:var(--acc3);">
     <input class="ed-input" id="ei-i-${id}" value="${entry.ipa||''}" placeholder="IPA" style="width:70px;">
@@ -628,7 +646,7 @@ function toast(msg,type='ok'){
   toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-// ── MIGRAÇÃO DA BASE ANTIGA ──
+// ── MIGRAÇÃO DA BASE ANTIGA (Mantenha este bloco intocado!) ──
 const BASE_DATA = [
   // ── VERBOS E DERIVAÇÕES (A - Z) ──
   ["ajλr", "aʒɐ̃r", "verbo", "Fazer, agir, construir ou executar uma tarefa física ou intelectual"],
@@ -811,7 +829,7 @@ const BASE_DATA = [
   ["lɔnarav", "lɔnaɾav", "substantivo", "Aquele que repousa ou se deita"],
   ["lɔnarṫi", "lɔnaɾθi", "substantivo", "Descanso ou o ato de deitar"],
   ["lɔnarჰa", "lɔnaɾksa", "advérbio", "Deitadamente"],
-  ["lukir", "lukiɾ", "verbo", "Ouvir; percepção sensorial de sons"],
+  ["lukir", "lukiɾ", "verbo", "Ouvir; percepção sensorial de sounds"],
   ["lukirλ", "lukiɾɐ̃", "adjetivo", "Ouvido ou escutado"],
   ["lukirav", "lukiɾav", "substantivo", "Ouvinte; aquele que escuta"],
   ["lukirṫi", "lukiɾθi", "substantivo", "Audição ou o conceito de ouvir"],
@@ -858,7 +876,7 @@ const BASE_DATA = [
   ["mugrɔrჰa", "mugɾɔɾksa", "advérbio", "Firmemente"],
   ["natrar", "natɾaɾ", "verbo", "Esverdear; processo natural de ganhar cor verde"],
   ["natrarλ", "natɾaɾɐ̃", "adjetivo", "Esverdeado"],
-  ["natrarav", "natɾaɾav", "substantivo", "Aquilo que colore de verde (ex: a natureza)"],
+  ["natrarav", "natɾaɾav", "substantivo", "Aquilo que colore de verde"],
   ["natrarṫi", "natɾaɾθi", "substantivo", "Vigor vegetal ou o conceito de verde"],
   ["natrarჰa", "natɾaɾksa", "advérbio", "De forma verdejante"],
   ["nitar", "nitaɾ", "verbo", "Anoitecer; processo natural de chegada da noite"],
@@ -1932,7 +1950,7 @@ async function migrateBaseData() {
       let i = 0;
       const batchSize = 100;
       
-      const allObjects = BASE_DATA.map(e => ({ word: e[0], ipa: e[1], type: e[2], trans: e[3] }));
+      const allObjects = BASE_DATA.map(e => ({ word: e[0], ipa: e[1], type: e[2], trans: e[3], createdAt: Date.now() - 1000000 + i })); // Dá um timestamp falso para manter a ordem base original
       
       while (i < allObjects.length) {
           batchArrays.push(allObjects.slice(i, i + batchSize));
@@ -1959,3 +1977,5 @@ updateDerivOptions();
 buildFilters();
 loadFromCloud();
 </script>
+</body>
+</html>
