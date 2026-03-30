@@ -407,9 +407,18 @@ select.fi option{background:var(--s2)}
     </div>
 
     <div class="card">
-      <div class="card-title">📝 Escrita e Posts Interativos</div>
-      <p style="font-size: 0.8rem; color: var(--tx2); margin-bottom: 12px;">Escreva seus textos e passe o mouse para ver a tradução inteligente.</p>
+     <div class="card-title">🔍 Analisador Morfossintático e Validador de Slots</div>
+      <p style="font-size: 0.8rem; color: var(--tx2); margin-bottom: 12px;">Analise a estrutura de clíticos e verifique se a frase segue a regra de Antecipação Contextual.</p>
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="input-analisador" class="fi" style="flex:1;" placeholder="Ex: tubi o nit in kamre iჰo ir'idina kin jivar'lo" onkeypress="if(event.key==='Enter') executarAnaliseMani()">
+        <button class="btn btn-save" onclick="executarAnaliseMani()">Analisar e Validar</button>
+      </div>
       
+      <div id="status-sintaxe" style="margin-top: 15px; min-height: 30px;"></div>
+
+      <div id="resultado-analisador" class="gloss-grid">
+        <span style="color:var(--tx3); font-size: 0.85rem; font-style: italic;">As palavras decompostas aparecerão aqui...</span>
+      </div>
       <div id="leitor-modo-edicao">
         <textarea id="input-leitor" class="fi" style="min-height: 120px; resize: vertical; margin-bottom: 10px;" placeholder="Escreva seu texto em Mani aqui..."></textarea>
         <button class="btn btn-ok" onclick="iniciarLeitura()">📖 Ativar Hover de Tradução</button>
@@ -565,77 +574,127 @@ function desenharMapa() {
   container.innerHTML = html;
 }
 
-  // ── CONFIGURAÇÕES MORFOLÓGICAS MANI ──
+// ── CONFIGURAÇÕES MORFOLÓGICAS E SLOTS DO MANI ──
 const REGRAS_MANI = {
     cliticos: ["'mas", "'ma", "'tas", "'ta", "'los", "'lo", "'las", "'la", "'les", "'le", "'li"],
-    prefixos: ["ir'", "un'", "εs'"],
+    prefixos: ["ir'", "un'", "εs'", "ɛs'"], // Suporte a ambas as grafias de épsilon
     sufixos: ["ium", "s"]
+};
+
+const NOME_SLOTS = {
+    0: "0: Condicional", 1: "1: Interrogativa", 2: "2: Tempo", 3: "3: Lugar",
+    4: "4: Negação", 5: "5: Modalidade", 6: "6: Objeto Alvo", 7: "7: Advérbio",
+    8: "8: Gatilho Temp.", 9: "9: Verbo'Agente", 10: "10: Adjunto"
 };
 
 function dissecarPalavra(raw) {
     let p = raw.toLowerCase().replace(/[.,;!?]/g, '').trim();
     let res = { original: raw, base: p, tags: [], encontrada: null };
 
-    // 1. Busca Direta
     let busca = D.find(e => e.word.toLowerCase() === p);
     if (busca) { res.encontrada = busca; return res; }
 
-    // 2. Decomposição (Prefixos -> Clíticos -> Sufixos)
     let temp = p;
-    
-    // Prefixos de Caso
-    REGRAS_MANI.prefixos.forEach(pref => {
-        if (temp.startsWith(pref)) {
-            res.tags.push(pref);
-            temp = temp.slice(pref.length);
-        }
-    });
+    REGRAS_MANI.prefixos.forEach(pref => { if (temp.startsWith(pref)) { res.tags.push(pref); temp = temp.slice(pref.length); } });
+    REGRAS_MANI.cliticos.forEach(clit => { if (temp.endsWith(clit)) { res.tags.push(clit); temp = temp.slice(0, -clit.length); } });
+    REGRAS_MANI.sufixos.forEach(suf => { if (temp.endsWith(suf)) { res.tags.push(suf); temp = temp.slice(0, -suf.length); } });
 
-    // Clíticos Pessoais
-    REGRAS_MANI.cliticos.forEach(clit => {
-        if (temp.endsWith(clit)) {
-            res.tags.push(clit);
-            temp = temp.slice(0, -clit.length);
-        }
-    });
-
-    // Gerúndios e Plurais
-    REGRAS_MANI.sufixos.forEach(suf => {
-        if (temp.endsWith(suf)) {
-            res.tags.push(suf);
-            temp = temp.slice(0, -suf.length);
-        }
-    });
-
-    // Busca com a raiz limpa
-    res.encontrada = D.find(e => e.word.toLowerCase() === temp) || 
-                     D.find(e => e.word.toLowerCase() === temp + 'r'); // Tenta recuperar infinitivo
+    res.encontrada = D.find(e => e.word.toLowerCase() === temp) || D.find(e => e.word.toLowerCase() === temp + 'r');
     res.base = temp;
     return res;
 }
 
-// ── FUNÇÕES DO ANALISADOR ──
+// ── FUNÇÕES DO ANALISADOR COM INTELIGÊNCIA DE SLOTS ──
 function executarAnaliseMani() {
-    const texto = document.getElementById('input-analisador').value;
+    const texto = document.getElementById('input-analisador').value.trim();
     const container = document.getElementById('resultado-analisador');
+    const statusContainer = document.getElementById('status-sintaxe');
+    
+    if (!texto) { container.innerHTML = ''; statusContainer.innerHTML = ''; return; }
+
     const palavras = texto.split(/\s+/);
     let html = '';
+    let tokensAnalisados = [];
+    let slotRepassado = -1;
 
+    // FASE 1: Classificação dos Slots
     palavras.forEach(p => {
         const d = dissecarPalavra(p);
+        d.slot = -1;
+
         if (d.encontrada) {
+            let w = d.base;
+            let t = d.encontrada.type;
+            let tags = d.tags;
+
+            // Motor de Heurística de Slots
+            if (w === 'tubi') d.slot = 0;
+            else if (t === 'interrogativo' || ['vi', 'vio', 'viλn', 'vu'].includes(w)) d.slot = 1;
+            else if (w === 'o') { d.slot = 2; slotRepassado = 2; }
+            else if (w === 'in' || w === 'trɔ') { d.slot = 3; slotRepassado = 3; }
+            else if (w === 'iჰo') d.slot = 4;
+            else if (['vunir', 'pɔtar', 'ṫunir'].includes(w)) d.slot = 5;
+            else if (tags.includes("ir'")) d.slot = 6;
+            else if (w === 'რɔs' || w === 'რos') { d.slot = 10; slotRepassado = 10; }
+            else if (tags.includes("εs'") || tags.includes("ɛs'")) d.slot = 10;
+            else if (w === 'kin' || w === 'kλn') d.slot = 8;
+            else if (t === 'verbo') d.slot = 9;
+            else if (t === 'advérbio' || w.endsWith('iჰa')) d.slot = 7;
+            else if (slotRepassado !== -1) {
+                // A palavra herda o slot da preposição anterior (ex: "in" [3] -> "kamre" herda [3])
+                d.slot = slotRepassado;
+                if (t === 'substantivo' || t === 'pronome') slotRepassado = -1; // Encerra o repasse ao atingir o alvo
+            } 
+            else if (t === 'pronome' && !tags.includes("ir'")) {
+                // Sujeito isolado costuma vir atrelado ao Verbo
+                d.slot = 9; 
+            }
+        }
+        tokensAnalisados.push(d);
+    });
+
+    // FASE 2: Validação de Ordem Crescente (Antecipação Contextual)
+    let ultimaOrdem = -1;
+    let errosOrdem = [];
+    
+    tokensAnalisados.forEach(d => {
+        if (d.encontrada) {
+            let slotLabel = d.slot !== -1 ? NOME_SLOTS[d.slot] : "? Indefinido";
+            let slotColor = d.slot !== -1 ? "var(--acc)" : "var(--tx3)";
+            
+            // Se o Slot atual for menor que o anterior, quebrou a regra!
+            if (d.slot !== -1) {
+                if (d.slot < ultimaOrdem) {
+                    errosOrdem.push(`A palavra <b>${d.original}</b> (Slot ${d.slot}) foi colocada depois do Slot ${ultimaOrdem}.`);
+                    slotColor = "var(--er)"; // Fica vermelho
+                }
+                ultimaOrdem = Math.max(ultimaOrdem, d.slot); // Atualiza o "maior" slot lido até agora
+            }
+
             html += `
             <div class="gloss-word">
+                <div style="font-size: 0.65rem; font-weight: bold; background: ${slotColor}; color: white; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; letter-spacing: 0.05em;">${slotLabel}</div>
                 <div class="gloss-orig">${d.original}</div>
                 <div class="gloss-morph">${d.encontrada.word} ${d.tags.map(t => '+ '+t).join(' ')}</div>
                 <div class="gloss-trans">${d.encontrada.trans}</div>
                 <div style="margin-top:5px">${d.tags.map(t => `<span class="gloss-tag">${t}</span>`).join('')}</div>
             </div>`;
         } else {
-            html += `<div class="gloss-word" style="border-color:var(--er)"><div class="gloss-orig">${p}</div><div style="color:var(--er); font-size:0.8rem;">? Não listada</div></div>`;
+            html += `<div class="gloss-word" style="border-color:var(--er)"><div class="gloss-orig">${d.original}</div><div style="color:var(--er); font-size:0.8rem;">? Não listada</div></div>`;
         }
     });
+
     container.innerHTML = html;
+
+    // FASE 3: Emissão do Diagnóstico
+    if (tokensAnalisados.some(t => !t.encontrada)) {
+        statusContainer.innerHTML = `<div style="display:inline-block; background:rgba(154,100,58,.2); border:1px solid rgba(154,100,58,.4); color:#e8b880; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem;">⚠️ Algumas palavras não foram reconhecidas. Cadastre-as para validar a sintaxe completa.</div>`;
+    } else if (errosOrdem.length === 0 && tokensAnalisados.length > 0) {
+        statusContainer.innerHTML = `<div style="display:inline-block; background:rgba(58,122,90,.2); border:1px solid rgba(58,122,90,.4); color:#80d4a8; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem;">✅ <b>Antecipação Contextual Perfeita!</b><br>Os slots foram apresentados na ordem correta. O ouvinte compreenderá a frase fluidamente.</div>`;
+    } else if (errosOrdem.length > 0) {
+        let errosHtml = errosOrdem.map(e => `<li>${e}</li>`).join('');
+        statusContainer.innerHTML = `<div style="display:inline-block; background:rgba(138,58,58,.2); border:1px solid rgba(138,58,58,.4); color:#f0c0c0; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem;">❌ <b>Quebra Sintática Detectada!</b><ul style="margin-top: 5px; padding-left: 20px;">${errosHtml}</ul></div>`;
+    }
 }
 
 // ── FUNÇÕES DO LEITOR ──
