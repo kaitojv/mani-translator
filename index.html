@@ -554,7 +554,7 @@ function desenharMapa() {
   container.innerHTML = html;
 }
 
- // ── BANCO DE DADOS DA APOSTILA OFICIAL MANI (COMPLETA) ──
+// ── SISTEMA DA APOSTILA INTERATIVA ──
 const APOSTILA_MANI = [
   { 
     id: 1, 
@@ -812,10 +812,33 @@ const APOSTILA_MANI = [
     id: 17, 
     titulo: "17. Números e tempo cronológico", 
     conteudo: `
-      <p>Bases numéricas: 0: <b>nɔ</b>, 1:`
-      }
-  ],
-      
+      <p>Bases numéricas: 0: <b>nɔ</b>, 1: <b>uri</b>, 2: <b>paro</b>, 3: <b>naji</b>, 4: <b>kλnko</b>, 5: <b>sinჰa</b>, 6: <b>terou</b>, 7: <b>luṫa</b>, 8: <b>boru</b>, 9: <b>mile</b>, 10: <b>deko</b>, 100: <b>domo</b>.</p>
+      <p>Ordinais usam o sufixo <code>-stu</code> (ex: <i>uristu</i> = primeiro).<br>Horas usam a partícula <code>fle</code> no Slot 2 (ex: <i>o uri fle</i> = à uma hora).</p>
+      <h3 style="color:var(--acc2); margin:15px 0 5px;">Dias da Semana</h3>
+      <p style="font-size:0.9rem;">Domingo (<b>kɔrona</b>), Segunda (<b>milana</b>), Terça (<b>pana</b>), Quarta (<b>jina</b>), Quinta (<b>vena</b>), Sexta (<b>sana</b>), Sábado (<b>lana</b>).</p>
+    ` 
+  },
+  { 
+    id: 18, 
+    titulo: "18. Expressões fixas e saudações", 
+    conteudo: `
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:15px;">
+        <tr style="border-bottom:1px solid var(--bd2); color:var(--acc2); text-align:left;"><th>Mani</th><th>Tradução / Nota</th></tr>
+        <tr><td style="padding:4px 0;"><b>iak</b></td><td>olá / oi</td></tr>
+        <tr><td style="padding:4px 0;"><b>miθa apεra</b></td><td>bom dia</td></tr>
+        <tr><td style="padding:4px 0;"><b>vin vimur'ta?</b></td><td>como vai?</td></tr>
+        <tr><td style="padding:4px 0;"><b>navo</b></td><td>tchau / até logo</td></tr>
+        <tr><td style="padding:4px 0;"><b>dron</b> / <b>nɔv</b></td><td>obrigado / de nada</td></tr>
+        <tr><td style="padding:4px 0;"><b>pazɛr</b></td><td>desculpe (pedido de perdão)</td></tr>
+      </table>
+      <div style="background:var(--s3); padding:10px; border:1px solid var(--ok); border-radius:6px; margin:10px 0;">
+        <p style="font-size:0.8rem; color:var(--tx2); margin-bottom:8px;">Frase completa usando todos os Slots:</p>
+        <b style="color:var(--tx);">tubi o kɔrona in makinoma iჰo ir'dλnთos kin soir'la</b><br>
+        <i style="font-size:0.85rem; color:var(--tx2);">Se no domingo na floresta ela não viu os pássaros</i>
+      </div>
+    ` 
+  }
+];
 
 let capituloAtivo = 1;
 
@@ -848,7 +871,6 @@ function mudarCapituloApostila(id) {
     renderizarApostila();
 }
 
-// Inicializa a apostila assim que o app carrega (coloque isso dentro da sua função loadApp() principal se houver, ou apenas deixe solto no fim do script)
 renderizarApostila();
 
 // ── CONFIGURAÇÕES MORFOLÓGICAS E SLOTS DO MANI ──
