@@ -170,6 +170,7 @@ select.fi option{background:var(--s2)}
   </header>
   <nav class="nav">
     <button class="nb on" id="nb-inicio" onclick="sw('inicio')">🌌 Início & Regras</button>
+    <button class="nb" id="nb-gramatica" onclick="sw('gramatica')">📖 Gramática Oficial</button>
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
     <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
@@ -178,73 +179,61 @@ select.fi option{background:var(--s2)}
   </nav>
   <div class="content">
 
-    <section class="tab on" id="tab-inicio">
-      <div style="max-width: 900px; margin: 0 auto;">
+   <section class="tab on" id="tab-inicio">
+      <div style="max-width: 850px; margin: 0 auto; padding: 20px 0;">
         
-        <div style="text-align: center; margin-bottom: 40px;">
-          <h1 style="font-size: 2.5rem; color: var(--acc3); margin-bottom: 10px; letter-spacing: -0.03em;">A Língua Mani</h1>
-          <p style="font-size: 1.1rem; color: var(--tx2); max-width: 600px; margin: 0 auto; line-height: 1.6;">
-            Uma língua construída viva, orgânica e em constante evolução. Nascida da necessidade de expressar conceitos de forma lógica e fluida, unindo a força da natureza à precisão morfológica.
-          </p>
+        <div style="text-align: center; margin-bottom: 60px;">
+          <h1 style="font-size: 4rem; color: var(--acc3); margin-bottom: 10px; letter-spacing: -0.02em; font-family: serif;">Mani</h1>
+          <p style="font-size: 1.1rem; color: var(--acc2); text-transform: uppercase; letter-spacing: 0.25em;">Língua Construída — Sistema Aglutinante</p>
+          <div style="font-size: 1.8rem; color: var(--tx3); margin-top: 25px; letter-spacing: 12px; font-weight: 300;">რ ჰ ṫ თ λ ɛ ɔ</div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
+        <div class="card" style="padding: 45px; border-top: 4px solid var(--acc); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -50px; right: -50px; font-size: 15rem; color: var(--bg); opacity: 0.5; font-family: serif; user-select: none; pointer-events: none;">M</div>
           
-          <div class="card" style="border-top: 4px solid var(--acc);">
-            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🧩 A Regra dos Slots (Sintaxe)</div>
-            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 15px;">
-              A identidade primária e mais autêntica do Mani é manter o <b>Sujeito no final</b>. A estrutura oficial segue o modelo <b>OVA (Objeto - Verbo - Agente)</b>.
-            </p>
-            <div style="background: var(--s2); padding: 12px; border-radius: 8px; border: 1px solid var(--bd2); font-size: 0.85rem; color: var(--acc3);">
-              <i>Exemplo:</i> "In makinoma kλn bor'mas mau oi tau" (À floresta iremos eu e você).
-            </div>
-            <p style="font-size: 0.85rem; color: var(--tx3); margin-top: 10px;">
-              *Nota: A ordem <b>SVO</b> (Sujeito-Verbo-Objeto) é aceita gramaticalmente como adaptação ocidental, mas não é a forma nativa preferencial.
+          <h2 style="font-size: 2rem; color: var(--tx); margin-bottom: 25px; position: relative; z-index: 1;">A Filosofia do Idioma</h2>
+          
+          <p style="font-size: 1.15rem; color: var(--tx2); line-height: 1.8; margin-bottom: 25px; position: relative; z-index: 1;">
+            O Mani nasceu de uma pergunta simples: <i>e se o idioma espelhasse a maneira como a natureza funciona, e não como o ego humano gosta de se organizar?</i>
+          </p>
+          
+          <p style="font-size: 1.15rem; color: var(--tx2); line-height: 1.8; margin-bottom: 25px; position: relative; z-index: 1;">
+            Na maior parte das línguas do mundo, a frase começa pelo sujeito. "Eu vi o pássaro". "Je suis". "I think". O falante se coloca no centro, anuncia quem é, e só depois conta o que aconteceu.
+          </p>
+
+          <div style="background: rgba(139,107,212,0.1); border-left: 5px solid var(--acc2); padding: 25px; border-radius: 0 12px 12px 0; margin: 35px 0; position: relative; z-index: 1;">
+            <p style="font-size: 1.3rem; color: var(--acc3); line-height: 1.6; font-weight: bold; margin: 0;">
+              O Mani inverte essa lógica. A ordem natural é OVA — Objeto, Verbo, Agente.
             </p>
           </div>
 
-          <div class="card" style="border-top: 4px solid var(--ok);">
-            <div class="card-title" style="font-size: 1rem; color: var(--tx);">⏳ Zero-Cópula e Gerúndios</div>
-            <ul style="font-size: 0.9rem; color: var(--tx2); line-height: 1.6; padding-left: 20px;">
-              <li style="margin-bottom: 8px;">
-                <b style="color: var(--ok);">Zero-Cópula:</b> Omissão elegante do verbo <i>vimur</i> (ser/estar) para falar horas e estados de tempo, conferindo extrema naturalidade à fala.
-              </li>
-              <li>
-                <b style="color: var(--ok);">Ação Contínua:</b> Ações em progresso (gerúndios) utilizam o sufixo orgânico <b>-ium</b> anexado ao verbo (ex: <i>vimurium'ma</i>, <i>glunɔrium</i>).
-              </li>
-            </ul>
+          <p style="font-size: 1.15rem; color: var(--tx2); line-height: 1.8; position: relative; z-index: 1;">
+            Primeiro o contexto, depois a ação, e só no final o indivíduo surge como consequência ou causador daquele evento. O ouvinte nunca é surpreendido — quando o verbo chega, ele já sabe onde estamos, quando estamos, e em que polaridade, através do sistema de Antecipação Contextual e da rigorosa regra de Slots.
+          </p>
+          
+          <div style="text-align: center; margin-top: 40px; position: relative; z-index: 1;">
+            <button class="btn btn-save" onclick="sw('gramatica')" style="padding: 12px 30px; font-size: 1.1rem;">📖 Ler a Gramática Completa</button>
           </div>
-
-          <div class="card" style="border-top: 4px solid #e89a80;">
-            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🌳 Morfologia e Derivação</div>
-            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 10px;">
-              As palavras no Mani não são isoladas; elas nascem de raízes e sofrem mutações exatas:
-            </p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; color: var(--tx);">
-              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Verbos terminam em <b>-r</b> / <b>-ar</b></div>
-              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Agentes recebem <b>-av</b></div>
-              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Conceitos recebem <b>-ṫi</b></div>
-              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Coletivos levam <b>-noma</b></div>
-            </div>
-          </div>
-
-          <div class="card" style="border-top: 4px solid #80c8d4;">
-            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🗣️ Identidade Fonética e Clíticos</div>
-            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 15px;">
-              O vocabulário foi depurado para abrigar caracteres únicos que dão a textura sonora da língua:
-            </p>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>L</b> (Lateral pura)</span>
-              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>რ</b> (Som de Rr forte)</span>
-              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>ჰ</b> (Som de Ks)</span>
-              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>თ</b> (Som de ch/x/sh)</span>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--tx3);">
-              *Para plurais terminados em consoante dura, usa-se a vogal de apoio <b>a</b> (ex: <i>menzoravas</i> ao invés de <i>menzoravs</i>). Os clíticos verbais definem a pessoa sem necessidade do pronome completo (ex: <b>'les</b> para 3ª pessoa do plural).
-            </p>
-          </div>
-
         </div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-gramatica">
+      <div style="display: flex; gap: 25px; max-width: 1100px; margin: 0 auto; align-items: flex-start; flex-wrap: wrap;">
+        
+        <div class="card" style="flex: 1; min-width: 250px; position: sticky; top: 20px; padding: 20px;">
+          <div style="font-weight: 800; color: var(--acc2); margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid var(--bd2); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em;">Sumário Oficial</div>
+          <ul id="menu-apostila" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+            </ul>
+        </div>
+
+        <div class="card" style="flex: 3; min-width: 300px; padding: 40px; min-height: 60vh;">
+          <h2 id="titulo-capitulo" style="font-size: 2.2rem; color: var(--acc3); margin-bottom: 25px; border-bottom: 2px solid var(--bd); padding-bottom: 15px;">Selecione um Capítulo</h2>
+          <div id="conteudo-capitulo" style="font-size: 1.1rem; color: var(--tx); line-height: 1.8;">
+            <span style="color: var(--tx3); font-style: italic;">Utilize o menu lateral para navegar pela gramática do Mani...</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -562,6 +551,48 @@ function desenharMapa() {
   html += `</div>`; // Fecha o flex-direction column principal
   container.innerHTML = html;
 }
+
+  // ── SISTEMA DA APOSTILA INTERATIVA ──
+const APOSTILA_MANI = [
+  { id: 1, titulo: "1. Introdução — O que é o Mani", conteudo: "<p>O Mani nasceu de uma pergunta simples: e se o idioma espelhasse a maneira como a natureza funciona, e não como o ego humano gosta de se organizar?</p><p>A ordem natural é OVA — Objeto, Verbo, Agente.</p>" },
+  { id: 2, titulo: "2. Fonologia — Os sons do idioma", conteudo: "<p>O Mani possui uma identidade sonora única. Letras como o <b>L</b> puro, o <b>რ</b> (som de Rr), o <b>ჰ</b> (som de Ks) e o <b>თ</b> (som de ch/sh) dão a textura da língua.</p>" },
+  { id: 3, titulo: "3. O sistema dos 10 Slots", conteudo: "A língua constrói a frase em camadas. A Antecipação Contextual se divide assim:<br><br><b>0:</b> Condicional<br><b>1:</b> Interrogativa<br><b>2:</b> Tempo absoluto<br><b>3:</b> Lugar / Espaço<br><b>...</b>" }
+  // Adicionaremos os outros capítulos aqui
+];
+
+let capituloAtivo = 1;
+
+function renderizarApostila() {
+    const menu = document.getElementById('menu-apostila');
+    const titulo = document.getElementById('titulo-capitulo');
+    const conteudo = document.getElementById('conteudo-capitulo');
+
+    // Renderiza os botões do menu
+    menu.innerHTML = APOSTILA_MANI.map(cap => `
+        <li>
+            <button onclick="mudarCapituloApostila(${cap.id})" 
+                    style="width: 100%; text-align: left; padding: 10px 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.95rem;
+                           ${capituloAtivo === cap.id ? 'background: var(--acc); color: white; border: none;' : 'background: transparent; color: var(--tx2); border: 1px solid var(--bd);'}">
+                ${cap.titulo}
+            </button>
+        </li>
+    `).join('');
+
+    // Renderiza o conteúdo do capítulo ativo
+    const capDados = APOSTILA_MANI.find(c => c.id === capituloAtivo);
+    if (capDados) {
+        titulo.innerHTML = capDados.titulo;
+        conteudo.innerHTML = capDados.conteudo;
+    }
+}
+
+function mudarCapituloApostila(id) {
+    capituloAtivo = id;
+    renderizarApostila();
+}
+
+// Inicializa a apostila assim que o app carrega (coloque isso dentro da sua função loadApp() principal se houver, ou apenas deixe solto no fim do script)
+renderizarApostila();
 
 // ── CONFIGURAÇÕES MORFOLÓGICAS E SLOTS DO MANI ──
 const REGRAS_MANI = {
