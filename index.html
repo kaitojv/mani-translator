@@ -152,6 +152,7 @@ select.fi option{background:var(--s2)}
     <div class="hdr-stat">Dicionário: <span id="total-count">...</span> entradas</div>
   </header>
   <nav class="nav">
+    <button class="nb on" id="nb-inicio" onclick="sw('inicio')">🌌 Início & Regras</button>
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
     <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
@@ -159,7 +160,77 @@ select.fi option{background:var(--s2)}
   </nav>
   <div class="content">
 
-    <section class="tab on" id="tab-criar">
+    <section class="tab on" id="tab-inicio">
+      <div style="max-width: 900px; margin: 0 auto;">
+        
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="font-size: 2.5rem; color: var(--acc3); margin-bottom: 10px; letter-spacing: -0.03em;">A Língua Mani</h1>
+          <p style="font-size: 1.1rem; color: var(--tx2); max-width: 600px; margin: 0 auto; line-height: 1.6;">
+            Uma língua construída viva, orgânica e em constante evolução. Nascida da necessidade de expressar conceitos de forma lógica e fluida, unindo a força da natureza à precisão morfológica.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
+          
+          <div class="card" style="border-top: 4px solid var(--acc);">
+            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🧩 A Regra dos Slots (Sintaxe)</div>
+            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 15px;">
+              A identidade primária e mais autêntica do Mani é manter o <b>Sujeito no final</b>. A estrutura oficial segue o modelo <b>OVA (Objeto - Verbo - Agente)</b>.
+            </p>
+            <div style="background: var(--s2); padding: 12px; border-radius: 8px; border: 1px solid var(--bd2); font-size: 0.85rem; color: var(--acc3);">
+              <i>Exemplo:</i> "In makinoma kλn bor'mas mau oi tau" (À floresta iremos eu e você).
+            </div>
+            <p style="font-size: 0.85rem; color: var(--tx3); margin-top: 10px;">
+              *Nota: A ordem <b>SVO</b> (Sujeito-Verbo-Objeto) é aceita gramaticalmente como adaptação ocidental, mas não é a forma nativa preferencial.
+            </p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--ok);">
+            <div class="card-title" style="font-size: 1rem; color: var(--tx);">⏳ Zero-Cópula e Gerúndios</div>
+            <ul style="font-size: 0.9rem; color: var(--tx2); line-height: 1.6; padding-left: 20px;">
+              <li style="margin-bottom: 8px;">
+                <b style="color: var(--ok);">Zero-Cópula:</b> Omissão elegante do verbo <i>vimur</i> (ser/estar) para falar horas e estados de tempo, conferindo extrema naturalidade à fala.
+              </li>
+              <li>
+                <b style="color: var(--ok);">Ação Contínua:</b> Ações em progresso (gerúndios) utilizam o sufixo orgânico <b>-ium</b> anexado ao verbo (ex: <i>vimurium'ma</i>, <i>glunɔrium</i>).
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid #e89a80;">
+            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🌳 Morfologia e Derivação</div>
+            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 10px;">
+              As palavras no Mani não são isoladas; elas nascem de raízes e sofrem mutações exatas:
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; color: var(--tx);">
+              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Verbos terminam em <b>-r</b> / <b>-ar</b></div>
+              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Agentes recebem <b>-av</b></div>
+              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Conceitos recebem <b>-ṫi</b></div>
+              <div style="background: var(--s2); padding: 8px; border-radius: 6px;">Coletivos levam <b>-noma</b></div>
+            </div>
+          </div>
+
+          <div class="card" style="border-top: 4px solid #80c8d4;">
+            <div class="card-title" style="font-size: 1rem; color: var(--tx);">🗣️ Identidade Fonética e Clíticos</div>
+            <p style="font-size: 0.9rem; color: var(--tx2); line-height: 1.5; margin-bottom: 15px;">
+              O vocabulário foi depurado para abrigar caracteres únicos que dão a textura sonora da língua:
+            </p>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>L</b> (Lateral pura)</span>
+              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>რ</b> (Som de Rr forte)</span>
+              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>ჰ</b> (Som de Ks)</span>
+              <span style="background: var(--s3); padding: 5px 12px; border-radius: 15px; border: 1px solid var(--bd2); color: #fff;"><b>თ</b> (Som de ch/x/sh)</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--tx3);">
+              *Para plurais terminados em consoante dura, usa-se a vogal de apoio <b>a</b> (ex: <i>menzoravas</i> ao invés de <i>menzoravs</i>). Os clíticos verbais definem a pessoa sem necessidade do pronome completo (ex: <b>'les</b> para 3ª pessoa do plural).
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-criar">
       <div class="cp-grid">
         <div class="card">
           <div class="card-title">Nova Entrada</div>
@@ -634,7 +705,7 @@ async function saveWord(){
 }
 
 // ── INTERFACE DO DICIONÁRIO ──
-let currentTab='criar', filt='all', alpha=null;
+let currentTab='inicio', filt='all', alpha=null;
 function sw(t){
   currentTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
