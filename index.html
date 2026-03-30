@@ -262,17 +262,24 @@ select.fi option{background:var(--s2)}
             <option value="aleatorio">🎲 Classe Aleatória</option>
             <option value="verbo">Verbo (-r)</option>
             <option value="substantivo">Substantivo</option>
-            <option value="adjetivo">Adjetivo (Vogal)</option>
+            <option value="adjetivo">Adjetivo</option>
           </select>
           
           <button class="btn btn-save" onclick="gerarPalavraMani()" style="padding: 10px 25px;">Gerar Raiz</button>
         </div>
-
+        
         <div style="background: var(--s2); border: 1px dashed var(--bd3); padding: 30px; border-radius: 12px; margin-bottom: 15px; position: relative;">
           <div id="etiqueta-classe" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx3);">...</div>
           <span id="resultado-gerador" style="font-size: 2.5rem; font-weight: 800; color: var(--acc3); letter-spacing: 2px;">...</span>
           
           <div id="preview-derivacoes-gerador"></div>
+        </div>
+        
+        <button id="btn-enviar-criacao" class="btn btn-cloud" style="display: none; width: auto; margin: 0 auto;" onclick="enviarPalavraGerada()">
+          🪄 Usar esta palavra e ver derivações
+        </button>
+      </div>
+    </section>
         
   </div>
 </div>
