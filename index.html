@@ -1942,22 +1942,32 @@ const BASE_DATA = [
 ];
 
 async function migrateBaseData() {
-  toast('Iniciando migração (isso pode levar alguns segundos)...', 'info');
+  toast('Iniciando migração... Por favor, não feche a página!', 'info');
   document.getElementById('migration-box').style.display = 'none';
   
   try {
       const batchArrays = [];
-      let i = 0;
+      let index = 0;
       const batchSize = 100;
       
-      const allObjects = BASE_DATA.map(e => ({ word: e[0], ipa: e[1], type: e[2], trans: e[3], createdAt: Date.now() - 1000000 + i })); // Dá um timestamp falso para manter a ordem base original
+      // Filtro de segurança: garante que nenhum dado seja "undefined" para o Firebase não travar
+      const allObjects = BASE_DATA.map((e, idx) => ({ 
+          word: e[0] || '', 
+          ipa: e[1] || '', 
+          type: e[2] || 'outros', 
+          trans: e[3] || '', 
+          createdAt: Date.now() - 1000000 + idx // Garante a ordem correta na aba de Recentes
+      }));
       
-      while (i < allObjects.length) {
-          batchArrays.push(allObjects.slice(i, i + batchSize));
-          i += batchSize;
+      // Divide a lista gigante em lotes de 100
+      while (index < allObjects.length) {
+          batchArrays.push(allObjects.slice(index, index + batchSize));
+          index += batchSize;
       }
       
-      for (const b of batchArrays) {
+      // Envia lote por lote
+      for (let k = 0; k < batchArrays.length; k++) {
+          const b = batchArrays[k];
           const batch = db.batch();
           b.forEach(item => {
               const docRef = db.collection("mani_words").doc();
@@ -1965,9 +1975,11 @@ async function migrateBaseData() {
           });
           await batch.commit();
       }
-      toast('Migração concluída! O banco está vivo na nuvem.', 'ok');
+      
+      toast('Migração concluída! Todas as centenas de palavras estão na nuvem.', 'ok');
   } catch (e) {
-      toast('Erro na migração.', 'err');
+      console.error(e);
+      toast('Erro na migração. Tente novamente.', 'err');
       document.getElementById('migration-box').style.display = 'block';
   }
 }
