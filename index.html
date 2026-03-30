@@ -219,9 +219,15 @@ select.fi option{background:var(--s2)}
 
     <section class="tab" id="tab-dictionary">
       <div class="dc-wrap">
-        <div class="sr-wrap">
-          <span class="sr-ico">🔍</span>
-          <input type="text" id="sr" placeholder="Buscar em Mani ou Português…" oninput="renderDict()">
+        <div class="sr-wrap" style="display: flex; gap: 10px;">
+          <div style="position:relative; flex: 1;">
+            <span class="sr-ico">🔍</span>
+            <input type="text" id="sr" placeholder="Buscar em Mani ou Português…" oninput="renderDict()">
+          </div>
+          <select id="sort-select" onchange="toggleSort(this.value)" class="fi" style="width: auto; padding: 0 14px; font-size: 0.85rem; cursor:pointer;">
+            <option value="alpha">Alfabética</option>
+            <option value="date">Recentes</option>
+          </select>
         </div>
         <div class="fr" id="fr"></div>
       </div>
@@ -252,6 +258,22 @@ const db = firebase.firestore();
 
 // ── ESTADO E NORMALIZAÇÃO ──
 let D = [];
+let sortOrder = 'alpha'; // Novo estado de ordenação
+
+function sortD(){
+  if (sortOrder === 'alpha') {
+    D.sort((a,b)=>nn(a.word).localeCompare(nn(b.word),'pt'));
+  } else {
+    // Ordena do maior (mais recente) para o menor
+    D.sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
+  }
+}
+
+function toggleSort(order) {
+  sortOrder = order;
+  sortD();
+  renderDict();
+}
 
 function nn(s){
   return s.toLowerCase()
@@ -419,27 +441,14 @@ async function saveWord(){
   const ip=document.getElementById('f-ipa').value.trim();
   
   if(!w || !t || !tp) { toast('Preencha os campos obrigatórios.', 'err'); return; }
-  
-  // Trava 1: Palavra exata já existe
-  if(D.find(e => e.word.toLowerCase() === w.toLowerCase())) { 
-      toast(`A palavra "${w}" já existe no dicionário!`, 'err'); 
-      return; 
-  }
-
-  // Trava 2: Tradução repetida (Sinônimos)
-  const tradExistente = D.find(e => e.trans.toLowerCase() === t.toLowerCase());
-  const checkSinonimo = document.getElementById('f-sinonimo');
-  const wrapSinonimo = document.getElementById('wrap-sinonimo');
-
-  if(tradExistente && !checkSinonimo.checked) {
-      document.getElementById('txt-sinonimo').textContent = `A tradução "${t}" já pertence a "${tradExistente.word}". Marque aqui para adicionar como sinônimo.`;
-      wrapSinonimo.style.display = 'block';
-      toast('Tradução já existente encontrada.', 'info');
-      return;
-  }
+  if(D.find(e => e.word.toLowerCase() === w.toLowerCase())) { toast(`A palavra "${w}" já existe!`, 'err'); return; }
   
   toast('Salvando...', 'info');
-  const all=[{word: w, ipa: ip, type: tp, trans: t}, ...buildDerivs(w,t,tp,ip)];
+  const now = Date.now(); // Carimba a hora exata
+  
+  const baseWord = {word: w, ipa: ip, type: tp, trans: t, createdAt: now};
+  const derivs = buildDerivs(w,t,tp,ip).map(d => ({...d, createdAt: now}));
+  const all = [baseWord, ...derivs];
   
   try {
       const batch = db.batch();
@@ -458,6 +467,9 @@ async function saveWord(){
   } catch (e) {
       toast('Erro ao salvar na nuvem.', 'err');
   }
+}
+
+
 }
 
 // ── INTERFACE DO DICIONÁRIO ──
@@ -512,6 +524,7 @@ function typeClass(t){
   return m[t]||'t-default';
 }
 
+// ── RENDERIZAÇÃO DO DICIONÁRIO ──
 function renderDict(){
   const fd=getFiltered();
   const dl=document.getElementById('dl');
@@ -520,25 +533,32 @@ function renderDict(){
   if(cc)cc.textContent=`${fd.length} entrada${fd.length!==1?'s':''} na nuvem`;
   if(!fd.length){dl.innerHTML='<div class="nr">Nenhuma entrada encontrada.</div>';return;}
   const q=document.getElementById('sr')?.value||'';
-  const groups={};
-  fd.forEach(e=>{const l=firstChar(e.word);if(!groups[l])groups[l]=[];groups[l].push(e);});
   
-  dl.innerHTML=Object.keys(groups).sort().map(l=>
-    `<div class="as">${!q?`<div class="ah">${l}</div>`:''}<div class="de-list">${
-      groups[l].map(e=>{
-        return `<div class="de" id="de-${e.id}">
-          <span class="ew">${e.word}</span>
-          <span class="ei">[${e.ipa||'—'}]</span>
-          <span class="et ${typeClass(e.type)}">${e.type}</span>
-          <span class="ed" id="ed-${e.id}">${e.trans}</span>
-          <div class="de-actions">
-            <button class="btn-sm btn-edit" onclick="startEdit('${e.id}')">✎</button>
-            <button class="btn-sm btn-del" onclick="delEntry('${e.id}')">✕</button>
-          </div>
-        </div>`;
-      }).join('')}</div></div>`
-  ).join('');
-}
+  const renderItem = (e) => `
+    <div class="de" id="de-${e.id}">
+      <span class="ew">${e.word}</span>
+      <span class="ei">[${e.ipa||'—'}]</span>
+      <span class="et ${typeClass(e.type)}">${e.type}</span>
+      <span class="ed" id="ed-${e.id}">${e.trans}</span>
+      <div class="de-actions">
+        <button class="btn-sm btn-edit" onclick="startEdit('${e.id}')">✎</button>
+        <button class="btn-sm btn-del" onclick="delEntry('${e.id}')">✕</button>
+      </div>
+    </div>`;
+
+  if (sortOrder === 'alpha') {
+    const groups={};
+    fd.forEach(e=>{const l=firstChar(e.word);if(!groups[l])groups[l]=[];groups[l].push(e);});
+    
+    dl.innerHTML=Object.keys(groups).sort().map(l=>
+      `<div class="as">${!q?`<div class="ah">${l}</div>`:''}<div class="de-list">${
+        groups[l].map(e => renderItem(e)).join('')}</div></div>`
+    ).join('');
+  } else {
+    // Quando ordenado por data, mostra uma lista contínua
+    dl.innerHTML = `<div class="as"><div class="ah">Últimas Adições</div><div class="de-list">${
+      fd.map(e => renderItem(e)).join('')}</div></div>`;
+  }
 
 // ── EDIÇÃO COMPLETA E DELETE NO FIREBASE ──
 function startEdit(id){
