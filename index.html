@@ -243,7 +243,7 @@ select.fi option{background:var(--s2)}
       <div id="dl"></div>
     </section>
 
-    <section class="tab" id="gerador">
+    <section class="tab" id="tab-gerador">
       <div class="card" style="max-width: 650px; margin: 0 auto; text-align: center;">
         <div class="card-title" style="margin-bottom: 20px;">Gerador Fonotático de Mani</div>
         <p style="font-size: 0.9em; color: var(--tx2); margin-bottom: 25px;">Gere raízes que respeitam as regras da língua e envie direto para a criação com suas derivações automáticas.</p>
@@ -613,16 +613,6 @@ function renderDict(){
     dl.innerHTML = `<div class="as"><div class="ah">Últimas Adições</div><div class="de-list">${
       fd.map(e => renderItem(e)).join('')}</div></div>`;
   }
-}
-
-// ── GERADOR FONOTÁTICO E MORFOLÓGICO ──
-const consoantesMani = ['p', 't', 'k', 'b', 'd', 'g', 'm', 'n', 'v', 's', 'z', 'l', 'j', 'r', 'L', 'რ', 'ჰ', 'თ'];
-const vogaisMani = ['a', 'e', 'i', 'o', 'u', 'ɔ', 'ɛ'];
-let palavraGeradaAtual = '';
-let classeGeradaAtual = '';
-
-function sortearLetra(array) {
-  return array[Math.floor(Math.random() * array.length)];
 }
 
 // ── GERADOR FONOTÁTICO E MORFOLÓGICO AVANÇADO ──
