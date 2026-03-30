@@ -1942,44 +1942,49 @@ const BASE_DATA = [
 ];
 
 async function migrateBaseData() {
-  toast('Iniciando migração... Por favor, não feche a página!', 'info');
+  toast('Iniciando migração... Por favor, aguarde!', 'info');
   document.getElementById('migration-box').style.display = 'none';
   
   try {
-      const batchArrays = [];
-      let index = 0;
-      const batchSize = 100;
+      // 1. Filtro Blindado: Remove qualquer linha vazia, nula ou mal formatada da lista
+      const validData = BASE_DATA.filter(e => Array.isArray(e) && e.length >= 4 && e[0]);
       
-      // Filtro de segurança: garante que nenhum dado seja "undefined" para o Firebase não travar
-      const allObjects = BASE_DATA.map((e, idx) => ({ 
-          word: e[0] || '', 
-          ipa: e[1] || '', 
-          type: e[2] || 'outros', 
-          trans: e[3] || '', 
-          createdAt: Date.now() - 1000000 + idx // Garante a ordem correta na aba de Recentes
+      // 2. Converte garantindo que tudo é texto puro (String)
+      const allObjects = validData.map((e, idx) => ({ 
+          word: String(e[0]).trim(), 
+          ipa: String(e[1]).trim(), 
+          type: String(e[2]).trim(), 
+          trans: String(e[3]).trim(), 
+          createdAt: Date.now() - 1000000 + idx // Mantém a ordem
       }));
       
-      // Divide a lista gigante em lotes de 100
-      while (index < allObjects.length) {
-          batchArrays.push(allObjects.slice(index, index + batchSize));
-          index += batchSize;
+      // 3. Divide em lotes de 100
+      const batchArrays = [];
+      for (let i = 0; i < allObjects.length; i += 100) {
+          batchArrays.push(allObjects.slice(i, i + 100));
       }
       
-      // Envia lote por lote
+      let salvos = 0;
+      
+      // 4. Envia lote por lote
       for (let k = 0; k < batchArrays.length; k++) {
           const b = batchArrays[k];
           const batch = db.batch();
+          
           b.forEach(item => {
               const docRef = db.collection("mani_words").doc();
               batch.set(docRef, item);
           });
+          
           await batch.commit();
+          salvos += b.length;
+          console.log(`Lote ${k+1} enviado com sucesso. Total parcial: ${salvos} palavras.`);
       }
       
-      toast('Migração concluída! Todas as centenas de palavras estão na nuvem.', 'ok');
+      toast(`Sucesso absoluto! ${salvos} palavras migradas.`, 'ok');
   } catch (e) {
-      console.error(e);
-      toast('Erro na migração. Tente novamente.', 'err');
+      console.error("Erro detalhado na migração:", e);
+      toast('Erro na migração. Abra o console (F12) para ver.', 'err');
       document.getElementById('migration-box').style.display = 'block';
   }
 }
