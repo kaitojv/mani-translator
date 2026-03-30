@@ -176,6 +176,8 @@ select.fi option{background:var(--s2)}
     <button class="nb" id="nb-gerador" onclick="sw('gerador')">⚙️ Gerador Fonotático</button>
     <button class="nb" id="nb-mapa" onclick="sw('mapa')">🌳 Mapa de Raízes</button>
     <button class="nb" id="nb-comunicacao" onclick="sw('comunicacao')">💬 Comunicação & Análise</button>
+
+    <div id="google_translate_element" style="margin-left: auto; padding: 5px;"></div>
   </nav>
   <div class="content">
 
@@ -2922,5 +2924,15 @@ updateDerivOptions();
 buildFilters();
 loadFromCloud();
 </script>
+  <script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'pt',
+      includedLanguages: 'en', // Traduz apenas para Inglês. Se quiser todos os idiomas, apague esta linha.
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
