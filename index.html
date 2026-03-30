@@ -154,9 +154,6 @@ select.fi option{background:var(--s2)}
   <nav class="nav">
     <button class="nb on" id="nb-criar" onclick="sw('criar')">＋ Criar Palavra</button>
     <button class="nb" id="nb-dictionary" onclick="sw('dictionary')">◉ Dicionário</button>
-    <button id="btn-gerador" onclick="mudarAba('gerador')" style="background: var(--s3); color: var(--tx2); border: 1px solid var(--bd2); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;">
-    ⚙️ Gerador Fonotático
-  </button>
   </nav>
   <div class="content">
 
@@ -196,7 +193,6 @@ select.fi option{background:var(--s2)}
             </div>
           </div>
         </div>
-
 
         <div class="card">
           <div class="card-title">Derivações Automáticas</div>
@@ -245,31 +241,6 @@ select.fi option{background:var(--s2)}
       <div class="dc-count" id="dcc"></div>
       <div id="dl"></div>
     </section>
-  </div>
-
-  <div id="aba-gerador" style="display: none; padding: 20px;">
-  <div class="gerador-container" style="background: var(--s2); padding: 30px; border-radius: 8px; border: 1px solid var(--bd); max-width: 600px; margin: 0 auto;">
-    <h3 style="color: var(--acc2); margin-bottom: 10px;">Gerador Fonotático de Mani</h3>
-    <p style="font-size: 0.9em; color: var(--tx2); margin-bottom: 20px;">Gere novas raízes respeitando as regras fonéticas e os novos caracteres (L, რ, ჰ, თ).</p>
-    
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-      <select id="padrao-silabico" style="background: var(--s3); color: var(--tx); border: 1px solid var(--bd2); padding: 10px; border-radius: 4px; flex: 1;">
-        <option value="CVCV">CVCV (ex: maku)</option>
-        <option value="CVC">CVC (ex: kɔro)</option>
-        <option value="VCV">VCV (ex: ofa)</option>
-        <option value="CVCVC">CVCVC (ex: lɔmun)</option>
-        <option value="aleatorio">🎲 Padrão Aleatório</option>
-      </select>
-      
-      <button onclick="gerarPalavraMani()" style="background: var(--acc); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
-        Gerar
-      </button>
-    </div>
-  </div>
-    
-    <div style="text-align: center; background: var(--s1); border: 1px solid var(--bd3); padding: 20px; border-radius: 6px;">
-      <span id="resultado-gerador" style="font-size: 2em; font-weight: bold; color: var(--tx); letter-spacing: 2px;">...</span>
-    </div>
   </div>
 </div>
 
@@ -608,80 +579,6 @@ function renderDict(){
     // Modo Recentes: Renderiza como uma lista contínua
     dl.innerHTML = `<div class="as"><div class="ah">Últimas Adições</div><div class="de-list">${
       fd.map(e => renderItem(e)).join('')}</div></div>`;
-  }
-}
-
-  // --- GERADOR FONOTÁTICO MANI ---
-
-const consoantesMani = ['p', 't', 'k', 'b', 'd', 'g', 'm', 'n', 'v', 's', 'z', 'l', 'j', 'r', 'L', 'რ', 'ჰ', 'თ'];
-const vogaisMani = ['a', 'e', 'i', 'o', 'u', 'ɔ', 'ɛ'];
-
-function sortearLetra(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function gerarPalavraMani() {
-  const padraoSelect = document.getElementById('padrao-silabico').value;
-  const padroesDisponiveis = ['CVCV', 'CVC', 'VCV', 'CVCVC'];
-  
-  // Se for aleatório, escolhe um dos padrões da lista
-  const padrao = padraoSelect === 'aleatorio' 
-    ? padroesDisponiveis[Math.floor(Math.random() * padroesDisponiveis.length)] 
-    : padraoSelect;
-
-  let novaPalavra = '';
-
-  // Constrói a palavra iterando sobre o padrão escolhido
-  for (let i = 0; i < padrao.length; i++) {
-    if (padrao[i] === 'C') {
-      novaPalavra += sortearLetra(consoantesMani);
-    } else if (padrao[i] === 'V') {
-      novaPalavra += sortearLetra(vogaisMani);
-    }
-  }
-
-  // Exibe o resultado no ecrã
-  const divResultado = document.getElementById('resultado-gerador');
-  divResultado.innerHTML = novaPalavra;
-  
-  // Efeito visual rápido para indicar que gerou uma nova
-  divResultado.style.color = 'var(--acc3)';
-  setTimeout(() => {
-    divResultado.style.color = 'var(--tx)';
-  }, 300);
-}
-
-  // Função para alternar entre as abas
-function mudarAba(aba) {
-  const abaDicionario = document.getElementById('aba-dicionario');
-  const abaGerador = document.getElementById('aba-gerador');
-  const btnDicionario = document.getElementById('btn-dicionario');
-  const btnGerador = document.getElementById('btn-gerador');
-
-  if (aba === 'dicionario') {
-    abaDicionario.style.display = 'block';
-    abaGerador.style.display = 'none';
-    
-    // Atualiza o estilo dos botões
-    btnDicionario.style.background = 'var(--acc)';
-    btnDicionario.style.color = 'white';
-    btnDicionario.style.border = 'none';
-    
-    btnGerador.style.background = 'var(--s3)';
-    btnGerador.style.color = 'var(--tx2)';
-    btnGerador.style.border = '1px solid var(--bd2)';
-  } else {
-    abaDicionario.style.display = 'none';
-    abaGerador.style.display = 'block';
-    
-    // Atualiza o estilo dos botões
-    btnGerador.style.background = 'var(--acc)';
-    btnGerador.style.color = 'white';
-    btnGerador.style.border = 'none';
-    
-    btnDicionario.style.background = 'var(--s3)';
-    btnDicionario.style.color = 'var(--tx2)';
-    btnDicionario.style.border = '1px solid var(--bd2)';
   }
 }
 
