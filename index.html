@@ -86,6 +86,8 @@ select.fi option{background:var(--s2)}
 .toast-err{background:rgba(138,58,58,.95);border:1px solid rgba(220,100,100,.4);color:#f0c0c0}
 .toast-info{background:rgba(58,80,138,.95);border:1px solid rgba(100,140,220,.4);color:#c0d4f8}
 
+  
+
 /* ── DICIONÁRIO ── */
 .dc-wrap{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
 .sr-wrap{position:relative; display:flex; gap:10px;}
@@ -1982,10 +1984,10 @@ async function migrateBaseData() {
       }
       
       toast(`Sucesso absoluto! ${salvos} palavras migradas.`, 'ok');
-  } catch (e) {
-      console.error("Erro detalhado na migração:", e);
-      toast('Erro na migração. Abra o console (F12) para ver.', 'err');
+   } catch (e) {
+      alert("❌ O GOOGLE BLOQUEOU O ENVIO!\n\nMotivo exato: " + e.message);
       document.getElementById('migration-box').style.display = 'block';
+  }
   }
 }
 
