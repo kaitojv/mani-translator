@@ -194,6 +194,29 @@ select.fi option{background:var(--s2)}
           </div>
         </div>
 
+        <div class="gerador-container" style="background: var(--s2); padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid var(--bd);">
+  <h3 style="color: var(--acc2); margin-bottom: 10px;">Gerador Fonotático de Mani</h3>
+  <p style="font-size: 0.9em; color: var(--tx2); margin-bottom: 15px;">Gere novas raízes e palavras com base nas regras sonoras da língua.</p>
+  
+  <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <select id="padrao-silabico" style="background: var(--s3); color: var(--tx); border: 1px solid var(--bd2); padding: 8px; border-radius: 4px;">
+      <option value="CVCV">CVCV (ex: maku)</option>
+      <option value="CVC">CVC (ex: kɔr)</option>
+      <option value="VCV">VCV (ex: ofa)</option>
+      <option value="CVCVC">CVCVC (ex: lɔmun)</option>
+      <option value="aleatorio">Aleatório</option>
+    </select>
+    
+    <button onclick="gerarPalavraMani()" style="background: var(--acc); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+      Gerar Palavra
+    </button>
+  </div>
+  
+  <div id="resultado-gerador" style="font-size: 1.5em; font-weight: bold; color: var(--tx); min-height: 35px; letter-spacing: 1px;">
+    ...
+  </div>
+</div>
+
         <div class="card">
           <div class="card-title">Derivações Automáticas</div>
           <div id="deriv-options-container">
@@ -580,6 +603,46 @@ function renderDict(){
     dl.innerHTML = `<div class="as"><div class="ah">Últimas Adições</div><div class="de-list">${
       fd.map(e => renderItem(e)).join('')}</div></div>`;
   }
+}
+
+  // --- GERADOR FONOTÁTICO MANI ---
+
+const consoantesMani = ['p', 't', 'k', 'b', 'd', 'g', 'm', 'n', 'v', 's', 'z', 'l', 'j', 'r', 'L', 'რ', 'ჰ', 'თ'];
+const vogaisMani = ['a', 'e', 'i', 'o', 'u', 'ɔ', 'ɛ'];
+
+function sortearLetra(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function gerarPalavraMani() {
+  const padraoSelect = document.getElementById('padrao-silabico').value;
+  const padroesDisponiveis = ['CVCV', 'CVC', 'VCV', 'CVCVC'];
+  
+  // Se for aleatório, escolhe um dos padrões da lista
+  const padrao = padraoSelect === 'aleatorio' 
+    ? padroesDisponiveis[Math.floor(Math.random() * padroesDisponiveis.length)] 
+    : padraoSelect;
+
+  let novaPalavra = '';
+
+  // Constrói a palavra iterando sobre o padrão escolhido
+  for (let i = 0; i < padrao.length; i++) {
+    if (padrao[i] === 'C') {
+      novaPalavra += sortearLetra(consoantesMani);
+    } else if (padrao[i] === 'V') {
+      novaPalavra += sortearLetra(vogaisMani);
+    }
+  }
+
+  // Exibe o resultado no ecrã
+  const divResultado = document.getElementById('resultado-gerador');
+  divResultado.innerHTML = novaPalavra;
+  
+  // Efeito visual rápido para indicar que gerou uma nova
+  divResultado.style.color = 'var(--acc3)';
+  setTimeout(() => {
+    divResultado.style.color = 'var(--tx)';
+  }, 300);
 }
 
 // ── EDIÇÃO COMPLETA E DELETE NO FIREBASE ──
