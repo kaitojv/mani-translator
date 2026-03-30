@@ -1944,50 +1944,50 @@ const BASE_DATA = [
 ];
 
 async function migrateBaseData() {
-  toast('Iniciando migração... Por favor, aguarde!', 'info');
-  document.getElementById('migration-box').style.display = 'none';
-  
+  // TESTE DE FOGO DO FIREBASE
   try {
-      // 1. Filtro Blindado: Remove qualquer linha vazia, nula ou mal formatada da lista
+    await db.collection("mani_words").doc("teste_de_conexao").set({ status: "ok" });
+  } catch (erro) {
+    alert("❌ O FIREBASE BLOQUEOU A GRAVAÇÃO!\n\nMotivo exato do erro: " + erro.message + "\n\nIsso prova que as Regras de Segurança estão fechadas no painel do Google.");
+    return; // Para o código imediatamente
+  }
+
+  toast('Conexão aceita! Iniciando migração lenta...', 'info');
+  document.getElementById('migration-box').style.display = 'none';
+
+  try {
       const validData = BASE_DATA.filter(e => Array.isArray(e) && e.length >= 4 && e[0]);
-      
-      // 2. Converte garantindo que tudo é texto puro (String)
       const allObjects = validData.map((e, idx) => ({ 
           word: String(e[0]).trim(), 
           ipa: String(e[1]).trim(), 
           type: String(e[2]).trim(), 
           trans: String(e[3]).trim(), 
-          createdAt: Date.now() - 1000000 + idx // Mantém a ordem
+          createdAt: Date.now() - 1000000 + idx 
       }));
       
-      // 3. Divide em lotes de 100
-      const batchArrays = [];
-      for (let i = 0; i < allObjects.length; i += 100) {
-          batchArrays.push(allObjects.slice(i, i + 100));
-      }
-      
-      let salvos = 0;
-      
-      // 4. Envia lote por lote
-      for (let k = 0; k < batchArrays.length; k++) {
-          const b = batchArrays[k];
+      // Enviando de 50 em 50 para ser ainda mais seguro
+      for (let i = 0; i < allObjects.length; i += 50) {
+          const lote = allObjects.slice(i, i + 50);
           const batch = db.batch();
           
-          b.forEach(item => {
+          lote.forEach(item => {
               const docRef = db.collection("mani_words").doc();
               batch.set(docRef, item);
           });
           
           await batch.commit();
-          salvos += b.length;
-          console.log(`Lote ${k+1} enviado com sucesso. Total parcial: ${salvos} palavras.`);
+          toast(`Salvando... ${i + lote.length} de ${allObjects.length}`, 'info');
       }
       
-      toast(`Sucesso absoluto! ${salvos} palavras migradas.`, 'ok');
-   } catch (e) {
-      alert("❌ O GOOGLE BLOQUEOU O ENVIO!\n\nMotivo exato: " + e.message);
+      // Limpa o documento de teste
+      await db.collection("mani_words").doc("teste_de_conexao").delete();
+      
+      toast(`✅ Sucesso absoluto! ${allObjects.length} palavras migradas.`, 'ok');
+  } catch (e) {
+      alert("❌ Erro durante o envio dos lotes:\n" + e.message);
       document.getElementById('migration-box').style.display = 'block';
   }
+
 }
 
 // ── INIT ──
