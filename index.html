@@ -267,6 +267,13 @@ select.fi option{background:var(--s2)}
           
           <button class="btn btn-save" onclick="gerarPalavraMani()" style="padding: 10px 25px;">Gerar Raiz</button>
         </div>
+
+        <div style="background: var(--s2); border: 1px dashed var(--bd3); padding: 30px; border-radius: 12px; margin-bottom: 15px; position: relative;">
+          <div id="etiqueta-classe" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx3);">...</div>
+          <span id="resultado-gerador" style="font-size: 2.5rem; font-weight: 800; color: var(--acc3); letter-spacing: 2px;">...</span>
+          
+          <div id="preview-derivacoes-gerador"></div>
+        </div>
         
         <div style="background: var(--s2); border: 1px dashed var(--bd3); padding: 30px; border-radius: 12px; margin-bottom: 15px; position: relative;">
           <div id="etiqueta-classe" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx3);">...</div>
@@ -622,30 +629,115 @@ function sortearLetra(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+// ── GERADOR FONOTÁTICO E MORFOLÓGICO AVANÇADO ──
+const consoantesMani = ['p', 't', 'k', 'b', 'd', 'g', 'm', 'n', 'v', 's', 'z', 'l', 'j', 'r', 'L', 'რ', 'ჰ', 'თ'];
+const vogaisMani = ['a', 'e', 'i', 'o', 'u', 'ɔ', 'ɛ'];
+
+// REGRAS DE COLISÃO
+// Adicione aqui sufixos e infixos que uma raiz primária não deve ter:
+const finaisProibidos = ['iჰa', 'av', 'ṫi', 'noma', 'ium', 'ar']; 
+// Adicione aqui encontros consonantais feios ou impossíveis (separados por |):
+const encontrosProibidos = /თb|pb|bp|kg|gk|td|dt|sz|zs|fv|vf|რr|rრ|LL|თთ|რრ|ჰჰ/i;
+
+let palavraGeradaAtual = '';
+let classeGeradaAtual = '';
+
+function sortearLetra(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 function gerarPalavraMani() {
   const qtdSelect = document.getElementById('qtd-silabas').value;
   const classeSelect = document.getElementById('gerador-classe').value;
-  
-  let numSilabas = qtdSelect === 'aleatorio' ? Math.floor(Math.random() * 4) + 1 : parseInt(qtdSelect);
-  
   const classesMani = ['verbo', 'substantivo', 'adjetivo'];
-  classeGeradaAtual = classeSelect === 'aleatorio' ? classesMani[Math.floor(Math.random() * classesMani.length)] : classeSelect;
 
-  let padraoDinamico = '';
-  const silabasPossiveis = ['CV', 'CV', 'CV', 'CVC', 'V']; 
+  let palavraValida = false;
 
-  for (let i = 0; i < numSilabas; i++) {
-    padraoDinamico += silabasPossiveis[Math.floor(Math.random() * silabasPossiveis.length)];
-  }
+  // LOOP MÁGICO: Gera e testa até a palavra passar em todas as regras!
+  while (!palavraValida) {
+    let numSilabas = qtdSelect === 'aleatorio' ? Math.floor(Math.random() * 4) + 1 : parseInt(qtdSelect);
+    classeGeradaAtual = classeSelect === 'aleatorio' ? classesMani[Math.floor(Math.random() * classesMani.length)] : classeSelect;
 
-  palavraGeradaAtual = '';
-  for (let i = 0; i < padraoDinamico.length; i++) {
-    if (padraoDinamico[i] === 'C') {
-      palavraGeradaAtual += sortearLetra(consoantesMani);
-    } else if (padraoDinamico[i] === 'V') {
-      palavraGeradaAtual += sortearLetra(vogaisMani);
+    let padraoDinamico = '';
+    const silabasPossiveis = ['CV', 'CV', 'CV', 'CVC', 'V']; 
+
+    for (let i = 0; i < numSilabas; i++) {
+      padraoDinamico += silabasPossiveis[Math.floor(Math.random() * silabasPossiveis.length)];
+    }
+
+    palavraGeradaAtual = '';
+    for (let i = 0; i < padraoDinamico.length; i++) {
+      if (padraoDinamico[i] === 'C') palavraGeradaAtual += sortearLetra(consoantesMani);
+      else if (padraoDinamico[i] === 'V') palavraGeradaAtual += sortearLetra(vogaisMani);
+    }
+
+    const ultimaLetra = palavraGeradaAtual.slice(-1);
+    const terminaEmVogal = vogaisMani.includes(ultimaLetra);
+
+    // REGRA 1: Verbo sempre termina em 'r'. Adjetivos ficam livres!
+    if (classeGeradaAtual === 'verbo') {
+      if (ultimaLetra !== 'r' && ultimaLetra !== 'რ') {
+        palavraGeradaAtual += terminaEmVogal ? 'r' : 'ar';
+      }
+    }
+
+    // --- TESTES DE QUALIDADE ---
+    let reprovada = false;
+
+    // Reprova se tiver encontros consonantais estranhos (ex: თb)
+    if (encontrosProibidos.test(palavraGeradaAtual)) reprovada = true;
+
+    // Reprova se a base terminar com sufixos já existentes no Mani (ex: iჰa, noma)
+    for (let sufixo of finaisProibidos) {
+      if (palavraGeradaAtual.endsWith(sufixo)) reprovada = true;
+    }
+
+    // Reprova se Substantivo/Adjetivo terminar em 'r' (para não confundir com Verbo)
+    if (classeGeradaAtual !== 'verbo' && palavraGeradaAtual.endsWith('r')) reprovada = true;
+
+    // Se não foi reprovada em nada, a palavra é válida e sai do loop!
+    if (!reprovada) {
+      palavraValida = true; 
     }
   }
+
+  // --- ATUALIZA A INTERFACE ---
+  const divResultado = document.getElementById('resultado-gerador');
+  const etiquetaClasse = document.getElementById('etiqueta-classe');
+  const divDerivacoes = document.getElementById('preview-derivacoes-gerador');
+  
+  divResultado.textContent = palavraGeradaAtual;
+  etiquetaClasse.textContent = classeGeradaAtual;
+  etiquetaClasse.className = `et ${typeClass(classeGeradaAtual)}`;
+  
+  // PREVIEW DE DERIVAÇÕES DIRETAMENTE NO GERADOR
+  let htmlDerivacoes = '';
+  if (classeGeradaAtual === 'verbo') {
+     const base = palavraGeradaAtual.replace(/r$/, '');
+     htmlDerivacoes = `
+        <div style="font-size: 0.8em; color: var(--tx2); margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${palavraGeradaAtual}λ</b> (Adj. Res)</span>
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${base}av</b> (Agente)</span>
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${palavraGeradaAtual}ṫi</b> (Abstrato)</span>
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${palavraGeradaAtual}iჰa</b> (Adv)</span>
+        </div>
+     `;
+  } else {
+     htmlDerivacoes = `
+        <div style="font-size: 0.8em; color: var(--tx2); margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${palavraGeradaAtual}s</b> (Plural)</span>
+            <span style="background: var(--bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--bd2);"><b style="color:var(--acc3)">${palavraGeradaAtual}noma</b> (Coletivo)</span>
+        </div>
+     `;
+  }
+  divDerivacoes.innerHTML = htmlDerivacoes;
+  
+  document.getElementById('btn-enviar-criacao').style.display = 'inline-block';
+  
+  // Efeito visual de recarregamento
+  divResultado.style.color = '#fff';
+  setTimeout(() => { divResultado.style.color = 'var(--acc3)'; }, 200);
+}
 
   // ESCULPIR A PALAVRA COM BASE NA CLASSE GRAMATICAL
   const ultimaLetra = palavraGeradaAtual.slice(-1);
