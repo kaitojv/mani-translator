@@ -245,13 +245,21 @@ html, body, div, span, header, nav, h1, h2, h3, input, button, select, textarea 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
 <div id="app">
-  <header class="hdr">
-    <div style="display:flex;align-items:baseline;gap:10px">
-      <div class="logo">Mani</div>
-      <div class="logo-sub">Nuvem Ativa</div>
+ <header class="hdr" style="padding: 20px 30px; border-bottom: 1px solid var(--bd2); background: linear-gradient(135deg, #080812 0%, #130d24 40%, #0a1030 100%);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    
+    <div style="font-family: 'Segoe UI', system-ui, sans-serif !important;">
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--acc3); letter-spacing: 1px; margin: 0; line-height: 1;">
+        Mani <span style="font-size: 1.4rem; font-weight: 400; color: var(--acc2);">Nuvem Ativa</span>
+      </h1>
     </div>
-    <div class="hdr-stat">Dicionário: <span id="total-count">...</span> entradas</div>
-  </header>
+
+    <div style="font-family: 'Segoe UI', system-ui, sans-serif !important; font-size: 1rem; color: var(--tx2);">
+      Dicionário: <span id="header-word-count" style="color: var(--acc3); font-weight: bold; font-size: 1.1rem;">1281</span> entradas
+    </div>
+    
+  </div>
+</header>
   <nav class="nav">
     <button class="nb on" id="nb-inicio" onclick="sw('inicio')">🌌 Início & Regras</button>
     <button class="nb" id="nb-gramatica" onclick="sw('gramatica')">📖 Gramática Oficial</button>
