@@ -162,22 +162,34 @@ select.fi option{background:var(--s2)}
   .sr-wrap{flex-direction: column;}
 }
 
-  /* ── CORREÇÃO DE FONTE E ALINHAMENTO GERAL ── */
-/* 1. Devolve a fonte moderna para o app inteiro */
-body, input, button, select, textarea, .hdr h1 {
+ /* ==================================================
+   CORREÇÃO BLINDADA (FONTE E ALINHAMENTO DO MANI)
+   ================================================== */
+
+/* 1. Força a fonte moderna (sem serifas) em ABSOLUTAMENTE TUDO do aplicativo */
+html, body, div, span, header, nav, h1, h2, h3, input, button, select, textarea {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
 }
 
-/* 2. Garante que o texto da página inicial (Mani) continue com a fonte clássica (Serif) */
-#tab-inicio h1, #tab-inicio .manifesto-texto {
-    font-family: 'Georgia', serif !important;
+/* 2. Mantém a elegância da fonte Serif (tipo livro) APENAS nas abas de leitura (Manifesto e Gramática) */
+#tab-inicio h1, 
+#tab-inicio p, 
+#tab-inicio div,
+#tab-gramatica h2, 
+#tab-gramatica p {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
 }
 
-/* 3. Força o dicionário e as listas a ficarem alinhados à esquerda */
-#tab-dictionary .card,
+/* 3. Força as caixinhas do Dicionário a ficarem estritamente alinhadas à esquerda */
 #dict-list,
-#dict-list div,
+#dict-list > div,
 .gloss-word {
+    text-align: left !important;
+}
+
+/* 4. Garante que os textos e traduções dentro das caixas não fiquem centralizados */
+#dict-list div div,
+#dict-list span {
     text-align: left !important;
 }
   
