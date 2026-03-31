@@ -16,14 +16,28 @@
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 
 /* HEADER E NAV */
-.hdr { background:linear-gradient(135deg,#080812 0%,#130d24 40%,#0a1030 100%); border-bottom:1px solid var(--bd); padding:20px; text-align:center; position:relative; }
-.hdr h1 { font-size:2rem; font-weight:800; color:var(--acc3); letter-spacing:1px; margin-bottom:5px; }
-.hdr p { font-size:0.9rem; color:var(--tx2); }
+.hdr { 
+  background: linear-gradient(135deg, #080812 0%, #130d24 40%, #0a1030 100%); 
+  border-bottom: 1px solid var(--bd); 
+  padding: 20px; 
+  /* Removido o text-align: center genérico para não estragar a sua Nuvem Ativa */
+}
 
-.nav { display:flex; flex-wrap:wrap; gap:8px; padding:15px 20px; background:var(--s1); border-bottom:1px solid var(--bd2); align-items:center; }
-.nb { background:var(--s2); color:var(--tx2); border:1px solid var(--bd); padding:10px 16px; border-radius:8px; cursor:pointer; font-size:0.9rem; font-weight:600; white-space:nowrap; transition:0.2s; flex-grow:1; text-align:center; }
-.nb:hover { background:var(--s3); color:var(--tx); }
-.nb.on { background:var(--acc); color:#fff; border-color:var(--acc2); }
+/* Restaura o layout lado-a-lado que mostrou na imagem */
+.hdr-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+.hdr h1 { font-size: 2rem; font-weight: 800; color: var(--acc3); letter-spacing: 1px; margin-bottom: 5px; }
+.hdr p { font-size: 0.9rem; color: var(--tx2); }
+
+.nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 15px 20px; background: var(--s1); border-bottom: 1px solid var(--bd2); align-items: center; }
+.nb { background: var(--s2); color: var(--tx2); border: 1px solid var(--bd); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; white-space: nowrap; transition: 0.2s; flex-grow: 1; text-align: center; }
+.nb:hover { background: var(--s3); color: var(--tx); }
+.nb.on { background: var(--acc); color: #fff; border-color: var(--acc2); }
 
 /* RESPONSIVIDADE MOBILE (TABLETS E TELEMÓVEIS) */
 @media (max-width: 768px) {
@@ -34,6 +48,36 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 
 @media (max-width: 480px) {
   .nb { flex-basis: calc(50% - 8px); }
+} 
+/* <-- A GARANTIA DE QUE O MEDIA FECHOU BEM ESTÁ AQUI */
+
+/* ==================================================
+   CORREÇÃO BLINDADA (FONTE E ALINHAMENTO DO MANI)
+   ================================================== */
+
+/* 1. Força a fonte moderna em ABSOLUTAMENTE TUDO */
+html, body, div, span, header, nav, h1, h2, h3, input, button, select, textarea {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+}
+
+/* 2. Mantém a fonte clássica APENAS nas áreas de leitura longa (Manifesto e Gramática) */
+#tab-inicio h1, #tab-inicio p, #tab-inicio div,
+#tab-gramatica h2, #tab-gramatica p {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+}
+
+/* 3. Força as caixinhas do Dicionário a ficarem estritamente à esquerda */
+#tab-dictionary .card,
+#dict-list,
+#dict-list > div,
+.gloss-word {
+    text-align: left !important;
+    align-items: flex-start !important;
+}
+
+#dict-list div div,
+#dict-list span {
+    text-align: left !important;
 }
   
 /* CONTENT */
